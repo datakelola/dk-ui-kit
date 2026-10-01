@@ -215,7 +215,7 @@
 	<Card.Root>
 		<Card.Header><Card.Title>{s.filterTitle}</Card.Title><Card.Description>{s.filterDesc}</Card.Description></Card.Header>
 		<Card.Content class="flex flex-col gap-4">
-			<Field.FieldGroup class="grid gap-4 md:grid-cols-[1fr_1fr_auto]">
+			<Field.FieldGroup class="grid grid-cols-1 gap-4 md:grid-cols-[1fr_1fr_auto]">
 				<Field.Field><Field.Label for="start">{s.startDate}</Field.Label><DatePicker bind:value={date} label={s.pickStart} placeholder={s.pickDatePh} /></Field.Field>
 				<Field.Field>
 					<Field.Label for="period">{s.period}</Field.Label>
@@ -226,20 +226,20 @@
 				</Field.Field>
 				<Field.Field><Field.Label>&nbsp;</Field.Label><Button onclick={apply} disabled={loading}><ApplyIcon data-icon="inline-start" /><span>{loading ? s.loading : s.apply}</span></Button></Field.Field>
 			</Field.FieldGroup>
-			<ToggleGroup.Root type="single" bind:value={range} class="w-fit" aria-label={s.rangeLabel}>
+			<ToggleGroup.Root type="single" bind:value={range} class="w-fit max-w-full flex-wrap" aria-label={s.rangeLabel}>
 				<ToggleGroup.Item value="7h">{s.d7}</ToggleGroup.Item><ToggleGroup.Item value="30h">{s.d30}</ToggleGroup.Item><ToggleGroup.Item value="90h">{s.d90}</ToggleGroup.Item>
 			</ToggleGroup.Root>
 			<Tabs.Root bind:value={tab}>
-				<Tabs.List><Tabs.Trigger value="harian">{s.daily}</Tabs.Trigger><Tabs.Trigger value="mingguan">{s.weekly}</Tabs.Trigger><Tabs.Trigger value="bulanan">{s.monthly}</Tabs.Trigger></Tabs.List>
+				<Tabs.List class="h-auto max-w-full flex-wrap"><Tabs.Trigger value="harian">{s.daily}</Tabs.Trigger><Tabs.Trigger value="mingguan">{s.weekly}</Tabs.Trigger><Tabs.Trigger value="bulanan">{s.monthly}</Tabs.Trigger></Tabs.List>
 			</Tabs.Root>
 		</Card.Content>
 		<Card.Footer class="text-muted-foreground text-xs">{s.scope}</Card.Footer>
 	</Card.Root>
 
 	{#if loading}
-		<div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{#each [1, 2, 3] as _}<Skeleton class="h-44 w-full" />{/each}</div>
+		<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">{#each [1, 2, 3] as _}<Skeleton class="h-44 w-full" />{/each}</div>
 	{:else}
-		<section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3" aria-label={s.sectionLabel}>
+		<section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3" aria-label={s.sectionLabel}>
 			{#each channels as c}
 				<Card.Root class={cn('transition-shadow hover:shadow-md', c.key === 'wa' && 'border-primary/40')}>
 					<Card.Header class="flex flex-row items-center gap-3">
@@ -261,7 +261,7 @@
 	<Alert.Root variant="warning"><TriangleAlert data-icon="alert" /><Alert.Description>{s.alertWait}</Alert.Description></Alert.Root>
 	<Alert.Root variant="success"><CircleCheck data-icon="alert" /><Alert.Description>{s.alertAll}</Alert.Description></Alert.Root>
 
-	<div class="grid gap-4 lg:grid-cols-2">
+	<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
 		<Card.Root>
 			<Card.Header><Card.Title>{s.volTitle}</Card.Title><Card.Description>{s.volDesc}</Card.Description></Card.Header>
 			<Card.Content>
@@ -279,8 +279,8 @@
 				{#if tickets.length === 0}
 					<Empty.Root><Empty.Header><Empty.Media><Inbox data-icon="empty" /></Empty.Media><Empty.Title>{s.emptyTitle}</Empty.Title><Empty.Description>{s.emptyDesc}</Empty.Description></Empty.Header></Empty.Root>
 				{:else}
-					<Table.Root><Table.Header><Table.Row><Table.Head>{s.thId}</Table.Head><Table.Head>{s.thSubject}</Table.Head><Table.Head>{s.thOwner}</Table.Head><Table.Head class="text-right">{s.thStatus}</Table.Head></Table.Row></Table.Header>
-					<Table.Body>{#each tickets as t}<Table.Row><Table.Cell class="font-mono text-xs">{t.id}</Table.Cell><Table.Cell><div class="flex items-center gap-2"><Avatar.Root class="size-6"><Avatar.Fallback>{t.owner.slice(0, 1)}</Avatar.Fallback></Avatar.Root><span class="font-medium">{t.subject}</span></div></Table.Cell><Table.Cell>{t.owner}</Table.Cell><Table.Cell class="text-right"><Badge variant={t.status === 'Urgent' ? 'destructive' : 'secondary'}>{statusLabel(t.status)}</Badge></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
+					<Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thId}</Table.Head><Table.Head>{s.thSubject}</Table.Head><Table.Head>{s.thOwner}</Table.Head><Table.Head class="text-right">{s.thStatus}</Table.Head></Table.Row></Table.Header>
+					<Table.Body>{#each tickets as t}<Table.Row><Table.Cell class="font-mono text-xs">{t.id}</Table.Cell><Table.Cell><div class="flex min-w-0 items-center gap-2"><Avatar.Root class="size-6 shrink-0"><Avatar.Fallback>{t.owner.slice(0, 1)}</Avatar.Fallback></Avatar.Root><span class="min-w-0 truncate font-medium">{t.subject}</span></div></Table.Cell><Table.Cell>{t.owner}</Table.Cell><Table.Cell class="text-right"><Badge variant={t.status === 'Urgent' ? 'destructive' : 'secondary'}>{statusLabel(t.status)}</Badge></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
 				{/if}
 			</Card.Content>
 			<Card.Footer><Separator class="my-1" /><p class="text-muted-foreground flex items-center gap-1 text-xs"><Info data-icon="inline" /> {s.showing3}</p></Card.Footer>

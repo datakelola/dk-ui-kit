@@ -188,8 +188,8 @@
 
 	<Card.Root>
 		<Card.Header class="flex flex-row flex-wrap items-center gap-2">
-			<InputGroup.Root class="max-w-sm"><InputGroup.Addon><Search class="size-4" /></InputGroup.Addon><InputGroup.Input bind:value={q} placeholder={s.searchPh} /></InputGroup.Root>
-			<Tabs.Root value="all"><Tabs.List><Tabs.Trigger value="all">{s.tabAll}</Tabs.Trigger><Tabs.Trigger value="success">{s.tabSuccess}</Tabs.Trigger><Tabs.Trigger value="failed">{s.tabFailed}</Tabs.Trigger></Tabs.List></Tabs.Root>
+			<InputGroup.Root class="w-full min-w-0 max-w-full sm:max-w-sm"><InputGroup.Addon><Search class="size-4" /></InputGroup.Addon><InputGroup.Input bind:value={q} placeholder={s.searchPh} class="min-w-0" /></InputGroup.Root>
+			<Tabs.Root value="all" class="min-w-0"><Tabs.List class="max-w-full overflow-x-auto [&>*]:whitespace-nowrap"><Tabs.Trigger value="all">{s.tabAll}</Tabs.Trigger><Tabs.Trigger value="success">{s.tabSuccess}</Tabs.Trigger><Tabs.Trigger value="failed">{s.tabFailed}</Tabs.Trigger></Tabs.List></Tabs.Root>
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props}><MoreVertical class="size-4" /> {s.source}</Button>{/snippet}</DropdownMenu.Trigger>
 				<DropdownMenu.Content><DropdownMenu.Group><DropdownMenu.GroupHeading>{s.sourceH}</DropdownMenu.GroupHeading><DropdownMenu.Item>{s.manual}</DropdownMenu.Item><DropdownMenu.Item>{s.batch}</DropdownMenu.Item></DropdownMenu.Group></DropdownMenu.Content>
@@ -205,7 +205,8 @@
 			{#if loading}<div class="flex flex-col gap-2 p-4"><Skeleton class="h-10 w-full" /><Skeleton class="h-10 w-full" /></div>
 			{:else if filtered.length === 0}<Empty.Root><Empty.Header><Empty.Title>{s.emptyTitle}</Empty.Title><Empty.Description>{s.emptyDesc}</Empty.Description></Empty.Header></Empty.Root>
 			{:else}
-				<Table.Root>
+				<div class="overflow-x-auto">
+				<Table.Root class="w-full min-w-[640px]">
 					<Table.Header><Table.Row><Table.Head>{s.thGroup}</Table.Head><Table.Head>{s.thTicket}</Table.Head><Table.Head>{s.thSource}</Table.Head><Table.Head>{s.thFile}</Table.Head><Table.Head>{s.thStatus}</Table.Head><Table.Head>{s.thAction}</Table.Head></Table.Row></Table.Header>
 					<Table.Body>
 						{#each filtered as r (r.group)}
@@ -215,13 +216,14 @@
 								<Table.Cell>
 									<Dialog.Root>
 										<Dialog.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props}>{s.retry}</Button>{/snippet}</Dialog.Trigger>
-										<Dialog.Content><Dialog.Header><Dialog.Title>{s.retry} {r.group}?</Dialog.Title></Dialog.Header><Dialog.Footer><Button onclick={() => toast.success(`Retry ${r.group} ${s.retryScheduled}`)}>{s.retry}</Button></Dialog.Footer></Dialog.Content>
+										<Dialog.Content class="max-w-[calc(100vw-2rem)]"><Dialog.Header><Dialog.Title class="truncate">{s.retry} {r.group}?</Dialog.Title></Dialog.Header><Dialog.Footer class="flex-wrap"><Button onclick={() => toast.success(`Retry ${r.group} ${s.retryScheduled}`)}>{s.retry}</Button></Dialog.Footer></Dialog.Content>
 									</Dialog.Root>
 								</Table.Cell>
 							</Table.Row>
 						{/each}
 					</Table.Body>
 				</Table.Root>
+				</div>
 			{/if}
 		</ScrollArea.Root>
 	</Card.Root>

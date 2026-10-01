@@ -160,7 +160,7 @@
 <div class="flex flex-col gap-6">
 	<div class="flex flex-col justify-between gap-3 lg:flex-row lg:items-end">
 		<div><h1 class="flex items-center gap-2 text-xl font-bold"><MessagesSquare size={20} class="text-primary" />{s.heading}</h1><p class="mt-1 text-sm text-muted-foreground">{s.sub}</p></div>
-		<div class="flex gap-2"><Button size="sm" variant="outline" onclick={reset}><RotateCcw data-icon="inline-start" />{s.reset}</Button><Button size="sm"><Download data-icon="inline-start" />{s.export}</Button></div>
+		<div class="flex flex-wrap gap-2"><Button size="sm" variant="outline" onclick={reset}><RotateCcw data-icon="inline-start" />{s.reset}</Button><Button size="sm"><Download data-icon="inline-start" />{s.export}</Button></div>
 	</div>
 
 	<div class="grid grid-cols-1 gap-4 md:grid-cols-3">
@@ -176,7 +176,7 @@
 	<Card.Root>
 		<Card.Header><Card.Title class="flex items-center gap-2"><SlidersHorizontal size={16} />{s.filterT}</Card.Title></Card.Header>
 		<Card.Content>
-			<Field.FieldGroup class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+			<Field.FieldGroup class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
 				<Field.Field><Field.Label for="ci-channel">{s.fChannel}</Field.Label>
 					<Select.Root type="single" bind:value={channel}><Select.Trigger id="ci-channel"><Select.Value placeholder={s.fAllChannel} /></Select.Trigger><Select.Content><Select.Item value="all">{s.fAllChannel}</Select.Item><Select.Item value="WhatsApp">WhatsApp</Select.Item><Select.Item value="Voice">Voice</Select.Item><Select.Item value="Live Chat">Live Chat</Select.Item><Select.Item value="Email">Email</Select.Item></Select.Content></Select.Root>
 				</Field.Field>
@@ -207,20 +207,20 @@
 	{/if}
 
 	<Card.Root>
-		<Card.Header class="flex-row items-center justify-between space-y-0"><div><Card.Title>{s.tblT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{filtered.length} {s.tblAgents} · {totalInteractions} {s.tblInteractions}</p></div><Badge variant="secondary">{s.badgeTarget}</Badge></Card.Header>
+		<Card.Header class="flex-row flex-wrap items-center justify-between gap-2 space-y-0"><div class="min-w-0"><Card.Title class="truncate">{s.tblT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{filtered.length} {s.tblAgents} · {totalInteractions} {s.tblInteractions}</p></div><Badge variant="secondary" class="shrink-0">{s.badgeTarget}</Badge></Card.Header>
 		<Card.Content>
 			{#if filtered.length > 0}
 				<div class="overflow-x-auto rounded-xl border">
-					<Table.Root>
+					<Table.Root class="min-w-[640px]">
 						<Table.Header><Table.Row><Table.Head>{s.hAgent}</Table.Head><Table.Head>{s.hChannel}</Table.Head><Table.Head class="text-right">{s.hInter}</Table.Head><Table.Head>{s.hAvg}</Table.Head><Table.Head>{s.hDist}</Table.Head><Table.Head>{s.hComment}</Table.Head><Table.Head class="text-right">{s.hAction}</Table.Head></Table.Row></Table.Header>
 						<Table.Body>
 							{#each pageRows as r}
 								<Table.Row>
-									<Table.Cell class="font-medium">{r.agent}</Table.Cell>
+									<Table.Cell class="max-w-[140px] truncate font-medium">{r.agent}</Table.Cell>
 									<Table.Cell><Badge variant="outline">{r.channel}</Badge></Table.Cell>
-									<Table.Cell class="text-right">{r.interactions}</Table.Cell>
-									<Table.Cell><span class="flex items-center gap-1 font-semibold"><Star size={13} class="fill-amber-400 text-amber-400" />{r.avg.toFixed(1)}</span><Progress value={(r.avg / 5) * 100} class="mt-1 w-24" /></Table.Cell>
-									<Table.Cell class="text-xs text-muted-foreground">{r.s5} · {r.s4} · {r.s3} · {r.s2} · {r.s1}</Table.Cell>
+									<Table.Cell class="text-right whitespace-nowrap">{r.interactions}</Table.Cell>
+									<Table.Cell><span class="flex items-center gap-1 font-semibold"><Star size={13} class="shrink-0 fill-amber-400 text-amber-400" />{r.avg.toFixed(1)}</span><Progress value={(r.avg / 5) * 100} class="mt-1 w-full max-w-24" /></Table.Cell>
+									<Table.Cell class="text-xs whitespace-nowrap text-muted-foreground">{r.s5} · {r.s4} · {r.s3} · {r.s2} · {r.s1}</Table.Cell>
 									<Table.Cell>{#if r.comment}<Badge variant="success">{s.commentYes}</Badge>{:else}<Badge variant="secondary">{s.commentNo}</Badge>{/if}</Table.Cell>
 									<Table.Cell class="text-right"><Button size="sm" variant="outline" onclick={() => openDetail(r.agent)}>{s.detailBtn}</Button></Table.Cell>
 								</Table.Row>
@@ -247,8 +247,8 @@
 	</Card.Root>
 
 	<Dialog.Root bind:open={detailOpen}>
-		<Dialog.Content>
-			<Dialog.Header><Dialog.Title>{s.dlgT} {detailName}</Dialog.Title><Dialog.Description>{s.dlgD}</Dialog.Description></Dialog.Header>
+		<Dialog.Content class="max-w-[calc(100vw-2rem)]">
+			<Dialog.Header><Dialog.Title class="min-w-0 truncate">{s.dlgT} {detailName}</Dialog.Title><Dialog.Description>{s.dlgD}</Dialog.Description></Dialog.Header>
 			<div class="flex flex-col gap-3 text-sm">
 				<div class="flex items-center justify-between rounded-lg bg-muted/50 p-3"><span class="text-muted-foreground">{s.dlgAvg}</span><span class="font-semibold">4.3 / 5.0</span></div>
 				<Progress value={86} />

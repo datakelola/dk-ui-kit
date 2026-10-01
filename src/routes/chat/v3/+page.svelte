@@ -322,16 +322,16 @@
 
 <svelte:head><title>{s.title}</title></svelte:head>
 
-<Card.Root class="h-[80vh]">
-	<Card.Content class="h-full p-0">
-		<Resizable.PaneGroup direction="horizontal" class="h-full">
+<Card.Root class="h-auto min-h-[80vh] lg:h-[80vh]">
+	<Card.Content class="h-full min-h-0 p-0">
+		<Resizable.PaneGroup direction="horizontal" class="h-full max-lg:h-auto max-lg:flex-col">
 			<!-- KOLOM KIRI — INBOX -->
-			<Resizable.Pane defaultSize={24} minSize={18}>
+			<Resizable.Pane defaultSize={24} minSize={18} class="max-lg:min-h-[340px] max-lg:w-full">
 				<div class="flex h-full flex-col gap-0">
 					<div class="flex flex-col gap-2 p-3">
-						<div class="flex items-center gap-2">
+						<div class="flex flex-wrap items-center gap-2">
 							<Inbox data-icon="inline-start" class="size-4 text-muted-foreground" />
-							<strong class="flex-1 text-sm">{s.inbox}</strong>
+							<strong class="min-w-0 flex-1 truncate text-sm">{s.inbox}</strong>
 							<Badge variant="secondary">{s.normal}</Badge>
 						</div>
 						<InputGroup.Root>
@@ -347,7 +347,7 @@
 					</div>
 					<Separator />
 					<Tabs.Root bind:value={inboxTab} class="flex min-h-0 flex-1 flex-col">
-						<Tabs.List class="mx-3 mt-2 grid w-auto grid-cols-3">
+						<Tabs.List class="mx-3 mt-2 grid w-auto max-w-full grid-cols-3 overflow-x-auto [&>*]:whitespace-nowrap">
 							<Tabs.Trigger value="myopen">{s.tabMyOpen}</Tabs.Trigger>
 							<Tabs.Trigger value="served">{s.tabServed}</Tabs.Trigger>
 							<Tabs.Trigger value="resolved">{s.tabResolved}</Tabs.Trigger>
@@ -395,12 +395,12 @@
 					</Tabs.Root>
 				</div>
 			</Resizable.Pane>
-			<Resizable.Handle />
+			<Resizable.Handle class="max-lg:hidden" />
 			<!-- KOLOM TENGAH — PERCAKAPAN -->
-			<Resizable.Pane defaultSize={46} minSize={30}>
-				<div class="flex h-full flex-col gap-0 border-x">
+			<Resizable.Pane defaultSize={46} minSize={30} class="max-lg:min-h-[480px] max-lg:w-full">
+				<div class="flex h-full flex-col gap-0 border-x max-lg:border-x-0 max-lg:border-y">
 					<div class="flex flex-col gap-2 p-3">
-						<div class="flex items-center gap-3">
+						<div class="flex flex-wrap items-center gap-3">
 							<Avatar.Root class="size-9">
 								<Avatar.Fallback>{initials(selected.name)}</Avatar.Fallback>
 							</Avatar.Root>
@@ -421,9 +421,9 @@
 								</Tooltip.Root>
 							</Tooltip.Provider>
 						</div>
-						<div class="flex items-center gap-2">
+						<div class="flex flex-wrap items-center gap-2">
 							<span class="text-xs font-medium text-muted-foreground">{s.userInteraction}</span>
-							<Badge variant="secondary" class="text-[11px]">{TICKET_ID}</Badge>
+							<Badge variant="secondary" class="max-w-full truncate text-[11px]">{TICKET_ID}</Badge>
 						</div>
 					</div>
 					<Separator />
@@ -476,8 +476,8 @@
 							{/if}
 						</div>
 					</ScrollArea.Root>
-					<div class="p-3 pt-2">
-						<InputGroup.Root>
+					<div class="max-w-full p-3 pt-2">
+						<InputGroup.Root class="max-w-full">
 							<InputGroup.Addon>
 								<Paperclip data-icon="inline" class="size-4" />
 								<Smile data-icon="inline" class="size-4" />
@@ -496,12 +496,12 @@
 					</div>
 				</div>
 			</Resizable.Pane>
-			<Resizable.Handle />
+			<Resizable.Handle class="max-lg:hidden" />
 			<!-- KOLOM KANAN — PANEL TIKET -->
-			<Resizable.Pane defaultSize={30} minSize={22}>
+			<Resizable.Pane defaultSize={30} minSize={22} class="max-lg:min-h-[440px] max-lg:w-full">
 				<div class="flex h-full flex-col gap-0">
 					<Tabs.Root bind:value={ticketTab} class="flex min-h-0 flex-1 flex-col">
-						<Tabs.List class="mx-3 mt-3 grid w-auto grid-cols-3">
+						<Tabs.List class="mx-3 mt-3 grid w-auto max-w-full grid-cols-3 overflow-x-auto [&>*]:whitespace-nowrap">
 							<Tabs.Trigger value="overview">{s.overview}</Tabs.Trigger>
 							<Tabs.Trigger value="endchat">{s.endChatTab}</Tabs.Trigger>
 							<Tabs.Trigger value="history">{s.historyTab}</Tabs.Trigger>
@@ -593,12 +593,12 @@
 											<Button variant="destructive" onclick={() => (endOpen = true)}>
 												<PhoneOff data-icon="inline-start" class="size-4" />{s.endChatBtn}
 											</Button>
-											<Dialog.Content>
+											<Dialog.Content class="max-w-[calc(100vw-2rem)]">
 												<Dialog.Header>
 													<Dialog.Title>{s.endTitle}</Dialog.Title>
 													<Dialog.Description>{s.endDesc}</Dialog.Description>
 												</Dialog.Header>
-												<Dialog.Footer>
+												<Dialog.Footer class="flex-wrap">
 													<Button variant="outline" onclick={() => (endOpen = false)}>{s.endCancel}</Button>
 													<Button variant="destructive" onclick={confirmEnd}>{s.endYes}</Button>
 												</Dialog.Footer>

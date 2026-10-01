@@ -287,7 +287,7 @@
 			<Badge variant="secondary" class="w-fit">{timezone}</Badge>
 		</Card.Header>
 		<Card.Content class="flex flex-col gap-4">
-			<Field.FieldGroup class="grid gap-4 md:grid-cols-[1fr_1fr_auto]">
+			<Field.FieldGroup class="grid grid-cols-1 gap-4 md:grid-cols-[1fr_1fr_auto]">
 				<Field.Field>
 					<Field.Label for="oh-channel">{s.channel}</Field.Label>
 					<Select.Root type="single" bind:value={channel}>
@@ -323,7 +323,7 @@
 				</Field.Field>
 			</Field.FieldGroup>
 			<Tabs.Root bind:value={tab}>
-				<Tabs.List>
+				<Tabs.List class="h-auto max-w-full flex-wrap">
 					<Tabs.Trigger value="jadwal">{s.tabSchedule}</Tabs.Trigger>
 					<Tabs.Trigger value="pengecualian">{s.tabExc} ({exceptions.length})</Tabs.Trigger>
 				</Tabs.List>
@@ -340,7 +340,8 @@
 				<Card.Description>{s.schedDesc}</Card.Description>
 			</Card.Header>
 			<Card.Content class="p-0">
-				<Table.Root>
+				<div class="overflow-x-auto">
+				<Table.Root class="min-w-[640px]">
 					<Table.Header>
 						<Table.Row>
 							<Table.Head>{s.thDay}</Table.Head>
@@ -380,6 +381,7 @@
 						{/each}
 					</Table.Body>
 				</Table.Root>
+				</div>
 			</Card.Content>
 			<Card.Footer>
 				<Separator class="my-1" />
@@ -387,7 +389,7 @@
 			</Card.Footer>
 		</Card.Root>
 	{:else}
-		<div class="grid gap-4 lg:grid-cols-[1fr_1.4fr]">
+		<div class="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1.4fr]">
 			<Card.Root>
 				<Card.Header>
 					<Card.Title class="flex items-center gap-2"><Plus data-icon="inline-start" /> {s.addExc}</Card.Title>
@@ -458,7 +460,7 @@
 </div>
 
 <Dialog.Root bind:open={editOpen}>
-	<Dialog.Content>
+	<Dialog.Content class="max-w-[calc(100vw-2rem)] sm:max-w-md">
 		<Dialog.Header>
 			<Dialog.Title>{s.editTitlePre} {editingDay ? dayLabel(editingDay.dayKey) : ''}</Dialog.Title>
 			<Dialog.Description>{s.editDesc}</Dialog.Description>

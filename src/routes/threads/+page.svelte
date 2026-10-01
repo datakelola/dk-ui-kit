@@ -141,11 +141,11 @@
 
 <div class="flex flex-col gap-3">
 	<Card.Root>
-		<Card.Header class="flex flex-row items-center gap-2">
-			<strong class="text-sm">{s.filters}</strong>
-			<div class="flex flex-1 flex-col gap-2 md:flex-row">
-				<InputGroup.Root class="max-w-md"><InputGroup.Addon><Search class="size-4" /></InputGroup.Addon><InputGroup.Input bind:value={q} placeholder={s.searchPh} /></InputGroup.Root>
-				<DateRangePicker bind:value={range} label={s.rangeLabel} class="max-w-xs" />
+		<Card.Header class="flex flex-row flex-wrap items-center gap-2">
+			<strong class="shrink-0 text-sm">{s.filters}</strong>
+			<div class="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center md:flex-row">
+				<InputGroup.Root class="w-full min-w-0 max-w-full sm:max-w-md"><InputGroup.Addon><Search class="size-4" /></InputGroup.Addon><InputGroup.Input bind:value={q} placeholder={s.searchPh} class="min-w-0" /></InputGroup.Root>
+				<DateRangePicker bind:value={range} label={s.rangeLabel} class="w-full min-w-0 max-w-full sm:max-w-xs" />
 			</div>
 			<Button variant="outline" size="sm" onclick={() => (q = '')}>{s.clear}</Button>
 			<Button size="sm" onclick={search}>{s.search}</Button>
@@ -156,8 +156,8 @@
 		</Card.Header>
 	</Card.Root>
 
-	<Tabs.Root value="list">
-		<Tabs.List><Tabs.Trigger value="list">{s.tabList}</Tabs.Trigger><Tabs.Trigger value="timeline">{s.tabTimeline}</Tabs.Trigger></Tabs.List>
+	<Tabs.Root value="list" class="min-w-0">
+		<Tabs.List class="max-w-full overflow-x-auto [&>*]:whitespace-nowrap"><Tabs.Trigger value="list">{s.tabList}</Tabs.Trigger><Tabs.Trigger value="timeline">{s.tabTimeline}</Tabs.Trigger></Tabs.List>
 		<Tabs.Content value="list">
 			<Card.Root>
 				<ScrollArea.Root class="h-[55vh]">
@@ -166,14 +166,14 @@
 					{:else}
 						<div class="flex flex-col gap-2 p-3">
 							{#each filtered as r (r.id)}
-								<div class="flex items-center gap-3 rounded-lg border p-3">
-									<Avatar.Root><Avatar.Fallback>{initials(r.user)}</Avatar.Fallback></Avatar.Root>
-									<span class="min-w-0 flex-1"><span class="flex items-center gap-2"><strong class="truncate text-sm">{r.user}</strong><Badge variant="outline" class="text-[10px]">{r.channel}</Badge><Badge variant="secondary">{r.count} {s.messages}</Badge></span>
+								<div class="flex min-w-0 flex-wrap items-center gap-3 rounded-lg border p-3">
+									<Avatar.Root class="shrink-0"><Avatar.Fallback>{initials(r.user)}</Avatar.Fallback></Avatar.Root>
+									<span class="min-w-0 flex-1 basis-40"><span class="flex flex-wrap items-center gap-2"><strong class="min-w-0 truncate text-sm">{r.user}</strong><Badge variant="outline" class="shrink-0 text-[10px]">{r.channel}</Badge><Badge variant="secondary" class="shrink-0">{r.count} {s.messages}</Badge></span>
 									<span class="block truncate text-xs text-muted-foreground">{r.preview} • {r.agent} • {r.date}</span></span>
 									<Tooltip.Provider><Tooltip.Root><Tooltip.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props} onclick={() => toast.success(s.toastOpened)}>{s.open}</Button>{/snippet}</Tooltip.Trigger><Tooltip.Content>{s.openTip}</Tooltip.Content></Tooltip.Root></Tooltip.Provider>
 									<Dialog.Root>
 										<Dialog.Trigger>{#snippet child({ props })}<Button size="sm" {...props}>{s.detail}</Button>{/snippet}</Dialog.Trigger>
-										<Dialog.Content><Dialog.Header><Dialog.Title>{s.threadPrefix}{r.id} — {r.user}</Dialog.Title></Dialog.Header>
+										<Dialog.Content class="max-w-[calc(100vw-2rem)]"><Dialog.Header><Dialog.Title class="truncate">{s.threadPrefix}{r.id} — {r.user}</Dialog.Title></Dialog.Header>
 											<Message.Group>
 												<Message.Root><div class="flex flex-col gap-1"><Message.Header>{r.user}</Message.Header><Bubble.Root variant="received"><Bubble.Content>{r.preview}</Bubble.Content></Bubble.Root><Message.Footer>{r.date}</Message.Footer></div></Message.Root>
 											</Message.Group>
@@ -189,8 +189,8 @@
 			</Card.Root>
 		</Tabs.Content>
 		<Tabs.Content value="timeline">
-			<Card.Root><Card.Content class="flex flex-col gap-2 p-4">
-				{#each filtered as r (r.id)}<div class="flex items-center gap-3"><span class="h-8 w-1 rounded bg-primary"></span><Avatar.Root><Avatar.Fallback>{initials(r.user)}</Avatar.Fallback></Avatar.Root><span class="text-sm">{r.user} — {r.preview}</span><Badge variant="outline">{r.date}</Badge></div><Separator />{/each}
+			<Card.Root><Card.Content class="flex min-w-0 flex-col gap-2 p-4">
+				{#each filtered as r (r.id)}<div class="flex min-w-0 flex-wrap items-center gap-3"><span class="h-8 w-1 shrink-0 rounded bg-primary"></span><Avatar.Root class="shrink-0"><Avatar.Fallback>{initials(r.user)}</Avatar.Fallback></Avatar.Root><span class="min-w-0 flex-1 truncate text-sm">{r.user} — {r.preview}</span><Badge variant="outline" class="shrink-0">{r.date}</Badge></div><Separator />{/each}
 			</Card.Content></Card.Root>
 		</Tabs.Content>
 	</Tabs.Root>

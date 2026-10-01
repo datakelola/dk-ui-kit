@@ -190,7 +190,7 @@
 <div class="flex flex-col gap-6">
 	<div class="flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
 		<div><h1 class="flex items-center gap-2 text-xl font-bold"><ShieldCheck size={20} class="text-primary" />{s.heading}</h1><p class="mt-1 text-sm text-muted-foreground">{s.sub}</p></div>
-		<div class="flex items-center gap-3">
+		<div class="flex flex-wrap items-center gap-3">
 			<label class="flex items-center gap-2 text-sm"><Switch bind:checked={autoRefresh} />{s.autoRefresh}</label>
 			<Button size="sm" onclick={refresh}><RefreshCw data-icon="inline-start" />{s.refreshBtn}</Button>
 		</div>
@@ -200,32 +200,32 @@
 		<Alert.Root variant="warning"><TriangleAlert /><Alert.Title>{inQueue} {s.alertQueue}</Alert.Title><Alert.Description>{s.alertUpd} {refreshedAt}. {s.alertAssign}</Alert.Description></Alert.Root>
 	{/if}
 
-	<div class="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
+	<div class="grid grid-cols-1 gap-4 lg:grid-cols-[1.6fr_1fr]">
 		<Card.Root>
-			<Card.Header class="flex-row items-center justify-between space-y-0">
-				<div><Card.Title>{s.openT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{s.openD}</p></div>
-				<Badge variant="secondary">{filtered.length} {s.sessionsUnit}</Badge>
+			<Card.Header class="flex-row flex-wrap items-center justify-between gap-2 space-y-0">
+				<div class="min-w-0"><Card.Title class="truncate">{s.openT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{s.openD}</p></div>
+				<Badge variant="secondary" class="shrink-0">{filtered.length} {s.sessionsUnit}</Badge>
 			</Card.Header>
 			<Card.Content>
-				<Field.FieldGroup class="mb-4 grid gap-3 md:grid-cols-[1fr_auto_auto]">
+				<Field.FieldGroup class="mb-4 grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto_auto]">
 					<Field.Field><Field.Label for="spv-q">{s.fSearch}</Field.Label><div class="relative"><Search size={15} class="absolute top-1/2 left-2.5 -translate-y-1/2 text-muted-foreground" /><Input id="spv-q" bind:value={search} placeholder={s.fSearchPh} class="pl-8" /></div></Field.Field>
 					<Field.Field><Field.Label>{s.fChannel}</Field.Label>
 						<Select.Root type="single" bind:value={channelFilter}><Select.Trigger><Select.Value placeholder={s.fAll} /></Select.Trigger><Select.Content><Select.Item value="all">{s.fAll}</Select.Item><Select.Item value="WhatsApp">WhatsApp</Select.Item><Select.Item value="Live Chat">Live Chat</Select.Item><Select.Item value="Voice">Voice</Select.Item><Select.Item value="Email">Email</Select.Item></Select.Content></Select.Root>
 					</Field.Field>
 					<Field.Field><Field.Label>{s.fStatus}</Field.Label>
-						<ToggleGroup.Root type="single" bind:value={statusFilter}><ToggleGroup.Item value="all">{s.stAll}</ToggleGroup.Item><ToggleGroup.Item value="open">{s.stOpen}</ToggleGroup.Item><ToggleGroup.Item value="queue">{s.stQueue}</ToggleGroup.Item><ToggleGroup.Item value="close">{s.stClose}</ToggleGroup.Item></ToggleGroup.Root>
+						<ToggleGroup.Root type="single" bind:value={statusFilter} class="max-w-full flex-wrap justify-start overflow-x-auto"><ToggleGroup.Item value="all">{s.stAll}</ToggleGroup.Item><ToggleGroup.Item value="open">{s.stOpen}</ToggleGroup.Item><ToggleGroup.Item value="queue">{s.stQueue}</ToggleGroup.Item><ToggleGroup.Item value="close">{s.stClose}</ToggleGroup.Item></ToggleGroup.Root>
 					</Field.Field>
 				</Field.FieldGroup>
 				{#if filtered.length > 0}
 					<div class="overflow-x-auto rounded-xl border">
-						<Table.Root>
+						<Table.Root class="min-w-[640px]">
 							<Table.Header><Table.Row><Table.Head>{s.hCust}</Table.Head><Table.Head>{s.hChannel}</Table.Head><Table.Head>{s.hAccount}</Table.Head><Table.Head>{s.hAgent}</Table.Head><Table.Head>{s.hStatus}</Table.Head><Table.Head>{s.hStart}</Table.Head><Table.Head class="text-right">{s.hAction}</Table.Head></Table.Row></Table.Header>
 							<Table.Body>
 								{#each pageRows as c}
 									<Table.Row>
-										<Table.Cell class="font-medium">{c.customer}</Table.Cell><Table.Cell>{c.channel}</Table.Cell><Table.Cell class="text-muted-foreground">{c.account}</Table.Cell>
-										<Table.Cell>{c.agent ?? '—'}</Table.Cell><Table.Cell><Badge variant={statusVariant(c.status)}>{statusText(c.status)}</Badge></Table.Cell><Table.Cell>{c.started}</Table.Cell>
-										<Table.Cell class="text-right"><div class="flex justify-end gap-1">{#if c.agent}<Button size="sm" variant="outline" onclick={() => toast.success(s.toastRelease)}>{s.release}</Button><Button size="sm" variant="destructive" onclick={() => openAssign(c.customer)}>{s.reassign}</Button>{:else}<Button size="sm" onclick={() => openAssign(c.customer)}><UserPlus data-icon="inline-start" />{s.assign}</Button>{/if}</div></Table.Cell>
+										<Table.Cell class="max-w-[120px] truncate font-medium">{c.customer}</Table.Cell><Table.Cell class="whitespace-nowrap">{c.channel}</Table.Cell><Table.Cell class="max-w-[120px] truncate text-muted-foreground">{c.account}</Table.Cell>
+										<Table.Cell class="max-w-[120px] truncate">{c.agent ?? '—'}</Table.Cell><Table.Cell><Badge variant={statusVariant(c.status)}>{statusText(c.status)}</Badge></Table.Cell><Table.Cell class="whitespace-nowrap">{c.started}</Table.Cell>
+										<Table.Cell class="text-right whitespace-nowrap"><div class="flex flex-wrap justify-end gap-1">{#if c.agent}<Button size="sm" variant="outline" onclick={() => toast.success(s.toastRelease)}>{s.release}</Button><Button size="sm" variant="destructive" onclick={() => openAssign(c.customer)}>{s.reassign}</Button>{:else}<Button size="sm" onclick={() => openAssign(c.customer)}><UserPlus data-icon="inline-start" />{s.assign}</Button>{/if}</div></Table.Cell>
 									</Table.Row>
 								{/each}
 							</Table.Body>
@@ -275,11 +275,11 @@
 	</div>
 
 	<Dialog.Root bind:open={assignOpen}>
-		<Dialog.Content>
-			<Dialog.Header><Dialog.Title>{s.dlgT}</Dialog.Title><Dialog.Description>{s.dlgD} {selectedChat || '—'}.</Dialog.Description></Dialog.Header>
+		<Dialog.Content class="max-w-[calc(100vw-2rem)]">
+			<Dialog.Header><Dialog.Title class="min-w-0 truncate">{s.dlgT}</Dialog.Title><Dialog.Description>{s.dlgD} {selectedChat || '—'}.</Dialog.Description></Dialog.Header>
 			<div class="overflow-x-auto rounded-xl border">
-				<Table.Root><Table.Header><Table.Row><Table.Head>{s.hUser}</Table.Head><Table.Head>{s.hName}</Table.Head><Table.Head class="text-right">{s.hAction}</Table.Head></Table.Row></Table.Header>
-				<Table.Body>{#each readyAgents as a}<Table.Row><Table.Cell class="font-mono text-xs">{a.username}</Table.Cell><Table.Cell>{a.name}</Table.Cell><Table.Cell class="text-right"><Button size="sm" onclick={() => { assignOpen = false; toast.success(s.toastAssign); }}>{s.dlgAssign}</Button></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
+				<Table.Root class="min-w-[420px]"><Table.Header><Table.Row><Table.Head>{s.hUser}</Table.Head><Table.Head>{s.hName}</Table.Head><Table.Head class="text-right">{s.hAction}</Table.Head></Table.Row></Table.Header>
+				<Table.Body>{#each readyAgents as a}<Table.Row><Table.Cell class="max-w-[140px] truncate font-mono text-xs">{a.username}</Table.Cell><Table.Cell class="max-w-[140px] truncate">{a.name}</Table.Cell><Table.Cell class="text-right"><Button size="sm" onclick={() => { assignOpen = false; toast.success(s.toastAssign); }}>{s.dlgAssign}</Button></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
 			</div>
 			<Dialog.Footer><Button size="sm" variant="outline" onclick={() => (assignOpen = false)}>{s.close}</Button></Dialog.Footer>
 		</Dialog.Content>

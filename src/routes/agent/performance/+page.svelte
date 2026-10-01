@@ -137,7 +137,7 @@
 	<Card.Root>
 		<Card.Header><Card.Title>{s.title}</Card.Title><Card.Description>{s.desc}</Card.Description></Card.Header>
 		<Card.Content class="flex flex-col gap-4">
-			<Field.FieldGroup class="grid gap-4 md:grid-cols-[1fr_200px_auto]">
+			<Field.FieldGroup class="grid grid-cols-1 gap-4 md:grid-cols-[1fr_200px_auto]">
 				<Field.Field><Field.Label for="q">{s.search}</Field.Label><div class="relative"><Search data-icon="input" /><Input id="q" bind:value={q} placeholder={s.searchPh} class="pl-9" /></div></Field.Field>
 				<Field.Field>
 					<Field.Label for="range">{s.range}</Field.Label>
@@ -145,7 +145,7 @@
 				</Field.Field>
 				<Field.Field><Field.Label>&nbsp;</Field.Label><Button onclick={reload} disabled={loading}><BtnIcon data-icon="inline-start" /><span>{loading ? s.loading : s.refresh}</span></Button></Field.Field>
 			</Field.FieldGroup>
-			<ToggleGroup.Root type="single" bind:value={view} aria-label={s.thStatus}><ToggleGroup.Item value="semua">{s.all}</ToggleGroup.Item><ToggleGroup.Item value="ready">{s.ready}</ToggleGroup.Item><ToggleGroup.Item value="offline">{s.offline}</ToggleGroup.Item></ToggleGroup.Root>
+			<ToggleGroup.Root type="single" bind:value={view} aria-label={s.thStatus} class="max-w-full flex-wrap"><ToggleGroup.Item value="semua">{s.all}</ToggleGroup.Item><ToggleGroup.Item value="ready">{s.ready}</ToggleGroup.Item><ToggleGroup.Item value="offline">{s.offline}</ToggleGroup.Item></ToggleGroup.Root>
 		</Card.Content>
 		<Card.Footer class="text-muted-foreground text-xs">{s.updated}</Card.Footer>
 	</Card.Root>
@@ -153,15 +153,15 @@
 	<Card.Root>
 		<Card.Header><Card.Title>{s.statusTitle}</Card.Title><Card.Description>{s.statusDesc}</Card.Description></Card.Header>
 		<Card.Content class="flex flex-col gap-4">
-			<Tabs.Root value="status"><Tabs.List><Tabs.Trigger value="status">{s.tabStatus}</Tabs.Trigger><Tabs.Trigger value="history">{s.tabHistory}</Tabs.Trigger></Tabs.List></Tabs.Root>
+			<Tabs.Root value="status"><Tabs.List class="h-auto max-w-full flex-wrap"><Tabs.Trigger value="status">{s.tabStatus}</Tabs.Trigger><Tabs.Trigger value="history">{s.tabHistory}</Tabs.Trigger></Tabs.List></Tabs.Root>
 			{#if loading}
 				<div class="flex flex-col gap-2">{#each [1, 2, 3] as _}<Skeleton class="h-12 w-full" />{/each}</div>
 			{:else if filtered.length === 0}
 				<Empty.Root><Empty.Header><Empty.Media><UserRound data-icon="empty" /></Empty.Media><Empty.Title>{s.emptyTitle}</Empty.Title><Empty.Description>{s.emptyDesc}</Empty.Description></Empty.Header></Empty.Root>
 			{:else}
-				<Table.Root><Table.Header><Table.Row><Table.Head>{s.thAgent}</Table.Head><Table.Head>{s.thStatus}</Table.Head><Table.Head>{s.thHandle}</Table.Head><Table.Head>{s.thClosed}</Table.Head><Table.Head class="text-right">{s.thActions}</Table.Head></Table.Row></Table.Header>
+				<Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thAgent}</Table.Head><Table.Head>{s.thStatus}</Table.Head><Table.Head>{s.thHandle}</Table.Head><Table.Head>{s.thClosed}</Table.Head><Table.Head class="text-right">{s.thActions}</Table.Head></Table.Row></Table.Header>
 				<Table.Body>{#each filtered as a}<Table.Row>
-					<Table.Cell><div class="flex items-center gap-2"><Avatar.Root class="size-8"><Avatar.Fallback>{a.name.slice(0, 1)}</Avatar.Fallback></Avatar.Root><div><div class="font-medium">{a.name}</div><div class="text-muted-foreground text-xs">{a.user}</div></div></div></Table.Cell>
+					<Table.Cell><div class="flex min-w-0 items-center gap-2"><Avatar.Root class="size-8 shrink-0"><Avatar.Fallback>{a.name.slice(0, 1)}</Avatar.Fallback></Avatar.Root><div class="min-w-0"><div class="truncate font-medium">{a.name}</div><div class="text-muted-foreground truncate text-xs">{a.user}</div></div></div></Table.Cell>
 					<Table.Cell><Badge variant={a.status === 'Ready' ? 'success' : 'secondary'} class={cn(a.status === 'Ready' && 'border-green-500/30')}>{statusLabel(a.status)}</Badge></Table.Cell>
 					<Table.Cell>{a.handle}</Table.Cell><Table.Cell>{a.closed}</Table.Cell>
 					<Table.Cell class="text-right"><Tooltip.Root><Tooltip.Trigger><Button variant="ghost" size="sm" onclick={() => { detail = a; open = true; }}><Eye data-icon="inline-start" />{s.view}</Button></Tooltip.Trigger><Tooltip.Content>{s.viewTip} {a.name}</Tooltip.Content></Tooltip.Root></Table.Cell>
@@ -174,13 +174,13 @@
 	<Card.Root>
 		<Card.Header><Card.Title>{s.histTitle}</Card.Title><Card.Description>{s.histDesc}</Card.Description></Card.Header>
 		<Card.Content class="flex flex-col gap-4">
-			<div class="flex flex-col gap-2">{#each filtered as a}<div class="flex items-center gap-3"><Badge variant="outline" class="min-w-24 justify-center">{a.name.split(' ')[0]}</Badge><Progress value={Math.round((a.total / 128) * 100)} class="flex-1" /><span class="text-xs font-medium">{a.total} {s.handled}</span></div>{/each}</div>
+			<div class="flex flex-col gap-2">{#each filtered as a}<div class="flex min-w-0 items-center gap-3"><Badge variant="outline" class="min-w-24 shrink-0 justify-center">{a.name.split(' ')[0]}</Badge><Progress value={Math.round((a.total / 128) * 100)} class="min-w-0 flex-1" /><span class="shrink-0 text-xs font-medium whitespace-nowrap">{a.total} {s.handled}</span></div>{/each}</div>
 
-			<Table.Root><Table.Header><Table.Row><Table.Head>{s.thAgent}</Table.Head><Table.Head>{s.thTotal}</Table.Head><Table.Head>{s.thAvg}</Table.Head><Table.Head>{s.thRate}</Table.Head><Table.Head>{s.thRating}</Table.Head></Table.Row></Table.Header>
+			<Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thAgent}</Table.Head><Table.Head>{s.thTotal}</Table.Head><Table.Head>{s.thAvg}</Table.Head><Table.Head>{s.thRate}</Table.Head><Table.Head>{s.thRating}</Table.Head></Table.Row></Table.Header>
 			<Table.Body>{#each filtered as a}<Table.Row><Table.Cell class="font-medium">{a.name}</Table.Cell><Table.Cell>{a.total}</Table.Cell><Table.Cell>{a.avg}</Table.Cell><Table.Cell><div class="flex items-center gap-2"><Progress value={a.rate} class="w-20" /><span class="text-xs">{a.rate}%</span></div></Table.Cell><Table.Cell><span class="flex items-center gap-1 font-medium"><Star data-icon="inline" />{a.rating}</span></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
 		</Card.Content>
 		<Card.Footer><Alert.Root variant="success"><Info data-icon="alert" /><Alert.Description>{s.alert}</Alert.Description></Alert.Root></Card.Footer>
 	</Card.Root>
 </div>
 
-<Dialog.Root bind:open><Dialog.Content class="sm:max-w-md"><Dialog.Header><Dialog.Title>{s.detail} — {detail.name}</Dialog.Title><Dialog.Description>{detail.user} · {statusLabel(detail.status)} · {detail.total} {s.handled}</Dialog.Description></Dialog.Header><Dialog.Footer><Button variant="outline" onclick={() => (open = false)}>{s.close}</Button></Dialog.Footer></Dialog.Content></Dialog.Root>
+<Dialog.Root bind:open><Dialog.Content class="max-w-[calc(100vw-2rem)] sm:max-w-md"><Dialog.Header><Dialog.Title>{s.detail} — {detail.name}</Dialog.Title><Dialog.Description>{detail.user} · {statusLabel(detail.status)} · {detail.total} {s.handled}</Dialog.Description></Dialog.Header><Dialog.Footer><Button variant="outline" onclick={() => (open = false)}>{s.close}</Button></Dialog.Footer></Dialog.Content></Dialog.Root>

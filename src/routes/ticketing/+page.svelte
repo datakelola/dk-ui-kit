@@ -154,18 +154,18 @@
 
 <div class="flex flex-col gap-3">
 	<Tabs.Root value="open">
-		<Tabs.List>
+		<Tabs.List class="max-w-full overflow-x-auto [&>*]:whitespace-nowrap">
 			<Tabs.Trigger value="open">{s.tabOpen}</Tabs.Trigger>
 			<Tabs.Trigger value="pending">{s.tabPending}</Tabs.Trigger>
 			<Tabs.Trigger value="resolved">{s.tabResolved}</Tabs.Trigger>
 		</Tabs.List>
 	</Tabs.Root>
 
-	<Resizable.PaneGroup direction="horizontal" class="min-h-[70vh] gap-3">
-		<Resizable.Pane defaultSize={32}>
-			<Card.Root class="flex h-full flex-col">
-				<Card.Header class="flex flex-row items-center gap-2">
-					<InputGroup.Root><InputGroup.Addon><Search class="size-4" /></InputGroup.Addon><InputGroup.Input placeholder={s.searchPh} /></InputGroup.Root>
+	<Resizable.PaneGroup direction="horizontal" class="min-h-[70vh] gap-3 max-lg:h-auto max-lg:flex-col">
+		<Resizable.Pane defaultSize={32} class="max-lg:min-h-[340px] max-lg:w-full">
+			<Card.Root class="flex h-full min-h-0 flex-col">
+				<Card.Header class="flex flex-row flex-wrap items-center gap-2">
+					<InputGroup.Root class="min-w-0 flex-1"><InputGroup.Addon><Search class="size-4" /></InputGroup.Addon><InputGroup.Input placeholder={s.searchPh} class="min-w-0" /></InputGroup.Root>
 					<DropdownMenu.Root>
 						<DropdownMenu.Trigger>
 							{#snippet child({ props })}<Button size="icon" variant="outline" {...props}><MoreVertical class="size-4" /></Button>{/snippet}
@@ -179,22 +179,22 @@
 				<ScrollArea.Root class="h-[55vh]">
 					<div class="flex flex-col gap-2 p-3">
 						{#each tickets as t (t.id)}
-							<button onclick={() => { sel = t; loading = true; setTimeout(() => (loading = false), 600); }} class={cn('flex items-center gap-3 rounded-lg p-3 text-left hover:bg-muted/50', sel.id === t.id && 'bg-muted')}>
-								<Avatar.Root><Avatar.Fallback>{initials(t.customer)}</Avatar.Fallback></Avatar.Root>
-								<span class="min-w-0 flex-1"><span class="flex items-center gap-2"><Ticket class="size-3" /><strong class="truncate text-sm">{t.id}</strong><Badge variant="outline" class="text-[10px]">{t.channel}</Badge></span>
+							<button onclick={() => { sel = t; loading = true; setTimeout(() => (loading = false), 600); }} class={cn('flex min-w-0 items-center gap-3 rounded-lg p-3 text-left hover:bg-muted/50', sel.id === t.id && 'bg-muted')}>
+								<Avatar.Root class="shrink-0"><Avatar.Fallback>{initials(t.customer)}</Avatar.Fallback></Avatar.Root>
+								<span class="min-w-0 flex-1"><span class="flex flex-wrap items-center gap-2"><Ticket class="size-3 shrink-0" /><strong class="min-w-0 flex-1 truncate text-sm">{t.id}</strong><Badge variant="outline" class="shrink-0 text-[10px]">{t.channel}</Badge></span>
 								<span class="block truncate text-xs text-muted-foreground">{t.subject}</span></span>
-								<Badge variant={t.status === 'open' ? 'default' : t.status === 'pending' ? 'secondary' : 'outline'}>{statusLabel(t.status)}</Badge>
+								<Badge variant={t.status === 'open' ? 'default' : t.status === 'pending' ? 'secondary' : 'outline'} class="shrink-0">{statusLabel(t.status)}</Badge>
 							</button>
 						{/each}
 					</div>
 				</ScrollArea.Root>
 			</Card.Root>
 		</Resizable.Pane>
-		<Resizable.Handle />
-		<Resizable.Pane defaultSize={68}>
-			<Card.Root class="flex h-full flex-col">
-				<Card.Header class="flex flex-row items-center gap-3">
-					<div class="flex flex-1 flex-col gap-0.5"><strong class="text-sm">{sel.id} — {sel.subject}</strong><span class="text-xs text-muted-foreground">{sel.customer} • {sel.channel}</span></div>
+		<Resizable.Handle class="max-lg:hidden" />
+		<Resizable.Pane defaultSize={68} class="max-lg:min-h-[480px] max-lg:w-full">
+			<Card.Root class="flex h-full min-h-0 flex-col">
+				<Card.Header class="flex flex-row flex-wrap items-center gap-3">
+					<div class="flex min-w-0 flex-1 flex-col gap-0.5"><strong class="truncate text-sm">{sel.id} — {sel.subject}</strong><span class="truncate text-xs text-muted-foreground">{sel.customer} • {sel.channel}</span></div>
 					<Tooltip.Provider><Tooltip.Root><Tooltip.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props}>{s.assign}</Button>{/snippet}</Tooltip.Trigger><Tooltip.Content>{s.assignTip}</Tooltip.Content></Tooltip.Root></Tooltip.Provider>
 					<Sheet.Root>
 						<Sheet.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props}>{s.timeline}</Button>{/snippet}</Sheet.Trigger>
@@ -202,7 +202,7 @@
 					</Sheet.Root>
 					<Dialog.Root>
 						<Dialog.Trigger>{#snippet child({ props })}<Button size="sm" {...props}>{s.closeTicket}</Button>{/snippet}</Dialog.Trigger>
-						<Dialog.Content><Dialog.Header><Dialog.Title>{s.closeTitle} {sel.id}?</Dialog.Title></Dialog.Header><Dialog.Footer><Button onclick={() => toast.success(s.toastClosed)}>{s.closeBtn}</Button></Dialog.Footer></Dialog.Content>
+						<Dialog.Content class="max-w-[calc(100vw-2rem)]"><Dialog.Header><Dialog.Title class="truncate">{s.closeTitle} {sel.id}?</Dialog.Title></Dialog.Header><Dialog.Footer class="flex-wrap"><Button onclick={() => toast.success(s.toastClosed)}>{s.closeBtn}</Button></Dialog.Footer></Dialog.Content>
 					</Dialog.Root>
 				</Card.Header>
 				<Separator />
@@ -216,8 +216,8 @@
 						<div class="mt-3 flex flex-col gap-2"><EmailItem from={sel.customer} subject={sel.subject} preview="Lampiran dokumen pengajuan…" time={sel.time} /></div>
 					{/if}
 				</ScrollArea.Root>
-				<Card.Footer>
-					<InputGroup.Root><InputGroup.Input bind:value={reply} placeholder={s.replyPh} /><InputGroup.Button onclick={() => { toast.success(s.toastReplied); reply = ''; }}>{s.send}</InputGroup.Button></InputGroup.Root>
+				<Card.Footer class="max-w-full">
+					<InputGroup.Root class="max-w-full"><InputGroup.Input bind:value={reply} placeholder={s.replyPh} class="min-w-0" /><InputGroup.Button onclick={() => { toast.success(s.toastReplied); reply = ''; }}>{s.send}</InputGroup.Button></InputGroup.Root>
 				</Card.Footer>
 			</Card.Root>
 		</Resizable.Pane>

@@ -292,19 +292,19 @@
       <Card.Title class="flex items-center gap-2"><Inbox data-icon="inline-start" /> {s.inbox} <Badge variant="secondary">{filtered.length}</Badge></Card.Title>
       <Card.Description>{s.desc}</Card.Description>
     </div>
-    <div class="flex shrink-0 gap-2">
+    <div class="flex flex-wrap shrink-0 gap-2">
       <Button size="sm" href="/email/compose">{s.compose}</Button>
       <Button size="sm" variant="outline" onclick={()=>composeOpen=true}>{s.quickCompose}</Button>
     </div>
   </Card.Header>
   <Card.Content class="flex flex-col gap-4">
     <Tabs.Root bind:value={folder}>
-      <Tabs.List class="w-full justify-start overflow-x-auto">
+      <Tabs.List class="w-full max-w-full justify-start overflow-x-auto [&>*]:shrink-0">
         {#each folders as f}<Tabs.Trigger value={f} onclick={()=>{page=1;}}>{folderLabel(f)}</Tabs.Trigger>{/each}
       </Tabs.List>
     </Tabs.Root>
 
-    <Field.FieldGroup class="grid gap-3 md:grid-cols-[1fr_auto_auto]">
+    <Field.FieldGroup class="grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto_auto]">
       <Field.Field>
         <Field.Label for="email-q">{s.searchLabel}</Field.Label>
         <InputGroup.Root>
@@ -318,7 +318,7 @@
       </Field.Field>
       <Field.Field>
         <Field.Label>{s.actionLabel}</Field.Label>
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2">
           <Button size="sm" variant="ghost" href="/email/send">{s.sent}</Button>
           <Button size="sm" variant="ghost" href="/email/history">{s.history}</Button>
           <Button size="sm" variant="ghost" href="/email/templates">{s.templates}</Button>
@@ -390,9 +390,9 @@
 
     <Pagination.Root count={filtered.length} perPage={perPage} bind:page>
       {#snippet children({ pages, range })}
-        <div class="flex items-center justify-between gap-2">
+        <div class="flex flex-wrap items-center justify-between gap-2">
           <p class="text-xs text-muted-foreground">{range.start}-{range.end} {s.of} {filtered.length}</p>
-          <div class="flex items-center gap-1">
+          <div class="flex flex-wrap items-center gap-1">
             <Pagination.PrevButton><ChevronLeft data-icon="true" /></Pagination.PrevButton>
             {#each pages as p (p.key)}
               {#if p.type==='page'}<Pagination.Link page={p.value}>{p.value}</Pagination.Link>
@@ -407,19 +407,19 @@
 </Card.Root>
 
 <Dialog.Root open={selected!=null} onOpenChange={(o)=>{if(!o)selected=null;}}>
-  <Dialog.Content>
+  <Dialog.Content class="max-w-[calc(100vw-2rem)]">
     <Dialog.Header>
       <Dialog.Title>{detail?.subject ?? s.detailFb}</Dialog.Title>
       <Dialog.Description>{detail?.from ?? s.previewFb}</Dialog.Description>
     </Dialog.Header>
-    <p class="text-sm">{detail?.from}</p>
+    <p class="min-w-0 truncate text-sm">{detail?.from}</p>
     <Textarea readonly value={detail?.snippet ?? ''} rows={4}/>
     <Dialog.Footer><Button size="sm" onclick={()=>{selected=null;toast.success(s.repliedToast);}}>{s.reply}</Button></Dialog.Footer>
   </Dialog.Content>
 </Dialog.Root>
 
 <AlertDialog.Root bind:open={archiveOpen}>
-  <AlertDialog.Content>
+  <AlertDialog.Content class="max-w-[calc(100vw-2rem)]">
     <AlertDialog.Header>
       <AlertDialog.Title>{s.archiveTitle}</AlertDialog.Title>
       <AlertDialog.Description>{s.archiveDesc}</AlertDialog.Description>

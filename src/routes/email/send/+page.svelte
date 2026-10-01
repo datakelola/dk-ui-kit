@@ -156,11 +156,11 @@
 <Card.Root>
   <Card.Header class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
     <div><Card.Title class="flex items-center gap-2"><Send size={18}/> {s.title} <Badge>{f.length}</Badge></Card.Title><Card.Description>{s.desc}</Card.Description></div>
-    <div class="flex gap-2"><Button size="sm" href="/email/compose">{s.compose}</Button><Button size="sm" variant="outline" href="/email">{s.inbox}</Button></div>
+    <div class="flex flex-wrap gap-2"><Button size="sm" href="/email/compose">{s.compose}</Button><Button size="sm" variant="outline" href="/email">{s.inbox}</Button></div>
   </Card.Header>
   <Card.Content class="flex flex-col gap-4">
-    <Tabs.Root value="all"><Tabs.List><Tabs.Trigger value="all">{s.tabAll}</Tabs.Trigger><Tabs.Trigger value="week">{s.tabWeek}</Tabs.Trigger></Tabs.List></Tabs.Root>
-    <Field.FieldGroup class="grid gap-3 md:grid-cols-[1fr_auto]">
+    <Tabs.Root value="all"><Tabs.List class="w-full max-w-full justify-start overflow-x-auto [&>*]:shrink-0"><Tabs.Trigger value="all">{s.tabAll}</Tabs.Trigger><Tabs.Trigger value="week">{s.tabWeek}</Tabs.Trigger></Tabs.List></Tabs.Root>
+    <Field.FieldGroup class="grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto]">
       <Field.Field><Field.Label>{s.searchLabel}</Field.Label><InputGroup.Root><InputGroup.Addon><Search size={14}/></InputGroup.Addon><InputGroup.Input bind:value={q} placeholder={s.searchPh}/></InputGroup.Root></Field.Field>
       <Field.Field><Field.Label>{s.autoArchive}</Field.Label><div class="pt-2"><Switch bind:checked={words}/></div></Field.Field>
     </Field.FieldGroup>
@@ -169,14 +169,14 @@
       {:else}<Empty.Root class="py-8"><Empty.Header><Empty.Title>{s.emptyTitle}</Empty.Title><Empty.Description>{s.emptyDesc}</Empty.Description></Empty.Header></Empty.Root>{/each}
     </div>
     <Card.Root><Card.Content class="p-0">
-      <Table.Root><Table.Header><Table.Row><Table.Head>{s.thFrom}</Table.Head><Table.Head>{s.thTo}</Table.Head><Table.Head>{s.thSubject}</Table.Head><Table.Head>{s.thDate}</Table.Head><Table.Head class="text-right">{s.thAction}</Table.Head></Table.Row></Table.Header>
-      <Table.Body>{#each paged as r}<Table.Row><Table.Cell>{r.from}</Table.Cell><Table.Cell>{r.to}</Table.Cell><Table.Cell class="font-medium">{r.subject}</Table.Cell><Table.Cell>{r.date}</Table.Cell><Table.Cell class="text-right"><Tooltip.Root><Tooltip.Trigger><Button size="sm" variant="outline" onclick={()=>{cur=r;open=true;}}>{s.view}</Button></Tooltip.Trigger><Tooltip.Content><p>{s.viewTip}</p></Tooltip.Content></Tooltip.Root> <Button size="sm" variant="ghost" onclick={()=>{cur=r;del=true;}}>{s.delete}</Button></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
+      <div class="overflow-x-auto"><Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thFrom}</Table.Head><Table.Head>{s.thTo}</Table.Head><Table.Head>{s.thSubject}</Table.Head><Table.Head>{s.thDate}</Table.Head><Table.Head class="text-right">{s.thAction}</Table.Head></Table.Row></Table.Header>
+      <Table.Body>{#each paged as r}<Table.Row><Table.Cell class="max-w-40 truncate">{r.from}</Table.Cell><Table.Cell class="max-w-40 truncate">{r.to}</Table.Cell><Table.Cell class="font-medium"><span class="block max-w-48 truncate">{r.subject}</span></Table.Cell><Table.Cell class="whitespace-nowrap">{r.date}</Table.Cell><Table.Cell class="text-right whitespace-nowrap"><Tooltip.Root><Tooltip.Trigger><Button size="sm" variant="outline" onclick={()=>{cur=r;open=true;}}>{s.view}</Button></Tooltip.Trigger><Tooltip.Content><p>{s.viewTip}</p></Tooltip.Content></Tooltip.Root> <Button size="sm" variant="ghost" onclick={()=>{cur=r;del=true;}}>{s.delete}</Button></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root></div>
     </Card.Content></Card.Root>
     <Pagination.Root count={f.length} perPage={perPage} bind:page>
-      {#snippet children({ pages, range })}<div class="flex items-center justify-between"><p class="text-xs text-muted-foreground">{range.start}-{range.end} {s.of} {f.length}</p><div class="flex gap-1"><Pagination.PrevButton size="icon"><ChevronLeft size={14}/></Pagination.PrevButton>{#each pages as p (p.key)}{#if p.type==='page'}<Pagination.Link page={p.value}>{p.value}</Pagination.Link>{/if}{/each}<Pagination.NextButton size="icon"><ChevronRight size={14}/></Pagination.NextButton></div></div>{/snippet}
+      {#snippet children({ pages, range })}<div class="flex flex-wrap items-center justify-between gap-2"><p class="text-xs text-muted-foreground">{range.start}-{range.end} {s.of} {f.length}</p><div class="flex flex-wrap gap-1"><Pagination.PrevButton size="icon"><ChevronLeft size={14}/></Pagination.PrevButton>{#each pages as p (p.key)}{#if p.type==='page'}<Pagination.Link page={p.value}>{p.value}</Pagination.Link>{/if}{/each}<Pagination.NextButton size="icon"><ChevronRight size={14}/></Pagination.NextButton></div></div>{/snippet}
     </Pagination.Root>
-    <Attachment.Group class="grid gap-2 sm:grid-cols-2"><Attachment.Root><Attachment.Title>invoice.pdf</Attachment.Title><Attachment.Description>300 KB</Attachment.Description></Attachment.Root></Attachment.Group>
+    <Attachment.Group class="grid grid-cols-1 gap-2 sm:grid-cols-2"><Attachment.Root><Attachment.Title class="min-w-0 truncate">invoice.pdf</Attachment.Title><Attachment.Description>300 KB</Attachment.Description></Attachment.Root></Attachment.Group>
   </Card.Content>
 </Card.Root>
-<Dialog.Root bind:open><Dialog.Content><Dialog.Header><Dialog.Title>{cur?.subject}</Dialog.Title></Dialog.Header><p class="text-sm">{s.toLabel}: {cur?.to}</p><Textarea readonly value={cur?.body??''} rows={4}/></Dialog.Content></Dialog.Root>
-<AlertDialog.Root bind:open={del}><AlertDialog.Content><AlertDialog.Header><AlertDialog.Title>{s.delTitle}</AlertDialog.Title></AlertDialog.Header><AlertDialog.Footer><AlertDialog.Cancel>{s.cancel}</AlertDialog.Cancel><AlertDialog.Action onclick={()=>toast.success(s.deletedToast)}>{s.delBtn}</AlertDialog.Action></AlertDialog.Footer></AlertDialog.Content></AlertDialog.Root>
+<Dialog.Root bind:open><Dialog.Content class="max-w-[calc(100vw-2rem)]"><Dialog.Header><Dialog.Title class="min-w-0 truncate">{cur?.subject}</Dialog.Title></Dialog.Header><p class="min-w-0 truncate text-sm">{s.toLabel}: {cur?.to}</p><Textarea readonly value={cur?.body??''} rows={4}/></Dialog.Content></Dialog.Root>
+<AlertDialog.Root bind:open={del}><AlertDialog.Content class="max-w-[calc(100vw-2rem)]"><AlertDialog.Header><AlertDialog.Title>{s.delTitle}</AlertDialog.Title></AlertDialog.Header><AlertDialog.Footer><AlertDialog.Cancel>{s.cancel}</AlertDialog.Cancel><AlertDialog.Action onclick={()=>toast.success(s.deletedToast)}>{s.delBtn}</AlertDialog.Action></AlertDialog.Footer></AlertDialog.Content></AlertDialog.Root>

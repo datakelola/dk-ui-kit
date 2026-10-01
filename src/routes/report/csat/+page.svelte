@@ -185,14 +185,14 @@
 
 	<div class="grid grid-cols-1 gap-4 md:grid-cols-4">
 		{#each statCards as sc}
-			<Card.Root><Card.Content class="flex items-center gap-3 p-4"><div class="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary"><sc.icon size={19} /></div><div><p class="text-xl font-bold">{sc.value}</p><p class="text-xs text-muted-foreground">{sc.label}</p>{#if sc.id === 'rate'}<Progress value={rate} class="mt-2 w-28" />{/if}</div></Card.Content></Card.Root>
+			<Card.Root><Card.Content class="flex items-center gap-3 p-4"><div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"><sc.icon size={19} /></div><div class="min-w-0"><p class="text-xl font-bold">{sc.value}</p><p class="truncate text-xs text-muted-foreground">{sc.label}</p>{#if sc.id === 'rate'}<Progress value={rate} class="mt-2 w-full max-w-28" />{/if}</div></Card.Content></Card.Root>
 		{/each}
 	</div>
 
 	<Card.Root>
 		<Card.Header><Card.Title>{s.filterT}</Card.Title><p class="text-sm text-muted-foreground">{s.filterD}</p></Card.Header>
 		<Card.Content>
-			<Field.FieldGroup class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+			<Field.FieldGroup class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
 				<Field.Field>
 					<Field.Label>{s.fPeriod}</Field.Label>
 					<DateRangePicker bind:value={period} label={s.fPeriodPh} />
@@ -248,18 +248,18 @@
 	</div>
 
 	<Card.Root>
-		<Card.Header class="flex-row items-center justify-between space-y-0">
-			<div><Card.Title>{s.detailT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{s.detailPre} {total} {s.detailMid} {pageRows.length} {s.detailEnd}</p></div>
-			<Badge variant="secondary">{filtered.length} {s.dataUnit}</Badge>
+		<Card.Header class="flex-row flex-wrap items-center justify-between gap-2 space-y-0">
+			<div class="min-w-0"><Card.Title class="truncate">{s.detailT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{s.detailPre} {total} {s.detailMid} {pageRows.length} {s.detailEnd}</p></div>
+			<Badge variant="secondary" class="shrink-0">{filtered.length} {s.dataUnit}</Badge>
 		</Card.Header>
 		<Card.Content>
 			{#if filtered.length > 0}
 				<div class="overflow-x-auto rounded-xl border">
-					<Table.Root>
+					<Table.Root class="min-w-[640px]">
 						<Table.Header><Table.Row><Table.Head>{s.hNo}</Table.Head><Table.Head>{s.hReporter}</Table.Head><Table.Head>{s.hChannel}</Table.Head><Table.Head>{s.hTicket}</Table.Head><Table.Head>{s.hDate}</Table.Head><Table.Head>{s.hTime}</Table.Head><Table.Head>{s.hScore}</Table.Head><Table.Head>{s.hDesc}</Table.Head><Table.Head>{s.hAgent}</Table.Head></Table.Row></Table.Header>
 						<Table.Body>
 							{#each pageRows as r, i}
-								<Table.Row><Table.Cell>{(safePage - 1) * perPage + i + 1}</Table.Cell><Table.Cell class="font-medium">{r.customer}</Table.Cell><Table.Cell>{r.kanal}</Table.Cell><Table.Cell class="font-mono text-xs">{r.ticket}</Table.Cell><Table.Cell>{r.created}</Table.Cell><Table.Cell>{r.time}</Table.Cell><Table.Cell><Badge variant={scoreVariant(r.score)}>{r.score ?? s.noScore}</Badge></Table.Cell><Table.Cell>{r.score ? scoreLabel[r.score] : s.noScore}</Table.Cell><Table.Cell>{r.agent}</Table.Cell></Table.Row>
+								<Table.Row><Table.Cell class="whitespace-nowrap">{(safePage - 1) * perPage + i + 1}</Table.Cell><Table.Cell class="max-w-[160px] truncate font-medium">{r.customer}</Table.Cell><Table.Cell class="whitespace-nowrap">{r.kanal}</Table.Cell><Table.Cell class="font-mono text-xs whitespace-nowrap">{r.ticket}</Table.Cell><Table.Cell class="whitespace-nowrap">{r.created}</Table.Cell><Table.Cell class="whitespace-nowrap">{r.time}</Table.Cell><Table.Cell><Badge variant={scoreVariant(r.score)}>{r.score ?? s.noScore}</Badge></Table.Cell><Table.Cell class="max-w-[160px] truncate">{r.score ? scoreLabel[r.score] : s.noScore}</Table.Cell><Table.Cell class="max-w-[140px] truncate">{r.agent}</Table.Cell></Table.Row>
 							{/each}
 						</Table.Body>
 					</Table.Root>

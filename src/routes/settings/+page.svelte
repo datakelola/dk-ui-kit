@@ -303,8 +303,8 @@
 		<Card.Header><Card.Title class="flex items-center gap-2"><Settings size={17} />{s.menuT}</Card.Title><p class="text-sm text-muted-foreground">{s.menuD}</p></Card.Header>
 		<Card.Content class="flex flex-col gap-1">
 			{#each menuItems as m}
-				<button type="button" onclick={() => (tab = m.id)} class="flex w-full items-start gap-3 rounded-xl p-3 text-left transition-colors {tab === m.id ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-accent hover:text-foreground'}">
-					<m.icon size={19} class="mt-0.5 shrink-0" /><span><span class="block text-sm font-medium">{m.label}</span><span class="block text-xs opacity-70">{m.desc}</span></span>
+				<button type="button" onclick={() => (tab = m.id)} class="flex w-full min-w-0 items-start gap-3 rounded-xl p-3 text-left transition-colors {tab === m.id ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-accent hover:text-foreground'}">
+					<m.icon size={19} class="mt-0.5 shrink-0" /><span class="min-w-0"><span class="block truncate text-sm font-medium">{m.label}</span><span class="block truncate text-xs opacity-70">{m.desc}</span></span>
 				</button>
 			{/each}
 			<Separator class="my-2" />
@@ -317,9 +317,9 @@
 
 			<Tabs.Content value="general" class="mt-0">
 				<Card.Root>
-					<Card.Header class="flex-row items-center justify-between space-y-0"><div><Card.Title>{s.gT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{s.gD}</p></div><Badge variant="secondary">{generalCards.length} {s.modulesUnit}</Badge></Card.Header>
+					<Card.Header class="flex-row flex-wrap items-center justify-between gap-2 space-y-0"><div class="min-w-0"><Card.Title class="truncate">{s.gT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{s.gD}</p></div><Badge variant="secondary" class="shrink-0">{generalCards.length} {s.modulesUnit}</Badge></Card.Header>
 					<Card.Content>
-						<Field.FieldGroup class="mb-4 grid gap-3 md:grid-cols-[1fr_auto]">
+						<Field.FieldGroup class="mb-4 grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto]">
 							<Field.Field><Field.Label for="set-q">{s.fMod}</Field.Label><div class="relative"><Search size={15} class="absolute top-1/2 left-2.5 -translate-y-1/2 text-muted-foreground" /><Input id="set-q" bind:value={search} placeholder={s.fModPh} class="pl-8" /></div></Field.Field>
 							<Field.Field><Field.Label>{s.viewMode}</Field.Label>
 								<Select.Root type="single" value="grid"><Select.Trigger><Select.Value placeholder={s.grid} /></Select.Trigger><Select.Content><Select.Item value="grid">{s.grid}</Select.Item><Select.Item value="list">{s.list}</Select.Item></Select.Content></Select.Root>
@@ -353,7 +353,7 @@
 					<Card.Root>
 						<Card.Header><Card.Title>{s.ctrlT}</Card.Title></Card.Header>
 						<Card.Content>
-							<Field.FieldGroup class="grid gap-4 md:grid-cols-2">
+							<Field.FieldGroup class="grid grid-cols-1 gap-4 md:grid-cols-2">
 								<Field.Field><div class="flex items-center justify-between rounded-xl border p-3"><div><Field.Label>{s.smtpL}</Field.Label><Field.Description>{s.smtpD}</Field.Description></div><Switch bind:checked={smtpOn} /></div></Field.Field>
 								<Field.Field><div class="flex items-center justify-between rounded-xl border p-3"><div><Field.Label>{s.autoL}</Field.Label><Field.Description>{s.autoD}</Field.Description></div><Switch bind:checked={autoreplyOn} /></div></Field.Field>
 								<Field.Field><Field.Label>{s.limitPre} {quota * 10}</Field.Label><Slider type="single" bind:value={quota} min={10} max={100} step={5} /><Field.Description>{s.limitD}</Field.Description></Field.Field>
@@ -367,8 +367,8 @@
 			<Tabs.Content value="blasting" class="mt-0">
 				<div class="flex flex-col gap-4">
 					<Card.Root>
-						<Card.Header class="flex-row items-center justify-between space-y-0"><div><Card.Title>{s.bT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{s.bD}</p></div>
-						<ToggleGroup.Root type="single" bind:value={blastView}><ToggleGroup.Item value="wa">{s.waTab}</ToggleGroup.Item><ToggleGroup.Item value="email">{s.emailTab}</ToggleGroup.Item><ToggleGroup.Item value="data">{s.dataTab}</ToggleGroup.Item></ToggleGroup.Root></Card.Header>
+						<Card.Header class="flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><div class="min-w-0"><Card.Title class="truncate">{s.bT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{s.bD}</p></div>
+						<ToggleGroup.Root type="single" bind:value={blastView} class="max-w-full flex-wrap justify-start overflow-x-auto"><ToggleGroup.Item value="wa">{s.waTab}</ToggleGroup.Item><ToggleGroup.Item value="email">{s.emailTab}</ToggleGroup.Item><ToggleGroup.Item value="data">{s.dataTab}</ToggleGroup.Item></ToggleGroup.Root></Card.Header>
 						<Card.Content>
 							{#if blastView === 'wa'}
 								<p class="mb-3 text-sm font-medium">{s.waT} <span class="font-normal text-muted-foreground">{s.waD}</span></p>
@@ -383,13 +383,13 @@
 						</Card.Content>
 					</Card.Root>
 
-					<div class="grid gap-4 lg:grid-cols-[1fr_320px]">
+					<div class="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_320px]">
 						<Card.Root>
-							<Card.Header class="flex-row items-center justify-between space-y-0"><div><Card.Title>{s.histT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{historyFiltered.length} {s.histPre}</p></div><Badge variant="secondary"><History size={12} />{s.audit}</Badge></Card.Header>
+							<Card.Header class="flex-row flex-wrap items-center justify-between gap-2 space-y-0"><div class="min-w-0"><Card.Title class="truncate">{s.histT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{historyFiltered.length} {s.histPre}</p></div><Badge variant="secondary" class="shrink-0"><History size={12} />{s.audit}</Badge></Card.Header>
 							<Card.Content>
 								<div class="overflow-x-auto rounded-xl border">
-									<Table.Root><Table.Header><Table.Row><Table.Head>{s.hID}</Table.Head><Table.Head>{s.hChannel}</Table.Head><Table.Head>{s.hTemplate}</Table.Head><Table.Head class="text-right">{s.hTarget}</Table.Head><Table.Head class="text-right">{s.hSent}</Table.Head><Table.Head>{s.hDate}</Table.Head><Table.Head>{s.hStatus}</Table.Head></Table.Row></Table.Header>
-									<Table.Body>{#each pageRows as h}<Table.Row><Table.Cell class="font-mono text-xs">{h.id}</Table.Cell><Table.Cell><Badge variant="outline">{h.channel}</Badge></Table.Cell><Table.Cell class="font-mono text-xs">{h.template}</Table.Cell><Table.Cell class="text-right">{h.target.toLocaleString('id-ID')}</Table.Cell><Table.Cell class="text-right">{h.sent.toLocaleString('id-ID')}</Table.Cell><Table.Cell>{h.date}</Table.Cell><Table.Cell><Badge variant={h.status === 'Selesai' ? 'success' : h.status === 'Berjalan' ? 'warning' : 'destructive'}>{h.status}</Badge></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
+									<Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.hID}</Table.Head><Table.Head>{s.hChannel}</Table.Head><Table.Head>{s.hTemplate}</Table.Head><Table.Head class="text-right">{s.hTarget}</Table.Head><Table.Head class="text-right">{s.hSent}</Table.Head><Table.Head>{s.hDate}</Table.Head><Table.Head>{s.hStatus}</Table.Head></Table.Row></Table.Header>
+									<Table.Body>{#each pageRows as h}<Table.Row><Table.Cell class="font-mono text-xs whitespace-nowrap">{h.id}</Table.Cell><Table.Cell><Badge variant="outline">{h.channel}</Badge></Table.Cell><Table.Cell class="max-w-[140px] truncate font-mono text-xs">{h.template}</Table.Cell><Table.Cell class="text-right whitespace-nowrap">{h.target.toLocaleString('id-ID')}</Table.Cell><Table.Cell class="text-right whitespace-nowrap">{h.sent.toLocaleString('id-ID')}</Table.Cell><Table.Cell class="whitespace-nowrap">{h.date}</Table.Cell><Table.Cell><Badge variant={h.status === 'Selesai' ? 'success' : h.status === 'Berjalan' ? 'warning' : 'destructive'}>{h.status}</Badge></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
 								</div>
 								<div class="mt-3 flex flex-col gap-2">{#each pageRows as h}<div><div class="flex justify-between text-xs"><span class="text-muted-foreground">{h.id}</span><span class="font-medium">{Math.round((h.sent / Math.max(1, h.target)) * 100)}%</span></div><Progress value={(h.sent / Math.max(1, h.target)) * 100} /></div>{/each}</div>
 								<div class="mt-4 flex justify-center">
@@ -431,7 +431,7 @@
 							<Empty.Root class="border border-dashed"><Empty.Header><Empty.Media><LayoutTemplate size={20} /></Empty.Media><Empty.Title>{s.emptyFieldT}</Empty.Title><Empty.Description>{s.emptyFieldD}</Empty.Description></Empty.Header></Empty.Root>
 						{/if}
 						<Alert.Root variant="warning" class="mt-4"><TriangleAlert /><Alert.Title>{s.apiT}</Alert.Title><Alert.Description>{s.apiD}</Alert.Description></Alert.Root>
-						<div class="mt-3 flex items-center gap-2 text-xs text-muted-foreground"><KeyRound size={14} /><span>{s.keyEx} WA-HSM-****-OKT · SMTP-RELAY-****</span></div>
+						<div class="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground"><KeyRound size={14} class="shrink-0" /><span class="min-w-0 break-words">{s.keyEx} WA-HSM-****-OKT · SMTP-RELAY-****</span></div>
 					</Card.Content>
 				</Card.Root>
 			</Tabs.Content>
@@ -439,9 +439,9 @@
 	</div>
 
 	<Dialog.Root bind:open={testOpen}>
-		<Dialog.Content>
-			<Dialog.Header><Dialog.Title>{s.dlgT}</Dialog.Title><Dialog.Description>{s.dlgD}</Dialog.Description></Dialog.Header>
-			<Field.FieldGroup class="grid gap-3">
+		<Dialog.Content class="max-w-[calc(100vw-2rem)]">
+			<Dialog.Header><Dialog.Title class="min-w-0 truncate">{s.dlgT}</Dialog.Title><Dialog.Description>{s.dlgD}</Dialog.Description></Dialog.Header>
+			<Field.FieldGroup class="grid grid-cols-1 gap-3">
 				<Field.Field><Field.Label for="smtp-to">{s.sendTo}</Field.Label><Input id="smtp-to" placeholder="ops@example.co.id" /></Field.Field>
 			</Field.FieldGroup>
 			<Dialog.Footer><Button size="sm" variant="outline" onclick={() => (testOpen = false)}>{s.cancel}</Button><Button size="sm" onclick={() => (testOpen = false)}><CircleCheck data-icon="inline-start" />{s.sendTest}</Button></Dialog.Footer>

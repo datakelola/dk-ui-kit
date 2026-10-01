@@ -183,19 +183,19 @@
 <Card.Root>
   <Card.Header class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
     <div><Card.Title>{s.title}</Card.Title><Card.Description>{s.desc}</Card.Description></div>
-    <div class="flex gap-2"><Button size="sm" variant="outline" href="/email">{s.inbox}</Button><Button size="sm" variant="secondary" href="/email/send">{s.sent}</Button></div>
+    <div class="flex flex-wrap gap-2"><Button size="sm" variant="outline" href="/email">{s.inbox}</Button><Button size="sm" variant="secondary" href="/email/send">{s.sent}</Button></div>
   </Card.Header>
   <Card.Content>
-    <Field.FieldGroup class="grid gap-4">
+    <Field.FieldGroup class="grid grid-cols-1 gap-4">
       <Field.Field>
         <Field.Label>{s.toLabel} *</Field.Label>
         <InputGroup.Root>
           <InputGroup.Input placeholder={s.toPh} bind:value={toInput} onkeydown={(e)=>{if(e.key==='Enter'){e.preventDefault();addTag();}}} />
           <InputGroup.Button onclick={addTag}>{s.add}</InputGroup.Button>
         </InputGroup.Root>
-        <div class="mt-2 flex flex-wrap gap-1">{#each toTags as t}<Badge variant="secondary">{t} <button onclick={()=>toTags=toTags.filter(x=>x!==t)} aria-label={s.removeLabel}>×</button></Badge>{/each}</div>
+        <div class="mt-2 flex flex-wrap gap-1">{#each toTags as t}<Badge variant="secondary" class="min-w-0 max-w-full"><span class="min-w-0 truncate">{t}</span> <button onclick={()=>toTags=toTags.filter(x=>x!==t)} aria-label={s.removeLabel}>×</button></Badge>{/each}</div>
       </Field.Field>
-      <div class="flex gap-2">
+      <div class="flex flex-wrap gap-2">
         <Tooltip.Root><Tooltip.Trigger><Button size="sm" variant={showCc?'default':'outline'} onclick={()=>showCc=!showCc}>CC</Button></Tooltip.Trigger><Tooltip.Content><p>{s.ccTip}</p></Tooltip.Content></Tooltip.Root>
         <Tooltip.Root><Tooltip.Trigger><Button size="sm" variant={showBcc?'default':'outline'} onclick={()=>showBcc=!showBcc}>BCC</Button></Tooltip.Trigger><Tooltip.Content><p>{s.bccTip}</p></Tooltip.Content></Tooltip.Root>
       </div>
@@ -218,7 +218,7 @@
         <Textarea bind:value={message} rows={6} placeholder={s.messagePh}/>
         <Field.Description>{s.messageDesc}</Field.Description>
       </Field.Field>
-      <Attachment.Group class="grid gap-2 sm:grid-cols-2">
+      <Attachment.Group class="grid grid-cols-1 gap-2 sm:grid-cols-2">
         {#each files as f}<Attachment.Root><Attachment.Title>{f.name}</Attachment.Title><Attachment.Description>{f.size}</Attachment.Description></Attachment.Root>{/each}
       </Attachment.Group>
       <Field.Set class="rounded-lg border p-3">
@@ -227,16 +227,16 @@
           <label class="flex items-center gap-2 text-sm"><Checkbox/> {s.signature}</label>
           <label class="flex items-center gap-2 text-sm"><Switch bind:checked={track}/> {s.trackOpen}</label>
         </div>
-        <RadioGroup.Root bind:value={schedule} class="mt-2 flex gap-4">
+        <RadioGroup.Root bind:value={schedule} class="mt-2 flex flex-wrap gap-4">
           <div class="flex items-center gap-2"><RadioGroup.Item value="now" id="s1"/><label for="s1" class="text-sm">{s.sendNow}</label></div>
           <div class="flex items-center gap-2"><RadioGroup.Item value="later" id="s2"/><label for="s2" class="text-sm">{s.schedule}</label></div>
         </RadioGroup.Root>
-        <RadioGroup.Root bind:value={priority} class="mt-2 flex gap-4">
+        <RadioGroup.Root bind:value={priority} class="mt-2 flex flex-wrap gap-4">
           <div class="flex items-center gap-2"><RadioGroup.Item value="normal" id="p1"/><label for="p1" class="text-sm">{s.normal}</label></div>
           <div class="flex items-center gap-2"><RadioGroup.Item value="urgent" id="p2"/><label for="p2" class="text-sm">{s.urgent}</label></div>
         </RadioGroup.Root>
       </Field.Set>
-      <div class="flex justify-end gap-2">
+      <div class="flex flex-wrap justify-end gap-2">
         <Button variant="outline" onclick={()=>quickOpen=true}>{s.quickPopup}</Button>
         <Button variant="ghost" href="/email">{s.cancel}</Button>
         <Button variant="secondary" onclick={()=>toast.success(s.draftToast)}>{s.saveDraft}</Button>

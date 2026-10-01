@@ -186,11 +186,11 @@
 <div class="flex flex-col gap-6">
 	<Card.Root>
 		<Card.Header class="flex-row flex-wrap items-center justify-between gap-3">
-			<div><Card.Title>{s.title}</Card.Title><Card.Description>{s.desc}</Card.Description></div>
-			<div class="flex flex-wrap gap-2"><Button onclick={() => (open = true)}><Plus data-icon="inline-start" />{s.add}</Button><Button variant="outline" onclick={() => (bulk = true)}><Upload data-icon="inline-start" />{s.import}</Button></div>
+			<div class="min-w-0 flex-1"><Card.Title>{s.title}</Card.Title><Card.Description>{s.desc}</Card.Description></div>
+			<div class="flex shrink-0 flex-wrap gap-2"><Button onclick={() => (open = true)}><Plus data-icon="inline-start" />{s.add}</Button><Button variant="outline" onclick={() => (bulk = true)}><Upload data-icon="inline-start" />{s.import}</Button></div>
 		</Card.Header>
 		<Card.Content class="flex flex-col gap-4">
-			<Field.FieldGroup class="grid gap-4 md:grid-cols-[140px_200px_1fr_auto]">
+			<Field.FieldGroup class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[140px_200px_1fr_auto]">
 				<Field.Field>
 					<Field.Label for="yr">{s.year}</Field.Label>
 					<Select.Root type="single" bind:value={year}><Select.Trigger id="yr" class="w-full">{year}</Select.Trigger><Select.Content><Select.Group><Select.GroupHeading>{s.year}</Select.GroupHeading><Select.Item value="2025">2025</Select.Item><Select.Item value="2026">2026</Select.Item><Select.Item value="2027">2027</Select.Item><Select.Item value="2028">2028</Select.Item></Select.Group></Select.Content></Select.Root>
@@ -202,14 +202,14 @@
 				<Field.Field><Field.Label for="qq">{s.search}</Field.Label><div class="relative"><Search data-icon="input" /><Input id="qq" bind:value={q} placeholder={s.searchPh} class="pl-9" /></div></Field.Field>
 				<Field.Field><Field.Label>&nbsp;</Field.Label><Button variant="secondary" onclick={load} disabled={loading}><BtnIcon data-icon="inline-start" /><span>{loading ? s.loading : s.load}</span></Button></Field.Field>
 			</Field.FieldGroup>
-			<ToggleGroup.Root type="single" bind:value={category} aria-label={s.category}><ToggleGroup.Item value="all">{s.togAll}</ToggleGroup.Item><ToggleGroup.Item value="nasional">{s.togNat}</ToggleGroup.Item><ToggleGroup.Item value="pemerintahan">{s.togGov}</ToggleGroup.Item><ToggleGroup.Item value="custom">{s.togCustom}</ToggleGroup.Item></ToggleGroup.Root>
-			<Tabs.Root bind:value={tab}><Tabs.List><Tabs.Trigger value="daftar">{s.tabList}</Tabs.Trigger><Tabs.Trigger value="periode">{s.tabPeriod}</Tabs.Trigger></Tabs.List></Tabs.Root>
+			<ToggleGroup.Root type="single" bind:value={category} aria-label={s.category} class="max-w-full flex-wrap"><ToggleGroup.Item value="all">{s.togAll}</ToggleGroup.Item><ToggleGroup.Item value="nasional">{s.togNat}</ToggleGroup.Item><ToggleGroup.Item value="pemerintahan">{s.togGov}</ToggleGroup.Item><ToggleGroup.Item value="custom">{s.togCustom}</ToggleGroup.Item></ToggleGroup.Root>
+			<Tabs.Root bind:value={tab}><Tabs.List class="h-auto max-w-full flex-wrap"><Tabs.Trigger value="daftar">{s.tabList}</Tabs.Trigger><Tabs.Trigger value="periode">{s.tabPeriod}</Tabs.Trigger></Tabs.List></Tabs.Root>
 			{#if tab === 'periode'}<DateRangePicker bind:value={period} label={s.pickPeriod} />{/if}
 		</Card.Content>
 		<Card.Footer class="text-muted-foreground text-xs">{filtered.length} {s.footCountPost} {year}.</Card.Footer>
 	</Card.Root>
 
-	<div class="grid gap-4 lg:grid-cols-[1fr_1.4fr]">
+	<div class="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_1.4fr]">
 		<Card.Root>
 			<Card.Header><Card.Title>{s.compTitle}</Card.Title><Card.Description>{s.compDescPre} {year}.</Card.Description></Card.Header>
 			<Card.Content class="flex flex-col gap-3">
@@ -225,8 +225,8 @@
 				{:else if filtered.length === 0}
 					<Empty.Root><Empty.Header><Empty.Media><Palmtree data-icon="empty" /></Empty.Media><Empty.Title>{s.emptyTitle}</Empty.Title><Empty.Description>{s.emptyDesc}</Empty.Description></Empty.Header></Empty.Root>
 				{:else}
-					<Table.Root><Table.Header><Table.Row><Table.Head>{s.thNo}</Table.Head><Table.Head>{s.thDate}</Table.Head><Table.Head>{s.thName}</Table.Head><Table.Head>{s.thCat}</Table.Head><Table.Head>{s.thStatus}</Table.Head><Table.Head class="text-right">{s.thAct}</Table.Head></Table.Row></Table.Header>
-					<Table.Body>{#each filtered as h, i}<Table.Row><Table.Cell class="text-muted-foreground">{i + 1}</Table.Cell><Table.Cell class="whitespace-nowrap font-medium">{h.date}</Table.Cell><Table.Cell><div class="flex items-center gap-2"><Avatar.Root class="size-6"><Avatar.Fallback>{h.name.slice(0, 1)}</Avatar.Fallback></Avatar.Root>{h.name}</div></Table.Cell><Table.Cell><Badge variant={h.categoryKey === 'custom' ? 'secondary' : 'outline'} class={cn(h.categoryKey === 'custom' && 'border-dashed')}>{catLabel(h.categoryKey)}</Badge></Table.Cell><Table.Cell><Badge variant={h.active ? 'success' : 'secondary'}>{h.active ? s.stActive : s.stInactive}</Badge></Table.Cell><Table.Cell class="text-right"><div class="flex justify-end gap-1"><Tooltip.Root><Tooltip.Trigger><Button variant="ghost" size="icon" aria-label="{s.edit} {h.name}"><Pencil data-icon="icon" /></Button></Tooltip.Trigger><Tooltip.Content>{s.edit}</Tooltip.Content></Tooltip.Root><Tooltip.Root><Tooltip.Trigger><Button variant="ghost" size="icon" aria-label="{s.del} {h.name}"><Trash2 data-icon="icon" /></Button></Tooltip.Trigger><Tooltip.Content>{s.del}</Tooltip.Content></Tooltip.Root></div></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
+					<Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thNo}</Table.Head><Table.Head>{s.thDate}</Table.Head><Table.Head>{s.thName}</Table.Head><Table.Head>{s.thCat}</Table.Head><Table.Head>{s.thStatus}</Table.Head><Table.Head class="text-right">{s.thAct}</Table.Head></Table.Row></Table.Header>
+					<Table.Body>{#each filtered as h, i}<Table.Row><Table.Cell class="text-muted-foreground">{i + 1}</Table.Cell><Table.Cell class="whitespace-nowrap font-medium">{h.date}</Table.Cell><Table.Cell><div class="flex min-w-0 items-center gap-2"><Avatar.Root class="size-6 shrink-0"><Avatar.Fallback>{h.name.slice(0, 1)}</Avatar.Fallback></Avatar.Root><span class="min-w-0 truncate">{h.name}</span></div></Table.Cell><Table.Cell><Badge variant={h.categoryKey === 'custom' ? 'secondary' : 'outline'} class={cn(h.categoryKey === 'custom' && 'border-dashed')}>{catLabel(h.categoryKey)}</Badge></Table.Cell><Table.Cell><Badge variant={h.active ? 'success' : 'secondary'}>{h.active ? s.stActive : s.stInactive}</Badge></Table.Cell><Table.Cell class="text-right"><div class="flex justify-end gap-1"><Tooltip.Root><Tooltip.Trigger><Button variant="ghost" size="icon" aria-label="{s.edit} {h.name}"><Pencil data-icon="icon" /></Button></Tooltip.Trigger><Tooltip.Content>{s.edit}</Tooltip.Content></Tooltip.Root><Tooltip.Root><Tooltip.Trigger><Button variant="ghost" size="icon" aria-label="{s.del} {h.name}"><Trash2 data-icon="icon" /></Button></Tooltip.Trigger><Tooltip.Content>{s.del}</Tooltip.Content></Tooltip.Root></div></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
 				{/if}
 			</Card.Content>
 			<Card.Footer><Separator class="my-1" /><p class="text-muted-foreground flex items-center gap-1 text-xs"><Info data-icon="inline" /> {s.tmplInfo}</p></Card.Footer>
@@ -235,5 +235,5 @@
 	<Alert.Root variant="success"><CalendarDays data-icon="alert" /><Alert.Description>{s.syncPre} {year} {s.syncPost}</Alert.Description></Alert.Root>
 </div>
 
-<Dialog.Root bind:open><Dialog.Content class="sm:max-w-md"><Dialog.Header><Dialog.Title>{s.dlgTitle}</Dialog.Title><Dialog.Description>{s.dlgDesc}</Dialog.Description></Dialog.Header><Field.FieldGroup class="flex flex-col gap-4 py-2"><Field.Field><Field.Label>{s.dateLabel}</Field.Label><DatePicker bind:value={holidayDate} label={s.pickHoliday} /></Field.Field><Field.Field><Field.Label for="hn">{s.nameLabel}</Field.Label><Input id="hn" placeholder={s.namePh} /></Field.Field></Field.FieldGroup><Dialog.Footer><Button variant="outline" onclick={() => (open = false)}>{s.cancel}</Button><Button onclick={save}>{s.save}</Button></Dialog.Footer></Dialog.Content></Dialog.Root>
-<Dialog.Root bind:open={bulk}><Dialog.Content class="sm:max-w-md"><Dialog.Header><Dialog.Title>{s.bulkTitle}</Dialog.Title><Dialog.Description>{s.bulkDesc}</Dialog.Description></Dialog.Header><Dialog.Footer><Button variant="outline" onclick={() => (bulk = false)}>{s.cancel}</Button><Button onclick={() => (bulk = false)}>{s.upload}</Button></Dialog.Footer></Dialog.Content></Dialog.Root>
+<Dialog.Root bind:open><Dialog.Content class="max-w-[calc(100vw-2rem)] sm:max-w-md"><Dialog.Header><Dialog.Title>{s.dlgTitle}</Dialog.Title><Dialog.Description>{s.dlgDesc}</Dialog.Description></Dialog.Header><Field.FieldGroup class="flex flex-col gap-4 py-2"><Field.Field><Field.Label>{s.dateLabel}</Field.Label><DatePicker bind:value={holidayDate} label={s.pickHoliday} /></Field.Field><Field.Field><Field.Label for="hn">{s.nameLabel}</Field.Label><Input id="hn" placeholder={s.namePh} /></Field.Field></Field.FieldGroup><Dialog.Footer><Button variant="outline" onclick={() => (open = false)}>{s.cancel}</Button><Button onclick={save}>{s.save}</Button></Dialog.Footer></Dialog.Content></Dialog.Root>
+<Dialog.Root bind:open={bulk}><Dialog.Content class="max-w-[calc(100vw-2rem)] sm:max-w-md"><Dialog.Header><Dialog.Title>{s.bulkTitle}</Dialog.Title><Dialog.Description>{s.bulkDesc}</Dialog.Description></Dialog.Header><Dialog.Footer><Button variant="outline" onclick={() => (bulk = false)}>{s.cancel}</Button><Button onclick={() => (bulk = false)}>{s.upload}</Button></Dialog.Footer></Dialog.Content></Dialog.Root>

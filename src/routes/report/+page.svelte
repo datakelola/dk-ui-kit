@@ -169,9 +169,9 @@
 		<Card.Content class="flex flex-col gap-1">
 			<p class="px-2 text-[0.65rem] font-bold tracking-widest text-muted-foreground uppercase">{s.categories}</p>
 			{#each cats as c}
-				<button type="button" onclick={() => (category = c.id)} class="flex w-full items-start gap-3 rounded-xl p-3 text-left transition-colors {category === c.id ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-accent hover:text-foreground'}">
+				<button type="button" onclick={() => (category = c.id)} class="flex w-full min-w-0 items-start gap-3 rounded-xl p-3 text-left transition-colors {category === c.id ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-accent hover:text-foreground'}">
 					<c.icon size={20} class="mt-0.5 shrink-0" />
-					<span><span class="block text-sm font-medium">{c.label}</span><span class="block text-xs opacity-70">{c.desc}</span></span>
+					<span class="min-w-0"><span class="block truncate text-sm font-medium">{c.label}</span><span class="block truncate text-xs opacity-70">{c.desc}</span></span>
 				</button>
 			{/each}
 			<Separator class="my-2" />
@@ -195,7 +195,7 @@
 		</Card.Header>
 		<Card.Content>
 			<Tabs.Root value={category} onValueChange={(v) => (category = v as Category)}>
-				<Tabs.List class="flex-wrap"><Tabs.Trigger value="all">{s.tabAll}</Tabs.Trigger><Tabs.Trigger value="calls">{s.tabCalls}</Tabs.Trigger><Tabs.Trigger value="tickets">{s.tabTickets}</Tabs.Trigger><Tabs.Trigger value="wallboards">{s.tabWall}</Tabs.Trigger><Tabs.Trigger value="omni">{s.tabOmni}</Tabs.Trigger></Tabs.List>
+				<Tabs.List class="w-full max-w-full justify-start overflow-x-auto [&>*]:shrink-0"><Tabs.Trigger value="all">{s.tabAll}</Tabs.Trigger><Tabs.Trigger value="calls">{s.tabCalls}</Tabs.Trigger><Tabs.Trigger value="tickets">{s.tabTickets}</Tabs.Trigger><Tabs.Trigger value="wallboards">{s.tabWall}</Tabs.Trigger><Tabs.Trigger value="omni">{s.tabOmni}</Tabs.Trigger></Tabs.List>
 			</Tabs.Root>
 			<div class="mt-4 flex flex-col gap-8">
 				{#each visibleGroups as group (group.id)}
@@ -234,7 +234,7 @@
 					</Empty.Root>
 				{/if}
 			</div>
-			<div class="mt-6 flex items-center gap-2 text-xs text-muted-foreground"><Star size={14} /><MessageSquareText size={14} /><Mail size={14} /><Users size={14} /><span>{s.scPre} <a class="underline" href="/report/csat">/report/csat</a>{s.scMid} <a class="underline" href="/report/csat-interaction">/report/csat-interaction</a>.</span></div>
+			<div class="mt-6 flex flex-wrap items-center gap-2 text-xs text-muted-foreground"><Star size={14} class="shrink-0" /><MessageSquareText size={14} class="shrink-0" /><Mail size={14} class="shrink-0" /><Users size={14} class="shrink-0" /><span class="min-w-0">{s.scPre} <a class="underline" href="/report/csat">/report/csat</a>{s.scMid} <a class="underline" href="/report/csat-interaction">/report/csat-interaction</a>.</span></div>
 		</Card.Content>
 	</Card.Root>
 </div>

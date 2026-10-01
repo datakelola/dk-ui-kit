@@ -146,15 +146,15 @@
 <svelte:head><title>{s.title}</title></svelte:head>
 
 <div class="flex flex-col gap-3">
-	<Card.Root>
-		<Card.Content class="flex items-center gap-3 overflow-x-auto p-4">
-			{#each stages as st, i}<div class="flex items-center gap-2"><span class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">{i + 1}</span><span class="whitespace-nowrap text-xs font-medium">{st}</span>{#if i < stages.length - 1}<span class="h-0.5 w-8 bg-border"></span>{/if}</div>{/each}
+	<Card.Root class="min-w-0">
+		<Card.Content class="flex max-w-full items-center gap-3 overflow-x-auto p-4">
+			{#each stages as st, i}<div class="flex shrink-0 items-center gap-2"><span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">{i + 1}</span><span class="whitespace-nowrap text-xs font-medium">{st}</span>{#if i < stages.length - 1}<span class="h-0.5 w-8 shrink-0 bg-border"></span>{/if}</div>{/each}
 		</Card.Content>
 	</Card.Root>
 
-	<div class="flex flex-wrap items-center gap-2">
-		<InputGroup.Root class="max-w-sm"><InputGroup.Addon><Search class="size-4" /></InputGroup.Addon><InputGroup.Input bind:value={q} placeholder={s.searchPh} /></InputGroup.Root>
-		<Tabs.Root value="all"><Tabs.List><Tabs.Trigger value="all">{s.tabAll}</Tabs.Trigger><Tabs.Trigger value="success">{s.tabSuccess}</Tabs.Trigger><Tabs.Trigger value="pending">{s.tabPending}</Tabs.Trigger></Tabs.List></Tabs.Root>
+	<div class="flex min-w-0 flex-wrap items-center gap-2">
+		<InputGroup.Root class="w-full min-w-0 max-w-full sm:max-w-sm"><InputGroup.Addon><Search class="size-4" /></InputGroup.Addon><InputGroup.Input bind:value={q} placeholder={s.searchPh} class="min-w-0" /></InputGroup.Root>
+		<Tabs.Root value="all" class="min-w-0"><Tabs.List class="max-w-full overflow-x-auto [&>*]:whitespace-nowrap"><Tabs.Trigger value="all">{s.tabAll}</Tabs.Trigger><Tabs.Trigger value="success">{s.tabSuccess}</Tabs.Trigger><Tabs.Trigger value="pending">{s.tabPending}</Tabs.Trigger></Tabs.List></Tabs.Root>
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props}><MoreVertical class="size-4" /> {s.action}</Button>{/snippet}</DropdownMenu.Trigger>
 			<DropdownMenu.Content><DropdownMenu.Group><DropdownMenu.GroupHeading>{s.resultH}</DropdownMenu.GroupHeading><DropdownMenu.Item>{s.export}</DropdownMenu.Item><DropdownMenu.Item>{s.sendEmail}</DropdownMenu.Item></DropdownMenu.Group></DropdownMenu.Content>
@@ -171,10 +171,10 @@
 				{:else}
 					<div class="flex flex-col gap-2 p-3">
 						{#each tickets as t (t.id)}
-							<button onclick={() => (sel = t)} class="flex items-center gap-3 rounded-lg border p-3 text-left hover:bg-muted/50">
-								<Avatar.Root><Avatar.Fallback>{initials(t.customer)}</Avatar.Fallback></Avatar.Root>
-								<span class="flex-1"><strong class="text-sm">{t.id} — {t.customer}</strong><span class="block text-xs text-muted-foreground">{t.result}</span></span>
-								<Badge variant={t.status === 'success' ? 'default' : 'secondary'}>{statusLabel(t.status)}</Badge>
+							<button onclick={() => (sel = t)} class="flex min-w-0 flex-wrap items-center gap-3 rounded-lg border p-3 text-left hover:bg-muted/50">
+								<Avatar.Root class="shrink-0"><Avatar.Fallback>{initials(t.customer)}</Avatar.Fallback></Avatar.Root>
+								<span class="min-w-0 flex-1 basis-40"><strong class="block truncate text-sm">{t.id} — {t.customer}</strong><span class="block truncate text-xs text-muted-foreground">{t.result}</span></span>
+								<Badge variant={t.status === 'success' ? 'default' : 'secondary'} class="shrink-0">{statusLabel(t.status)}</Badge>
 							</button>
 						{/each}
 					</div>
@@ -182,10 +182,10 @@
 			</ScrollArea.Root>
 		</Card.Root>
 		<Card.Root>
-			<Card.Header class="flex flex-row items-center gap-2"><strong class="flex-1 text-sm">{s.detail} {sel.id}</strong><Badge variant="outline">{statusLabel(sel.status)}</Badge>
+			<Card.Header class="flex flex-row flex-wrap items-center gap-2"><strong class="min-w-0 flex-1 truncate text-sm">{s.detail} {sel.id}</strong><Badge variant="outline" class="shrink-0">{statusLabel(sel.status)}</Badge>
 				<Dialog.Root>
 						<Dialog.Trigger>{#snippet child({ props })}<Button size="sm" {...props}>{s.previewEmail}</Button>{/snippet}</Dialog.Trigger>
-					<Dialog.Content><Dialog.Header><Dialog.Title>{s.previewTitle} {sel.id}</Dialog.Title></Dialog.Header><EmailItem from="noreply@ahu.go.id" subject={`${s.resultH} ${sel.id}`} preview={sel.result} time={sel.time} /><Dialog.Footer><Button onclick={() => toast.success(s.toastSent)}>{s.send}</Button></Dialog.Footer></Dialog.Content>
+					<Dialog.Content class="max-w-[calc(100vw-2rem)]"><Dialog.Header><Dialog.Title class="truncate">{s.previewTitle} {sel.id}</Dialog.Title></Dialog.Header><EmailItem from="noreply@ahu.go.id" subject={`${s.resultH} ${sel.id}`} preview={sel.result} time={sel.time} /><Dialog.Footer class="flex-wrap"><Button onclick={() => toast.success(s.toastSent)}>{s.send}</Button></Dialog.Footer></Dialog.Content>
 				</Dialog.Root>
 			</Card.Header><Separator />
 			<Card.Content class="flex flex-col gap-2 p-4">

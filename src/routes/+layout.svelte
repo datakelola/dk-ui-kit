@@ -372,7 +372,7 @@
 	</Sidebar.Root>
 
 	<Sidebar.Inset class="min-h-svh min-w-0 overflow-hidden">
-		<header class="flex h-16 shrink-0 items-center gap-3 border-b border-border/80 bg-card/95 px-4 backdrop-blur md:px-6">
+		<header class="flex h-16 shrink-0 items-center gap-1.5 border-b border-border/80 bg-card/95 px-3 backdrop-blur sm:gap-3 sm:px-4 md:px-6">
 			<Sidebar.Trigger aria-label="Buka atau ciutkan sidebar" />
 			<div class="flex min-w-0 flex-col gap-0.5 leading-none">
 				<h1 class="truncate text-lg font-semibold tracking-tight md:text-xl">{pageTitle}</h1>
@@ -380,7 +380,7 @@
 					{dateFmt($locale).format(now)} • {timeFmt($locale).format(now)}
 				</p>
 			</div>
-			<div class="ms-auto flex items-center gap-1.5">
+			<div class="ms-auto flex min-w-0 shrink-0 items-center gap-1 sm:gap-1.5">
 				<InputGroup.Root class="hidden w-full max-w-xs sm:flex lg:max-w-sm">
 					<InputGroup.Addon><Search data-icon="true" /></InputGroup.Addon>
 					<InputGroup.Input
@@ -421,7 +421,7 @@
 							</span>
 						{/snippet}
 					</Popover.Trigger>
-					<Popover.Content align="end" class="w-72">
+					<Popover.Content align="end" class="w-72 max-w-[calc(100vw-2rem)]">
 						<Popover.Title class="text-sm font-semibold">{chrome.notif}</Popover.Title>
 						<Popover.Description class="text-xs">{chrome.notifDesc}</Popover.Description>
 						<div class="flex items-center justify-between gap-2 rounded-lg bg-muted/50 px-2.5 py-2">
@@ -443,10 +443,10 @@
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger aria-label={chrome.auxLabel}>
 						{#snippet child({ props })}
-							<Button {...props} variant="outline" size="sm" class="gap-2">
-								<span class="size-2 rounded-full {auxMeta[auxStatus].dot}" aria-hidden="true"></span>
-								{auxStatus === "online" ? chrome.auxOnline : auxStatus === "aux" ? chrome.auxAux : chrome.auxOffline}
-								<ChevronDown data-icon="true" />
+							<Button {...props} variant="outline" size="sm" class="max-w-[38vw] gap-2 sm:max-w-none">
+								<span class="size-2 shrink-0 rounded-full {auxMeta[auxStatus].dot}" aria-hidden="true"></span>
+								<span class="min-w-0 flex-1 truncate">{auxStatus === "online" ? chrome.auxOnline : auxStatus === "aux" ? chrome.auxAux : chrome.auxOffline}</span>
+								<ChevronDown data-icon="true" class="hidden shrink-0 min-[420px]:block" />
 							</Button>
 						{/snippet}
 					</DropdownMenu.Trigger>

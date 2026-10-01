@@ -167,20 +167,20 @@
 <svelte:head><title>{s.title}</title></svelte:head>
 
 <div class="flex min-h-svh flex-col gap-3 bg-slate-950 p-3 text-slate-100">
-	<header class="flex flex-wrap items-center gap-3">
-		<div class="flex items-center gap-2">
-			<img src="/favicon.svg" alt="Logo" class="size-8 rounded-md" />
-			<h1 class="text-xl font-bold tracking-tight">{s.heading}</h1>
+	<header class="flex min-w-0 flex-wrap items-center gap-3">
+		<div class="flex min-w-0 items-center gap-2">
+			<img src="/favicon.svg" alt="Logo" class="size-8 shrink-0 rounded-md" />
+			<h1 class="truncate text-xl font-bold tracking-tight">{s.heading}</h1>
 		</div>
-		<div class="ms-auto rounded-lg border border-slate-800 bg-slate-900/70 px-3 py-1.5 text-right">
+		<div class="ms-auto max-w-full rounded-lg border border-slate-800 bg-slate-900/70 px-3 py-1.5 text-right max-sm:ms-0 max-sm:w-full">
 			<p class="text-xs font-semibold tracking-wide uppercase">{dayFmt.format(now)} {s.at} {timeFmt.format(now)}</p>
 			<p class="text-[10px] tracking-wide text-slate-400 uppercase">{s.lastUpdated} {timeFmt.format(lastUpdated)}</p>
 		</div>
 	</header>
 
-	<div class="grid flex-1 gap-3 xl:grid-cols-[250px_minmax(0,1fr)_250px]">
+	<div class="grid min-w-0 flex-1 grid-cols-1 gap-3 xl:grid-cols-[250px_minmax(0,1fr)_250px]">
 		<!-- Kolom kiri -->
-		<div class="grid grid-cols-2 content-start gap-3">
+		<div class="grid min-w-0 grid-cols-1 content-start gap-3 min-[420px]:grid-cols-2">
 			<section class="rounded-xl border border-slate-800 bg-blue-600 p-3" aria-label="SCR">
 				<p class="inline-block rounded bg-blue-800/60 px-1.5 py-0.5 text-[10px] font-bold tracking-wider">SCR</p>
 				<p class="mt-1 text-4xl font-bold tabular-nums">82<span class="text-lg">.9</span><span class="text-sm font-medium"> %</span></p>
@@ -205,7 +205,7 @@
 				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.abandoned}</p>
 				<p class="text-4xl font-bold tabular-nums text-red-400">{abandoned}</p>
 			</section>
-			<section class="col-span-2 rounded-xl border border-slate-800 bg-blue-600 p-3" aria-label="SCR Email">
+			<section class="col-span-1 min-w-0 rounded-xl border border-slate-800 bg-blue-600 p-3 min-[420px]:col-span-2" aria-label="SCR Email">
 				<p class="inline-block rounded bg-blue-800/60 px-1.5 py-0.5 text-[10px] font-bold tracking-wider">SCR EMAIL</p>
 				<p class="mt-1 text-4xl font-bold tabular-nums">74<span class="text-lg">.5</span><span class="text-sm font-medium"> %</span></p>
 			</section>
@@ -217,7 +217,7 @@
 				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.distributed}</p>
 				<p class="text-4xl font-bold tabular-nums text-amber-400">161</p>
 			</section>
-			<section class="col-span-2 flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900/70 p-3" aria-label="Email Answered">
+			<section class="col-span-1 flex min-w-0 items-center justify-between gap-2 rounded-xl border border-slate-800 bg-slate-900/70 p-3 min-[420px]:col-span-2" aria-label="Email Answered">
 				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.answered}</p>
 				<p class="text-4xl font-bold tabular-nums text-green-400">120</p>
 			</section>
@@ -255,9 +255,10 @@
 					</table>
 				</div>
 			</section>
-			<div class="grid gap-3 lg:grid-cols-2">
-				<section class="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/70" aria-label="Konsultasi">
-					<table class="w-full text-sm">
+			<div class="grid grid-cols-1 gap-3 lg:grid-cols-2">
+				<section class="min-w-0 overflow-hidden rounded-xl border border-slate-800 bg-slate-900/70" aria-label="Konsultasi">
+					<div class="overflow-x-auto">
+					<table class="w-full min-w-[640px] text-sm">
 						<thead>
 							<tr class="text-left text-[11px] tracking-wider text-slate-400">
 								<th class="px-4 py-2.5 font-semibold">{s.consult}</th>
@@ -271,9 +272,11 @@
 							{/each}
 						</tbody>
 					</table>
+					</div>
 				</section>
-				<section class="overflow-hidden rounded-xl border border-slate-800 bg-slate-900/70" aria-label="Aduan">
-					<table class="w-full text-sm">
+				<section class="min-w-0 overflow-hidden rounded-xl border border-slate-800 bg-slate-900/70" aria-label="Aduan">
+					<div class="overflow-x-auto">
+					<table class="w-full min-w-[640px] text-sm">
 						<thead>
 							<tr class="text-left text-[11px] tracking-wider text-slate-400">
 								<th class="px-4 py-2.5 font-semibold">{s.complaint}</th>
@@ -287,13 +290,14 @@
 							{/each}
 						</tbody>
 					</table>
+					</div>
 				</section>
 			</div>
 		</div>
 
 		<!-- Kolom kanan -->
-		<div class="grid grid-cols-2 content-start gap-3">
-			<section class="col-span-2 rounded-xl border border-slate-800 bg-green-600 p-3" aria-label="SCR WA Chat">
+		<div class="grid min-w-0 grid-cols-1 content-start gap-3 min-[420px]:grid-cols-2">
+			<section class="col-span-1 min-w-0 rounded-xl border border-slate-800 bg-green-600 p-3 min-[420px]:col-span-2" aria-label="SCR WA Chat">
 				<p class="inline-block rounded bg-green-800/60 px-1.5 py-0.5 text-[10px] font-bold tracking-wider">SCR WA CHAT</p>
 				<p class="mt-1 text-4xl font-bold tabular-nums">0<span class="text-sm font-medium"> %</span></p>
 			</section>
@@ -305,11 +309,11 @@
 				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.incomingChat}</p>
 				<p class="text-3xl font-bold tabular-nums text-purple-400">0</p>
 			</section>
-			<section class="col-span-2 flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900/70 p-3" aria-label="Chat Answered">
+			<section class="col-span-1 flex min-w-0 items-center justify-between gap-2 rounded-xl border border-slate-800 bg-slate-900/70 p-3 min-[420px]:col-span-2" aria-label="Chat Answered">
 				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.answered}</p>
 				<p class="text-3xl font-bold tabular-nums text-blue-400">0</p>
 			</section>
-			<section class="col-span-2 rounded-xl border border-slate-800 bg-green-600 p-3" aria-label="SCR WA Call">
+			<section class="col-span-1 min-w-0 rounded-xl border border-slate-800 bg-green-600 p-3 min-[420px]:col-span-2" aria-label="SCR WA Call">
 				<p class="inline-block rounded bg-green-800/60 px-1.5 py-0.5 text-[10px] font-bold tracking-wider">SCR WA CALL</p>
 				<p class="mt-1 text-4xl font-bold tabular-nums">64<span class="text-lg">.3</span><span class="text-sm font-medium"> %</span></p>
 			</section>
@@ -321,7 +325,7 @@
 				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.incomingCall}</p>
 				<p class="text-3xl font-bold tabular-nums text-purple-400">{incomingCall}</p>
 			</section>
-			<section class="col-span-2 flex items-center justify-between rounded-xl border border-slate-800 bg-slate-900/70 p-3" aria-label="Call Answered">
+			<section class="col-span-1 flex min-w-0 items-center justify-between gap-2 rounded-xl border border-slate-800 bg-slate-900/70 p-3 min-[420px]:col-span-2" aria-label="Call Answered">
 				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.answered}</p>
 				<p class="text-3xl font-bold tabular-nums text-blue-400">{answeredCall}</p>
 			</section>
