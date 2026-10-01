@@ -10,7 +10,8 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Sheet from '$lib/components/ui/sheet';
 	import * as InputOTP from '$lib/components/ui/input-otp';
-	import * as Chart from '$lib/components/ui/chart';
+	import { Skeleton } from '$lib/components/ui/skeleton';
+	import { onMount } from 'svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -19,7 +20,6 @@
 	import { Switch } from '$lib/components/ui/switch';
 	import DatePicker from "$lib/components/ui/date-picker.svelte";
 	import { CalendarDate, type DateValue } from '@internationalized/date';
-	import { Chart as LCChart, Svg, Axis, Grid, Bars } from 'layerchart';
 	import { toast } from 'svelte-sonner';
 	import { RefreshCw, Users, Hourglass, MessagesSquare, CircleCheck, Search, UserPlus, ShieldCheck, TriangleAlert } from 'lucide-svelte';
 	import { locale } from '$lib/i18n';
@@ -183,6 +183,11 @@
 	function openAssign(customer: string) { selectedChat = customer; assignOpen = true; }
 	let refreshedAt = $state('10:24:00');
 	function refresh() { toast.success(s.toastRefresh); refreshedAt = new Date().toLocaleTimeString('id-ID'); }
+
+	let ChartBeban = $state(null);
+	onMount(async () => {
+		ChartBeban = (await import('./chart-beban.svelte')).default;
+	});
 </script>
 
 <svelte:head><title>{s.docTitle}</title></svelte:head>
@@ -263,11 +268,7 @@
 			<Card.Root>
 				<Card.Header><Card.Title>{s.loadT}</Card.Title><p class="text-sm text-muted-foreground">{s.loadD}</p></Card.Header>
 				<Card.Content>
-					<Chart.Container config={chartConfig} class="aspect-auto h-48">
-						<LCChart data={loadData} x="label" y="value" padding={{ left: 8, right: 8 }}>
-							<Svg><Grid vertical={false} /><Axis placement="bottom" /><Axis placement="left" grid rule /><Bars radius={6} /></Svg>
-						</LCChart>
-					</Chart.Container>
+					{#if ChartBeban}<ChartBeban data={loadData} config={chartConfig} />{:else}<Skeleton class="h-48 w-full" />{/if}
 					<Button size="sm" variant="outline" class="mt-3 w-full" onclick={() => (sheetOpen = true)}>{s.shiftBtn}</Button>
 				</Card.Content>
 			</Card.Root>

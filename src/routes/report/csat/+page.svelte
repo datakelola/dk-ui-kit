@@ -7,7 +7,8 @@
 	import * as Empty from '$lib/components/ui/empty';
 	import * as Alert from '$lib/components/ui/alert';
 	import DateRangePicker from "$lib/components/ui/date-range-picker.svelte";
-	import * as Chart from '$lib/components/ui/chart';
+	import { Skeleton } from '$lib/components/ui/skeleton';
+	import { onMount } from 'svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -15,7 +16,6 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { CalendarDate } from '@internationalized/date';
 	import type { DateRange } from 'bits-ui';
-	import { Chart as LCChart, Svg, Axis, Grid, Bars, Area } from 'layerchart';
 	import { Download, Filter, RotateCcw, Search, Smile, Meh, Frown, Info, Phone, CircleCheck, ChartLine, CircleX } from 'lucide-svelte';
 	import { locale } from '$lib/i18n';
 
@@ -165,6 +165,12 @@
 
 	function reset() { kanal = 'all'; agent = 'all'; status = 'all'; search = ''; page = 1; period = { start: new CalendarDate(2026, 1, 1), end: new CalendarDate(2026, 9, 30) }; }
 	const agents = ['Ayu Lestari', 'Rizky Pratama', 'Dewi Anggraini', 'Fajar Nugraha'];
+	let ChartDistribusi = $state(null);
+	let ChartTren = $state(null);
+	onMount(async () => {
+		ChartDistribusi = (await import('./chart-distribusi.svelte')).default;
+		ChartTren = (await import('./chart-tren.svelte')).default;
+	});
 	let statCards = $derived([
 		{ id: 'total' as const, icon: Phone, label: s.statTotal, value: String(total) },
 		{ id: 'filled' as const, icon: CircleCheck, label: s.statFilled, value: String(filled) },
@@ -225,22 +231,14 @@
 		<Card.Root>
 			<Card.Header><Card.Title>{s.distT}</Card.Title><p class="text-sm text-muted-foreground">{s.distD}</p></Card.Header>
 			<Card.Content>
-				<Chart.Container config={chartConfig} class="aspect-auto h-64">
-					<LCChart data={dist} x="label" y="value" padding={{ left: 8, right: 8 }}>
-						<Svg><Grid vertical={false} /><Axis placement="bottom" /><Axis placement="left" grid rule /><Bars radius={6} /></Svg>
-					</LCChart>
-				</Chart.Container>
+				{#if ChartDistribusi}<ChartDistribusi data={dist} config={chartConfig} />{:else}<Skeleton class="h-64 w-full" />{/if}
 				<div class="mt-3 flex flex-col gap-2">{#each dist as d}<div class="flex items-center justify-between text-xs"><span class="text-muted-foreground">{d.label}</span><span class="font-semibold">{d.value}</span></div><Progress value={(d.value / Math.max(1, total)) * 100} />{/each}</div>
 			</Card.Content>
 		</Card.Root>
 		<Card.Root>
 			<Card.Header><Card.Title>{s.trendT}</Card.Title><p class="text-sm text-muted-foreground">{s.trendD}</p></Card.Header>
 			<Card.Content>
-				<Chart.Container config={chartConfig} class="aspect-auto h-64">
-					<LCChart data={trend} x="day" y="total" yNice padding={{ left: 8, right: 8 }}>
-						<Svg><Grid vertical={false} /><Axis placement="bottom" /><Axis placement="left" grid rule /><Area y1="total" fill="var(--color-primary)" fillOpacity={0.15} stroke="var(--color-primary)" /><Area y1="filled" fill="var(--color-success, #16a34a)" fillOpacity={0.2} stroke="var(--color-success, #16a34a)" /></Svg>
-					</LCChart>
-				</Chart.Container>
+				{#if ChartTren}<ChartTren data={trend} config={chartConfig} />{:else}<Skeleton class="h-64 w-full" />{/if}
 				<Separator class="my-3" />
 				<div class="flex flex-wrap gap-2 text-xs"><Badge variant="secondary">{s.legTotal}</Badge><Badge variant="secondary">{s.legFilled}</Badge><Badge variant="outline"><Smile size={12} />{s.leg1}</Badge><Badge variant="outline"><Meh size={12} />{s.leg2}</Badge><Badge variant="outline"><Frown size={12} />{s.leg3}</Badge></div>
 			</Card.Content>

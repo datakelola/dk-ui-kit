@@ -7,13 +7,13 @@
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Alert from '$lib/components/ui/alert';
 	import * as Avatar from '$lib/components/ui/avatar';
-	import * as Chart from '$lib/components/ui/chart';
 	import * as ToggleGroup from '$lib/components/ui/toggle-group';
+	import { Skeleton } from '$lib/components/ui/skeleton';
+	import { onMount } from 'svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
 	import { Progress } from '$lib/components/ui/progress';
 	import { Separator } from '$lib/components/ui/separator';
-	import { Skeleton } from '$lib/components/ui/skeleton';
 	import * as Empty from '$lib/components/ui/empty';
 	import DatePicker from "$lib/components/ui/date-picker.svelte";
 	import { Spinner } from '$lib/components/ui/spinner';
@@ -205,8 +205,11 @@
 	let period = $state('2026-09');
 	function apply() { loading = true; setTimeout(() => (loading = false), 600); }
 	const ApplyIcon = $derived(loading ? Spinner : CalendarDays);
-	const chartConfig = { volume: { label: 'Volume', color: 'var(--primary)' } };
-	const bars = [42, 68, 55, 80, 62, 90, 74];
+	let ChartVolume = $state(null);
+	onMount(async () => {
+		ChartVolume = (await import('./chart-volume.svelte')).default;
+	});
+
 </script>
 
 <svelte:head><title>{s.docTitle}</title></svelte:head>
@@ -265,9 +268,7 @@
 		<Card.Root>
 			<Card.Header><Card.Title>{s.volTitle}</Card.Title><Card.Description>{s.volDesc}</Card.Description></Card.Header>
 			<Card.Content>
-				<Chart.Container config={chartConfig} class="min-h-40">
-					<div class="flex h-36 w-full items-end gap-2">{#each bars as b}<div class="flex-1 rounded bg-primary/80" style="height:{b}%"></div>{/each}</div>
-				</Chart.Container>
+				{#if ChartVolume}<ChartVolume />{:else}<Skeleton class="h-40 w-full" />{/if}
 			</Card.Content>
 			<Card.Footer class="flex flex-col gap-3">
 				{#each dist as d}<div class="flex flex-col gap-1.5"><div class="flex justify-between text-sm"><span>{d.label}</span><span class="text-muted-foreground">{d.value}%</span></div><Progress value={d.value} /></div>{/each}

@@ -8,7 +8,8 @@
 	import * as Empty from '$lib/components/ui/empty';
 	import * as Alert from '$lib/components/ui/alert';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import * as Chart from '$lib/components/ui/chart';
+	import { Skeleton } from '$lib/components/ui/skeleton';
+	import { onMount } from 'svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
@@ -16,7 +17,6 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { Slider } from '$lib/components/ui/slider';
 	import { Switch } from '$lib/components/ui/switch';
-	import { Chart as LCChart, Svg, Axis, Grid, Bars } from 'layerchart';
 	import { Search, Star, Download, RotateCcw, TriangleAlert, MessagesSquare, SlidersHorizontal } from 'lucide-svelte';
 	import { locale } from '$lib/i18n';
 
@@ -153,6 +153,11 @@
 	function openDetail(name: string) { detailName = name; detailOpen = true; }
 	function reset() { channel = 'all'; agent = 'all'; minScore = 1; onlyComment = false; search = ''; page = 1; }
 	function stars(v: number) { return Array.from({ length: 5 }, (_, i) => i < Math.round(v)); }
+
+	let ChartRata = $state(null);
+	onMount(async () => {
+		ChartRata = (await import('./chart-rata.svelte')).default;
+	});
 </script>
 
 <svelte:head><title>{s.docTitle}</title></svelte:head>
@@ -197,11 +202,7 @@
 		<Card.Root>
 			<Card.Header><Card.Title>{s.chartT}</Card.Title><p class="text-sm text-muted-foreground">{s.chartPre} {filtered.length} {s.chartEnd}</p></Card.Header>
 			<Card.Content>
-				<Chart.Container config={chartConfig} class="aspect-auto h-72">
-					<LCChart data={barData} x="label" y="value" padding={{ left: 8, right: 8 }}>
-						<Svg><Grid vertical={false} /><Axis placement="bottom" /><Axis placement="left" grid rule domain={[0, 5]} /><Bars radius={6} /></Svg>
-					</LCChart>
-				</Chart.Container>
+				{#if ChartRata}<ChartRata data={barData} config={chartConfig} />{:else}<Skeleton class="h-72 w-full" />{/if}
 			</Card.Content>
 		</Card.Root>
 	{/if}
