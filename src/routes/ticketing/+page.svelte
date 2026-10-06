@@ -16,8 +16,9 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import * as Empty from '$lib/components/ui/empty';
 	import { Skeleton } from '$lib/components/ui/skeleton';
-	import EmailItem from '$lib/components/ui/email-item.svelte';
 	import { toast } from 'svelte-sonner';
+	import { onMount } from 'svelte';
+	import { api } from '$lib/api';
 	import { cn } from '$lib/utils';
 	import { Search, MoreVertical, Ticket } from 'lucide-svelte';
 	import { locale } from '$lib/i18n';
@@ -138,14 +139,81 @@
 	} as const;
 	let s = $derived(STR[$locale]);
 
-	const tickets = [
-		{ id: 'TCK-001', customer: 'Budi Santoso', subject: 'Paket belum sampai', channel: 'WhatsApp', status: 'open', time: '10:20' },
-		{ id: 'TCK-002', customer: 'Siti Aminah', subject: 'Pengajuan KTP', channel: 'Email', status: 'pending', time: '09:45' },
-		{ id: 'TCK-003', customer: 'Andi Wijaya', subject: 'Refund dana', channel: 'Live Chat', status: 'resolved', time: '08:15' }
-	];
-	let sel = $state(tickets[0]);
+	type TRow = { id: string; number: string; customer: string; subject: string; channel: string; status: string; time: string };
+	let tickets = $state<TRow[]>([]);
+	let sel = $state<TRow | null>(null);
 	let loading = $state(false);
 	let reply = $state('');
+	let replies = $state<{ id: string; body: string; author_type: string; created_at: string }[]>([]);
+	let loadError = $state('');
+
+	async function loadTickets(status?: string) {
+		loading = true;
+		try {
+			const [rows, contactList] = await Promise.all([
+				api.tickets(status),
+				api.contacts().catch(() => [] as any[])
+			]);
+			const names = new Map((contactList as any[]).map((c: any) => [c.id, c.full_name]));
+			tickets = (rows as any[]).map((t: any) => ({
+				id: t.id,
+				number: t.number,
+				customer: (t.contact_id && names.get(t.contact_id)) || '—',
+				subject: t.subject,
+				channel: t.source === 'public_form' ? 'Form' : t.source === 'agent' ? 'Agent' : t.source,
+				status: t.status,
+				time: String(t.created_at ?? '').slice(0, 16).replace('T', ' ')
+			}));
+			if (!sel || !tickets.some((t) => t.id === sel!.id)) sel = tickets[0] ?? null;
+			if (sel) await loadReplies(sel.id);
+		} catch (e) {
+			loadError = (e as Error).message;
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function loadReplies(id: string) {
+		try {
+			const r = await api.ticketDetail(id);
+			replies = r.replies;
+		} catch {
+			replies = [];
+		}
+	}
+
+	async function pick(t: TRow) {
+		sel = t;
+		loading = true;
+		await loadReplies(t.id);
+		loading = false;
+	}
+
+	async function sendReply() {
+		if (!sel || !reply.trim()) return;
+		const body = reply;
+		reply = '';
+		try {
+			await api.replyTicket(sel.id, body);
+			toast.success(s.toastReplied);
+			await loadReplies(sel.id);
+		} catch (e) {
+			toast.error((e as Error).message);
+		}
+	}
+
+	async function closeTicket() {
+		if (!sel) return;
+		try {
+			await api.updateTicket(sel.id, { status: 'resolved' });
+			toast.success(s.toastClosed);
+			await loadTickets();
+		} catch (e) {
+			toast.error((e as Error).message);
+		}
+	}
+
+	onMount(() => loadTickets());
 	const initials = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
 	const statusLabel = (st: string) => st === 'open' ? s.stOpen : st === 'pending' ? s.stPending : s.stResolved;
 </script>
@@ -155,11 +223,12 @@
 <div class="flex flex-col gap-3">
 	<Tabs.Root value="open">
 		<Tabs.List class="max-w-full overflow-x-auto [&>*]:whitespace-nowrap">
-			<Tabs.Trigger value="open">{s.tabOpen}</Tabs.Trigger>
-			<Tabs.Trigger value="pending">{s.tabPending}</Tabs.Trigger>
-			<Tabs.Trigger value="resolved">{s.tabResolved}</Tabs.Trigger>
+			<Tabs.Trigger value="open" onclick={() => loadTickets('open')}>{s.tabOpen}</Tabs.Trigger>
+			<Tabs.Trigger value="pending" onclick={() => loadTickets('pending')}>{s.tabPending}</Tabs.Trigger>
+			<Tabs.Trigger value="resolved" onclick={() => loadTickets('resolved')}>{s.tabResolved}</Tabs.Trigger>
 		</Tabs.List>
 	</Tabs.Root>
+	{#if loadError}<p class="rounded-xl border border-rose-100 bg-rose-50 px-3 py-2 text-sm text-rose-600">{loadError}</p>{/if}
 
 	<Resizable.PaneGroup direction="horizontal" class="min-h-[70vh] gap-3 max-lg:h-auto max-lg:flex-col">
 		<Resizable.Pane defaultSize={32} class="max-lg:min-h-[340px] max-lg:w-full">
@@ -179,7 +248,7 @@
 				<ScrollArea.Root class="h-[55vh]">
 					<div class="flex flex-col gap-2 p-3">
 						{#each tickets as t (t.id)}
-							<button onclick={() => { sel = t; loading = true; setTimeout(() => (loading = false), 600); }} class={cn('flex min-w-0 items-center gap-3 rounded-lg p-3 text-left hover:bg-muted/50', sel.id === t.id && 'bg-muted')}>
+							<button onclick={() => pick(t)} class={cn('flex min-w-0 items-center gap-3 rounded-lg p-3 text-left hover:bg-muted/50', sel?.id === t.id && 'bg-muted')}>
 								<Avatar.Root class="shrink-0"><Avatar.Fallback>{initials(t.customer)}</Avatar.Fallback></Avatar.Root>
 								<span class="min-w-0 flex-1"><span class="flex flex-wrap items-center gap-2"><Ticket class="size-3 shrink-0" /><strong class="min-w-0 flex-1 truncate text-sm">{t.id}</strong><Badge variant="outline" class="shrink-0 text-[10px]">{t.channel}</Badge></span>
 								<span class="block truncate text-xs text-muted-foreground">{t.subject}</span></span>
@@ -192,9 +261,10 @@
 		</Resizable.Pane>
 		<Resizable.Handle class="max-lg:hidden" />
 		<Resizable.Pane defaultSize={68} class="max-lg:min-h-[480px] max-lg:w-full">
+			{#if sel}
 			<Card.Root class="flex h-full min-h-0 flex-col">
 				<Card.Header class="flex flex-row flex-wrap items-center gap-3">
-					<div class="flex min-w-0 flex-1 flex-col gap-0.5"><strong class="truncate text-sm">{sel.id} — {sel.subject}</strong><span class="truncate text-xs text-muted-foreground">{sel.customer} • {sel.channel}</span></div>
+					<div class="flex min-w-0 flex-1 flex-col gap-0.5"><strong class="truncate text-sm">{sel.number} — {sel.subject}</strong><span class="truncate text-xs text-muted-foreground">{sel.customer} • {sel.channel}</span></div>
 					<Tooltip.Provider><Tooltip.Root><Tooltip.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props}>{s.assign}</Button>{/snippet}</Tooltip.Trigger><Tooltip.Content>{s.assignTip}</Tooltip.Content></Tooltip.Root></Tooltip.Provider>
 					<Sheet.Root>
 						<Sheet.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props}>{s.timeline}</Button>{/snippet}</Sheet.Trigger>
@@ -202,24 +272,31 @@
 					</Sheet.Root>
 					<Dialog.Root>
 						<Dialog.Trigger>{#snippet child({ props })}<Button size="sm" {...props}>{s.closeTicket}</Button>{/snippet}</Dialog.Trigger>
-						<Dialog.Content class="max-w-[calc(100vw-2rem)]"><Dialog.Header><Dialog.Title class="truncate">{s.closeTitle} {sel.id}?</Dialog.Title></Dialog.Header><Dialog.Footer class="flex-wrap"><Button onclick={() => toast.success(s.toastClosed)}>{s.closeBtn}</Button></Dialog.Footer></Dialog.Content>
+						<Dialog.Content class="max-w-[calc(100vw-2rem)]"><Dialog.Header><Dialog.Title class="truncate">{s.closeTitle} {sel.number}?</Dialog.Title></Dialog.Header><Dialog.Footer class="flex-wrap"><Button onclick={closeTicket}>{s.closeBtn}</Button></Dialog.Footer></Dialog.Content>
 					</Dialog.Root>
 				</Card.Header>
 				<Separator />
 				<ScrollArea.Root class="h-[45vh] p-4">
 					{#if loading}<div class="flex flex-col gap-2"><Skeleton class="h-12 w-full" /><Skeleton class="h-12 w-5/6" /></div>
+					{:else if !replies.length}<p class="p-4 text-center text-sm text-muted-foreground">Belum ada balasan.</p>
 					{:else}
 						<Message.Group>
-							<Message.Root><Message.Avatar><Avatar.Root><Avatar.Fallback>{initials(sel.customer)}</Avatar.Fallback></Avatar.Root></Message.Avatar><div class="flex flex-col gap-1"><Message.Header>{sel.customer}</Message.Header><Bubble.Root variant="received"><Bubble.Content>{sel.subject} — {s.msgFollowup}</Bubble.Content></Bubble.Root><Message.Footer>{sel.time}</Message.Footer></div></Message.Root>
-							<Message.Root class="justify-end"><div class="flex flex-col gap-1"><Bubble.Root variant="sent"><Bubble.Content>{s.msgProcPrefix} {sel.id} {s.msgProcSuffix}</Bubble.Content></Bubble.Root><Message.Footer>{s.agentNow}</Message.Footer></div></Message.Root>
+							{#each replies as rp}
+								<Message.Root class={rp.author_type === 'agent' ? 'justify-end' : ''}>
+									{#if rp.author_type !== 'agent'}<Message.Avatar><Avatar.Root><Avatar.Fallback>{initials(sel.customer)}</Avatar.Fallback></Avatar.Root></Message.Avatar>{/if}
+									<div class="flex flex-col gap-1"><Message.Header>{rp.author_type === 'agent' ? s.agentNow : sel.customer}</Message.Header><Bubble.Root variant={rp.author_type === 'agent' ? 'sent' : 'received'}><Bubble.Content>{rp.body}</Bubble.Content></Bubble.Root><Message.Footer>{String(rp.created_at ?? '').slice(0, 16).replace('T', ' ')}</Message.Footer></div>
+								</Message.Root>
+							{/each}
 						</Message.Group>
-						<div class="mt-3 flex flex-col gap-2"><EmailItem from={sel.customer} subject={sel.subject} preview="Lampiran dokumen pengajuan…" time={sel.time} /></div>
 					{/if}
 				</ScrollArea.Root>
 				<Card.Footer class="max-w-full">
-					<InputGroup.Root class="max-w-full"><InputGroup.Input bind:value={reply} placeholder={s.replyPh} class="min-w-0" /><InputGroup.Button onclick={() => { toast.success(s.toastReplied); reply = ''; }}>{s.send}</InputGroup.Button></InputGroup.Root>
+					<InputGroup.Root class="max-w-full"><InputGroup.Input bind:value={reply} placeholder={s.replyPh} class="min-w-0" /><InputGroup.Button onclick={sendReply}>{s.send}</InputGroup.Button></InputGroup.Root>
 				</Card.Footer>
 			</Card.Root>
+			{:else}
+				<div class="flex h-full items-center justify-center p-6 text-sm text-muted-foreground">Pilih tiket untuk melihat detail.</div>
+			{/if}
 		</Resizable.Pane>
 	</Resizable.PaneGroup>
 </div>

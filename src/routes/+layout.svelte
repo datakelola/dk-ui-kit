@@ -208,6 +208,7 @@
 	onMount(() => {
 		initTheme();
 		initLocale();
+		if (!localStorage.getItem('dk_token') && page.url.pathname !== '/login') goto('/login');
 		const t = setInterval(() => (now = new Date()), 1000);
 		try {
 			sidebarOpen = localStorage.getItem("dk-sidebar") !== "1";
@@ -497,7 +498,7 @@
 						</DropdownMenu.Label>
 						<DropdownMenu.Separator />
 						<DropdownMenu.Item onclick={() => goto("/settings")}><Settings data-icon="true" />{menuLabel("settings", $locale)}</DropdownMenu.Item>
-						<DropdownMenu.Item variant="destructive"><LogOut data-icon="true" />{chrome.logout}</DropdownMenu.Item>
+						<DropdownMenu.Item variant="destructive" onclick={() => { localStorage.removeItem("dk_token"); goto("/login"); }}><LogOut data-icon="true" />{chrome.logout}</DropdownMenu.Item>
 					</DropdownMenu.Content>
 				</DropdownMenu.Root>
 			</div>

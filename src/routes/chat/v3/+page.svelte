@@ -34,6 +34,8 @@
 		History
 	} from 'lucide-svelte';
 	import { locale } from '$lib/i18n';
+	import { onMount } from 'svelte';
+	import { api } from '$lib/api';
 
 	const STR = {
 		id: {
@@ -251,26 +253,67 @@
 	let inboxTab: Queue = $state('myopen');
 	let ticketTab = $state('overview');
 
-	let queues = $state([
-		{ id: 1, name: 'Budi Santoso', handle: '@budi.s', snippet: 'Halo, paket saya belum sampai?', time: '10:20', unread: 3, online: true, read: false, queue: 'myopen' as Queue },
-		{ id: 2, name: 'Siti Aminah', handle: '@siti.a', snippet: 'Mohon info pengajuan KTP…', time: '09:45', unread: 1, online: true, read: false, queue: 'myopen' as Queue },
-		{ id: 3, name: 'Rina Marlina', handle: '@rina.m', snippet: 'Baik, saya bantu cek resi…', time: '09:00', unread: 0, online: false, read: true, queue: 'served' as Queue },
-		{ id: 4, name: 'Dewi Lestari', handle: '@dewi.l', snippet: 'Oke, ditunggu kabar bot…', time: '08:30', unread: 0, online: false, read: true, queue: 'served' as Queue },
-		{ id: 5, name: 'Andi Wijaya', handle: '@andi.w', snippet: 'Terima kasih atas bantuannya', time: '08:15', unread: 0, online: false, read: true, queue: 'resolved' as Queue }
-	]);
+	type Conv = {
+		id: string; name: string; handle: string; snippet: string; time: string;
+		unread: number; online: boolean; read: boolean; queue: Queue;
+		status: string; awaiting_since?: string;
+	};
+	let queues = $state<Conv[]>([]);
+	let loadError = $state('');
+	const queueOf = (status: string): Queue => (status === 'resolved' ? 'resolved' : status === 'pending' ? 'served' : 'myopen');
+
+	async function loadQueues() {
+		try {
+			const [convs, contactList] = await Promise.all([
+				api.conversations(undefined, 50),
+				api.contacts().catch(() => [] as any[])
+			]);
+			const names = new Map((contactList as any[]).map((c: any) => [c.id, c.full_name]));
+			queues = (convs as any[]).map((c: any) => ({
+				id: c.id,
+				name: (c.contact_id && names.get(c.contact_id)) || 'Tanpa kontak',
+				handle: c.contact_id ? String(c.contact_id).slice(0, 8) : '—',
+				snippet: `status ${c.status}`,
+				time: (c.last_message_at ?? c.created_at ?? '').slice(0, 16).replace('T', ' '),
+				unread: c.awaiting_since ? 1 : 0,
+				online: c.status === 'open',
+				read: !c.awaiting_since,
+				queue: queueOf(c.status),
+				status: c.status,
+				awaiting_since: c.awaiting_since
+			}));
+			if (!queues.some((q) => q.id === selectedId) && queues.length) selectedId = queues[0].id;
+		} catch (e) {
+			loadError = (e as Error).message;
+		}
+	}
+	onMount(loadQueues);
 	const filteredQueues = $derived(queues.filter((q) => q.queue === inboxTab));
-	let selectedId = $state(1);
+	let selectedId = $state('');
 	const selected = $derived(queues.find((q) => q.id === selectedId) ?? queues[0]);
 
 	const TICKET_ID = '#JKT-9374-3U128';
 
 	let draft = $state('');
 	let loading = $state(false);
-	let messages = $state([
-		{ id: 1, from: 'customer' as const, body: 'Halo, paket saya belum sampai?', time: '10:20' },
-		{ id: 2, from: 'agent' as const, body: 'Halo kak, boleh info nomor resinya?', time: '10:22' },
-		{ id: 3, from: 'customer' as const, body: 'Resi JNE123456789', time: '10:23' }
-	]);
+	let messages = $state<{ id: string; from: 'customer' | 'agent'; body: string; time: string }[]>([]);
+
+	async function loadMessages(id: string) {
+		loading = true;
+		try {
+			const rows = await api.convMessages(id);
+			messages = (rows as any[]).map((m: any) => ({
+				id: String(m.id),
+				from: m.direction === 'outbound' ? ('agent' as const) : ('customer' as const),
+				body: m.body,
+				time: String(m.created_at ?? '').slice(0, 16).replace('T', ' ')
+			}));
+		} catch {
+			messages = [];
+		} finally {
+			loading = false;
+		}
+	}
 
 	let agentName = $state('');
 	let branch = $state('');
@@ -294,29 +337,41 @@
 			.join('')
 			.toUpperCase();
 
-	function pick(id: number) {
+	function pick(id: string) {
 		selectedId = id;
-		loading = true;
-		setTimeout(() => (loading = false), 700);
+		void loadMessages(id);
 	}
 
-	function send() {
-		if (!draft.trim()) return;
-		messages = [...messages, { id: Date.now(), from: 'agent' as const, body: draft.trim(), time: 'now' }];
+	async function send() {
+		if (!draft.trim() || !selected) return;
+		const body = draft.trim();
 		draft = '';
-		toast.success(s.toastSent);
+		try {
+			await api.replyConversation(selected.id, body);
+			toast.success(s.toastSent);
+			await loadMessages(selected.id);
+			await loadQueues();
+		} catch (e) {
+			toast.error((e as Error).message);
+		}
 	}
 
 	function saveTicket() {
 		toast.success(s.toastSaved);
 	}
 
-	function confirmEnd() {
-		queues = queues.map((q) => (q.id === selected.id ? { ...q, queue: 'resolved' as Queue, unread: 0 } : q));
-		endOpen = false;
-		inboxTab = 'resolved';
-		ticketTab = 'overview';
-		toast.success(s.toastEnded);
+	async function confirmEnd() {
+		if (!selected) return;
+		try {
+			await api.updateConversation(selected.id, { status: 'resolved' });
+			endOpen = false;
+			inboxTab = 'resolved';
+			ticketTab = 'overview';
+			toast.success(s.toastEnded);
+			await loadQueues();
+		} catch (e) {
+			toast.error((e as Error).message);
+		}
 	}
 </script>
 
@@ -359,7 +414,7 @@
 										onclick={() => pick(q.id)}
 										class={cn(
 											'flex items-center gap-3 rounded-lg p-2.5 text-left hover:bg-muted/60',
-											selected.id === q.id && 'bg-muted'
+											selected?.id === q.id && 'bg-muted'
 										)}
 									>
 										<span class="relative shrink-0">
@@ -398,6 +453,7 @@
 			<Resizable.Handle class="max-lg:hidden" />
 			<!-- KOLOM TENGAH — PERCAKAPAN -->
 			<Resizable.Pane defaultSize={46} minSize={30} class="max-lg:min-h-[480px] max-lg:w-full">
+				{#if selected}
 				<div class="flex h-full flex-col gap-0 border-x max-lg:border-x-0 max-lg:border-y">
 					<div class="flex flex-col gap-2 p-3">
 						<div class="flex flex-wrap items-center gap-3">
@@ -495,6 +551,9 @@
 						</InputGroup.Root>
 					</div>
 				</div>
+				{:else}
+					<div class="flex h-full items-center justify-center p-6 text-sm text-muted-foreground">Pilih percakapan untuk mulai.</div>
+				{/if}
 			</Resizable.Pane>
 			<Resizable.Handle class="max-lg:hidden" />
 			<!-- KOLOM KANAN — PANEL TIKET -->

@@ -16,6 +16,9 @@
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import DateRangePicker from '$lib/components/ui/date-range-picker.svelte';
 	import { toast } from 'svelte-sonner';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { api } from '$lib/api';
 	import { Search, Filter } from 'lucide-svelte';
 	import type { DateRange } from 'bits-ui';
 	import { locale } from '$lib/i18n';
@@ -124,11 +127,30 @@
 	} as const;
 	let s = $derived(STR[$locale]);
 
-	const rows = [
-		{ id: 1, user: 'Budi Santoso', agent: 'Agent Rina', channel: 'Chat', preview: 'Paket belum sampai…', date: '2026-09-28', count: 12 },
-		{ id: 2, user: 'Siti Aminah', agent: 'Agent Dodi', channel: 'Email', preview: 'Pengajuan KTP…', date: '2026-09-29', count: 5 },
-		{ id: 3, user: 'Andi Wijaya', agent: 'Agent Rina', channel: 'Inbound', preview: 'Refund dana…', date: '2026-09-30', count: 8 }
-	];
+	let rows = $state<{ id: string; user: string; agent: string; channel: string; preview: string; date: string; count: number }[]>([]);
+	let loadError = $state('');
+	async function loadRows() {
+		try {
+			const [convs, contactList] = await Promise.all([
+				api.conversations(undefined, 50),
+				api.contacts().catch(() => [] as any[])
+			]);
+			const names = new Map((contactList as any[]).map((c: any) => [c.id, c.full_name]));
+			rows = (convs as any[]).map((c: any, i: number) => ({
+				id: c.id,
+				user: (c.contact_id && names.get(c.contact_id)) || 'Tanpa kontak',
+				agent: '—',
+				channel: 'WhatsApp',
+				preview: `status ${c.status}`,
+				date: (c.last_message_at ?? c.created_at ?? '').slice(0, 10),
+				count: 0,
+				_num: i + 1
+			}));
+		} catch (e) {
+			loadError = (e as Error).message;
+		}
+	}
+	onMount(loadRows);
 	let q = $state('');
 	let loading = $state(false);
 	let range = $state<DateRange | undefined>(undefined);
@@ -157,6 +179,7 @@
 	</Card.Root>
 
 	<Tabs.Root value="list" class="min-w-0">
+		{#if loadError}<p class="mb-2 rounded-xl border border-rose-100 bg-rose-50 px-3 py-2 text-sm text-rose-600">{loadError}</p>{/if}
 		<Tabs.List class="max-w-full overflow-x-auto [&>*]:whitespace-nowrap"><Tabs.Trigger value="list">{s.tabList}</Tabs.Trigger><Tabs.Trigger value="timeline">{s.tabTimeline}</Tabs.Trigger></Tabs.List>
 		<Tabs.Content value="list">
 			<Card.Root>
@@ -170,7 +193,7 @@
 									<Avatar.Root class="shrink-0"><Avatar.Fallback>{initials(r.user)}</Avatar.Fallback></Avatar.Root>
 									<span class="min-w-0 flex-1 basis-40"><span class="flex flex-wrap items-center gap-2"><strong class="min-w-0 truncate text-sm">{r.user}</strong><Badge variant="outline" class="shrink-0 text-[10px]">{r.channel}</Badge><Badge variant="secondary" class="shrink-0">{r.count} {s.messages}</Badge></span>
 									<span class="block truncate text-xs text-muted-foreground">{r.preview} • {r.agent} • {r.date}</span></span>
-									<Tooltip.Provider><Tooltip.Root><Tooltip.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props} onclick={() => toast.success(s.toastOpened)}>{s.open}</Button>{/snippet}</Tooltip.Trigger><Tooltip.Content>{s.openTip}</Tooltip.Content></Tooltip.Root></Tooltip.Provider>
+									<Tooltip.Provider><Tooltip.Root><Tooltip.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props} onclick={() => goto('/chat/v3')}>{s.open}</Button>{/snippet}</Tooltip.Trigger><Tooltip.Content>{s.openTip}</Tooltip.Content></Tooltip.Root></Tooltip.Provider>
 									<Dialog.Root>
 										<Dialog.Trigger>{#snippet child({ props })}<Button size="sm" {...props}>{s.detail}</Button>{/snippet}</Dialog.Trigger>
 										<Dialog.Content class="max-w-[calc(100vw-2rem)]"><Dialog.Header><Dialog.Title class="truncate">{s.threadPrefix}{r.id} — {r.user}</Dialog.Title></Dialog.Header>
