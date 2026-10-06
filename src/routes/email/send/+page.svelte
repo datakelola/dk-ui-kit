@@ -18,6 +18,8 @@
   import EmailItem from '$lib/components/ui/email-item.svelte';
   import { ChevronLeft, ChevronRight, Search, Send } from 'lucide-svelte';
   import { locale } from '$lib/i18n';
+  import { onMount } from 'svelte';
+  import { api } from '$lib/api';
 
   const STR = {
     id: {
@@ -141,13 +143,22 @@
 
   let q=$state(''); let page=$state(1); const perPage=4; let open=$state(false); let del=$state(false);
   let cur:any=$state(null); let words=$state(true);
-  const rows=[
-    {id:1,from:'cs@corp.id',to:'budi@mail.com',subject:'Re: Reset password',date:'10:00',att:1,body:'Password berhasil direset.'},
-    {id:2,from:'cs@corp.id',to:'sari@corp.id',subject:'Invoice September',date:'Kemarin',att:2,body:'Terlampir invoice.'},
-    {id:3,from:'cs@corp.id',to:'andi@mail.com',subject:'Terima kasih',date:'Senin',att:0,body:'Terima kasih.'},
-    {id:4,from:'cs@corp.id',to:'doni@mail.com',subject:'Data permintaan',date:'Jumat',att:1,body:'Berikut data.'},
-    {id:5,from:'cs@corp.id',to:'hrd@corp.id',subject:'Pengumuman',date:'Kamis',att:0,body:'Pengumuman libur.'}
-  ];
+  type SentRow = {id:string;from:string;to:string;subject:string;date:string;att:number;body:string};
+  let rows=$state<SentRow[]>([
+    {id:'1',from:'cs@corp.id',to:'budi@mail.com',subject:'Re: Reset password',date:'10:00',att:0,body:'Password berhasil direset.'}
+  ]);
+  async function loadSent() {
+    try {
+      const data = (await api.emails('send')) as any[];
+      if (data.length) {
+        rows = data.map((e: any) => ({
+          id: String(e.id), from: e.from || '—', to: e.to || '—', subject: e.subject || '(tanpa subjek)',
+          date: String(e.created_at ?? '').slice(0, 16).replace('T', ' '), att: 0, body: e.body || ''
+        }));
+      }
+    } catch { /* fallback mock tetap */ }
+  }
+  onMount(loadSent);
   let f=$derived(rows.filter(r=>!q||(r.subject+r.to).toLowerCase().includes(q.toLowerCase())));
   let paged=$derived(f.slice((page-1)*perPage,page*perPage));
 </script>

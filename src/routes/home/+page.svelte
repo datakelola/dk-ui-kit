@@ -10,6 +10,7 @@
 	import * as ToggleGroup from '$lib/components/ui/toggle-group';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { onMount } from 'svelte';
+	import { api } from '$lib/api';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
 	import { Progress } from '$lib/components/ui/progress';
@@ -184,11 +185,23 @@
 
 	const channelIcons: Record<string, typeof Phone> = { phone: Phone, chat: MessageCircle, email: Mail, wa: MessageCircle, soc: Share2, cmt: Star };
 	let channels = $derived(s.channels.map((c) => ({ ...c, icon: channelIcons[c.key] ?? Star })));
-	const tickets = [
+	type HomeTicket = { id: string; subject: string; channel: string; owner: string; status: string };
+	let tickets = $state<HomeTicket[]>([
 		{ id: 'T-2026-001', subject: 'Keterlambatan pengiriman', channel: 'WhatsApp', owner: 'Rina', status: 'Urgent' },
 		{ id: 'T-2026-002', subject: 'Reset password akun', channel: 'Live Chat', owner: 'Budi', status: 'Open' },
 		{ id: 'T-2026-003', subject: 'Permintaan invoice bulanan', channel: 'Email', owner: 'Sari', status: 'In Progress' }
-	];
+	]);
+	async function loadTickets() {
+		try {
+			const rows = (await api.tickets()) as any[];
+			if (rows.length) {
+				tickets = rows.slice(0, 3).map((t: any) => ({
+					id: t.number, subject: t.subject, channel: t.source, owner: '—', status: t.status
+				}));
+			}
+		} catch { /* tetap tampilkan fallback */ }
+	}
+	onMount(loadTickets);
 	function statusLabel(st: string): string {
 		if (st === 'Urgent') return s.stUrgent;
 		if (st === 'Open') return s.stOpen;

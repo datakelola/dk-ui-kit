@@ -272,6 +272,7 @@
 			queues = (convs as any[]).map((c: any) => ({
 				id: c.id,
 				name: (c.contact_id && names.get(c.contact_id)) || 'Tanpa kontak',
+				contactId: c.contact_id ?? null,
 				handle: c.contact_id ? String(c.contact_id).slice(0, 8) : '—',
 				snippet: `status ${c.status}`,
 				time: (c.last_message_at ?? c.created_at ?? '').slice(0, 16).replace('T', ' '),
@@ -356,8 +357,17 @@
 		}
 	}
 
-	function saveTicket() {
-		toast.success(s.toastSaved);
+	async function saveTicket() {
+		try {
+			const parts = [category, rtype, complaintPath, branch].filter(Boolean);
+			const subject = (parts.length ? parts.join(' / ') : 'Tiket dari chat') + (selected ? ` — ${selected.name}` : '');
+			const p: Record<string, string> = { subject, priority: 'medium' };
+			if (selected?.contactId) p.contact_id = selected.contactId;
+			await api.createTicket(p);
+			toast.success(s.toastSaved);
+		} catch (e) {
+			toast.error((e as Error).message);
+		}
 	}
 
 	async function confirmEnd() {

@@ -19,6 +19,8 @@
   import { toast, Toaster } from 'svelte-sonner';
   import { ChevronLeft, ChevronRight, Search, History } from 'lucide-svelte';
   import { locale } from '$lib/i18n';
+  import { onMount } from 'svelte';
+  import { api } from '$lib/api';
 
   const STR = {
     id: {
@@ -193,13 +195,24 @@
 
   let q=$state(''); let status=$state('all'); let range=$state('30'); let page=$state(1); const perPage=4;
   let open=$state(false); let exp=$state(false); let cur:any=$state(null); let fmt=$state('csv'); let inc=$state(true);
-  const rows=[
-    {id:1,from:'Budi <budi@mail.com>',to:'cs@corp.id',subject:'Reset password',status:'Sent',date:'09:00',preview:'Mohon reset…',att:1},
-    {id:2,from:'Sari <sari@corp.id>',to:'cs@corp.id',subject:'Invoice',status:'Draft',date:'Kemarin',preview:'Draf invoice…',att:0},
-    {id:3,from:'Andi <andi@mail.com>',to:'cs@corp.id',subject:'Terima kasih',status:'Sent',date:'Senin',preview:'Terima kasih…',att:0},
-    {id:4,from:'Doni <doni@mail.com>',to:'cs@corp.id',subject:'Tanya produk',status:'Sent',date:'Jumat',preview:'Info produk…',att:2},
-    {id:5,from:'Rina <rina@mail.com>',to:'cs@corp.id',subject:'Data',status:'Draft',date:'Kamis',preview:'Draf data…',att:0}
-  ];
+  type HistRow = {id:string;from:string;to:string;subject:string;status:string;date:string;preview:string;att:number};
+  let rows=$state<HistRow[]>([
+    {id:'1',from:'Budi <budi@mail.com>',to:'cs@corp.id',subject:'Reset password',status:'Sent',date:'09:00',preview:'Mohon reset…',att:0}
+  ]);
+  async function loadHistory() {
+    try {
+      const data = (await api.emails()) as any[];
+      if (data.length) {
+        rows = data.map((e: any) => ({
+          id: String(e.id), from: e.from || '—', to: e.to || '—', subject: e.subject || '(tanpa subjek)',
+          status: e.status === 'draft' ? 'Draft' : e.status === 'send' ? 'Sent' : 'Inbox',
+          date: String(e.created_at ?? '').slice(0, 16).replace('T', ' '),
+          preview: String(e.body || '').slice(0, 80), att: 0
+        }));
+      }
+    } catch { /* fallback mock tetap */ }
+  }
+  onMount(loadHistory);
   let f=$derived(rows.filter(r=>(status==='all'||r.status.toLowerCase()===status)&&(!q||(r.subject+r.from).toLowerCase().includes(q.toLowerCase()))));
   let paged=$derived(f.slice((page-1)*perPage,page*perPage));
 </script>

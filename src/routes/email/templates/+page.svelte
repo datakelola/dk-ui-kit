@@ -17,6 +17,8 @@
   import { toast, Toaster } from 'svelte-sonner';
   import { FileText } from 'lucide-svelte';
   import { locale } from '$lib/i18n';
+  import { onMount } from 'svelte';
+  import { api } from '$lib/api';
 
   const STR = {
     id: {
@@ -175,16 +177,45 @@
   let s = $derived(STR[$locale]);
 
   let name=$state(''); let tsubject=$state(''); let tbody=$state('');
-  let editing:number|null=$state(null); let del:number|null=$state(null); let use=$state<any>(null);
+  let editing:string|null=$state(null); let del:string|null=$state(null); let use=$state<any>(null);
   let active=$state(true); let cat=$state('umum'); let q=$state('');
-  let rows=$state([
-    {id:1,name:'Follow-up Tiket',subject:'Follow-up tiket Anda',body:'Halo, menindaklanjuti…'},
-    {id:2,name:'Pengiriman Invoice',subject:'Invoice September',body:'Terlampir invoice…'},
-    {id:3,name:'Ucapan Terima Kasih',subject:'Terima kasih',body:'Terima kasih…'}
+  type TplRow = {id:string;name:string;subject:string;body:string};
+  let rows=$state<TplRow[]>([
+    {id:'1',name:'Follow-up Tiket',subject:'Follow-up tiket Anda',body:'Halo, menindaklanjuti…'}
   ]);
+  async function loadTpl() {
+    try {
+      const data = (await api.emailTemplates()) as any[];
+      if (data.length) rows = data.map((t: any) => ({ id: String(t.id), name: t.name, subject: t.subject ?? '', body: t.body ?? '' }));
+    } catch { /* fallback mock tetap */ }
+  }
+  onMount(loadTpl);
   let f=$derived(rows.filter(r=>!q||(r.name+r.subject).toLowerCase().includes(q.toLowerCase())));
-  function save(){ if(!name.trim()){toast.error(s.nameRequired);return;} if(editing){rows=rows.map(r=>r.id===editing?{...r,name,subject:tsubject,body:tbody}:r);toast.success(s.updatedToast);}else{rows=[...rows,{id:Date.now(),name,subject:tsubject,body:tbody}];toast.success(s.savedToast);} name='';tsubject='';tbody='';editing=null; }
+  async function save(){
+    if(!name.trim()){toast.error(s.nameRequired);return;}
+    try {
+      if(editing){
+        await api.deleteEmailTemplate(editing);
+        await api.createEmailTemplate({name, subject:tsubject, body:tbody});
+        toast.success(s.updatedToast);
+      } else {
+        await api.createEmailTemplate({name, subject:tsubject, body:tbody});
+        toast.success(s.savedToast);
+      }
+      name='';tsubject='';tbody='';editing=null;
+      await loadTpl();
+    } catch(e){ toast.error((e as Error).message); }
+  }
   function edit(r:any){editing=r.id;name=r.name;tsubject=r.subject;tbody=r.body;}
+  async function delTpl(){
+    if(!del) return;
+    try {
+      await api.deleteEmailTemplate(del);
+      toast.success(s.deletedToast);
+      del=null;
+      await loadTpl();
+    } catch(e){ toast.error((e as Error).message); }
+  }
 </script>
 <svelte:head><title>{s.docTitle}</title></svelte:head>
 <Toaster position="top-right"/>
@@ -209,4 +240,4 @@
   </Card.Content>
 </Card.Root>
 <Dialog.Root open={use!=null} onOpenChange={(o)=>{if(!o)use=null;}}><Dialog.Content class="max-w-[calc(100vw-2rem)]"><Dialog.Header><Dialog.Title class="min-w-0 truncate">{use?.name}</Dialog.Title></Dialog.Header><Textarea readonly value={use?.body??''} rows={5}/></Dialog.Content></Dialog.Root>
-<AlertDialog.Root open={del!=null} onOpenChange={(o)=>{if(!o)del=null;}}><AlertDialog.Content class="max-w-[calc(100vw-2rem)]"><AlertDialog.Header><AlertDialog.Title>{s.delTitle}</AlertDialog.Title></AlertDialog.Header><AlertDialog.Footer><AlertDialog.Cancel>{s.cancel}</AlertDialog.Cancel><AlertDialog.Action onclick={()=>{rows=rows.filter(r=>r.id!==del);del=null;toast.success(s.deletedToast);}}>{s.delBtn}</AlertDialog.Action></AlertDialog.Footer></AlertDialog.Content></AlertDialog.Root>
+<AlertDialog.Root open={del!=null} onOpenChange={(o)=>{if(!o)del=null;}}><AlertDialog.Content class="max-w-[calc(100vw-2rem)]"><AlertDialog.Header><AlertDialog.Title>{s.delTitle}</AlertDialog.Title></AlertDialog.Header><AlertDialog.Footer><AlertDialog.Cancel>{s.cancel}</AlertDialog.Cancel><AlertDialog.Action onclick={delTpl}>{s.delBtn}</AlertDialog.Action></AlertDialog.Footer></AlertDialog.Content></AlertDialog.Root>

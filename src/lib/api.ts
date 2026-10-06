@@ -52,7 +52,14 @@ export const api = {
   updateTicket: (id: string, v: object) => patch(`/tickets/${id}`, v),
 
   contacts: (search?: string) => get<any[]>(`/contacts${search ? `?search=${encodeURIComponent(search)}` : ''}`),
-  overview: () => get<Record<string, number>>('/reports/overview')
+  overview: () => get<Record<string, number>>('/reports/overview'),
+
+  emails: (status?: string) => get<any[]>(`/emails${status ? `?status=${status}` : ''}`),
+  createEmail: (v: object) => post('/emails', v).then((r) => r.data),
+  sendEmail: (id: string) => post(`/emails/${id}/send`, {}).then((r) => r.data),
+  emailTemplates: () => get<any[]>('/email-templates'),
+  createEmailTemplate: (v: object) => post('/email-templates', v).then((r) => r.data),
+  deleteEmailTemplate: (id: string) => req(`/email-templates/${id}`, { method: 'DELETE' }).then((r) => r.data)
 };
 
 export function logout() {

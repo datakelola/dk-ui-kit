@@ -23,6 +23,8 @@
   import EmailCompose from '$lib/components/ui/email-compose.svelte';
   import { ChevronLeft, ChevronRight, Inbox, Search, Archive, Trash2, MailOpen } from 'lucide-svelte';
   import { locale } from '$lib/i18n';
+  import { onMount } from 'svelte';
+  import { api } from '$lib/api';
 
   const STR = {
     id: {
@@ -257,16 +259,28 @@
   let checked = $state<number[]>([]);
 
   type Mail = { id:number; from:string; subject:string; snippet:string; date:string; read:boolean; status:string; ticket?:string; agent?:string; attachments:number };
-  const mails: Mail[] = [
-    { id:1, from:'Budi Santoso <budi@mail.com>', subject:'Permintaan reset password akun', snippet:'Mohon bantuan reset password untuk akun perusahaan kami…', date:'09:41', read:false, status:'Belum Dibaca', ticket:'T-2026-001', agent:'Rina', attachments:2 },
-    { id:2, from:'Sari Dewi <sari@corp.id>', subject:'Invoice bulan September', snippet:'Berikut kami lampirkan invoice bulan berjalan…', date:'Kemarin', read:true, status:'Sudah Dibaca', ticket:'T-2026-002', attachments:1 },
-    { id:3, from:'Andi <andi@mail.com>', subject:'Terima kasih atas bantuannya', snippet:'Layanan sangat membantu, terima kasih…', date:'Senin', read:true, status:'Terima Kasih', attachments:0 },
-    { id:4, from:'Spam Promo <promo@spam.com>', subject:'Menangkan hadiah!', snippet:'Klik link ini untuk klaim…', date:'Minggu', read:true, status:'Spam', attachments:0 },
-    { id:5, from:'HRD <hrd@corp.id>', subject:'Draft: Pengumuman libur', snippet:'Draf pengumuman libur akhir tahun…', date:'Sabtu', read:true, status:'Draft', attachments:0 },
-    { id:6, from:'Support <cs@corp.id>', subject:'Tiket Close: Gangguan akses', snippet:'Tiket telah diselesaikan…', date:'Jumat', read:true, status:'Close', attachments:1 },
-    { id:7, from:'Doni <doni@mail.com>', subject:'Salah sambung, mohon abaikan', snippet:'Email ini salah alamat…', date:'Kamis', read:false, status:'Salah Sambung', attachments:0 },
-    { id:8, from:'Rina <rina@mail.com>', subject:'Re: Permintaan data', snippet:'Sudah kami reply dengan data terlampir…', date:'Rabu', read:true, status:'Sudah Di-reply', attachments:1 }
-  ];
+  let mails = $state<Mail[]>([
+    { id:1, from:'Budi Santoso <budi@mail.com>', subject:'Permintaan reset password akun', snippet:'Mohon bantuan reset password untuk akun perusahaan kami…', date:'09:41', read:false, status:'Belum Dibaca', ticket:'T-2026-001', agent:'Rina', attachments:2 }
+  ]);
+  const folderOf = (st: string) => (st === 'draft' ? 'Draft' : st === 'send' ? 'Sudah Di-reply' : 'Belum Dibaca');
+  async function loadMails() {
+    try {
+      const rows = (await api.emails()) as any[];
+      if (rows.length) {
+        mails = rows.map((e: any, i: number) => ({
+          id: i + 1,
+          from: e.from || e.to || '—',
+          subject: e.subject || '(tanpa subjek)',
+          snippet: String(e.body || '').slice(0, 80),
+          date: String(e.created_at ?? '').slice(0, 16).replace('T', ' '),
+          read: e.status !== 'inbox',
+          status: folderOf(e.status),
+          attachments: 0
+        }));
+      }
+    } catch { /* fallback mock tetap */ }
+  }
+  onMount(loadMails);
   const statusVariant = (v:string) => v==='Spam'?'destructive':v==='Terima Kasih'?'success':v==='Draft'?'warning':v==='Close'?'secondary':'outline' as const;
   let filtered = $derived(mails.filter(m => (folder==='Semua'||m.status===folder) && (!q || (m.subject+m.from).toLowerCase().includes(q.toLowerCase()))));
   let totalPages = $derived(Math.max(1, Math.ceil(filtered.length/perPage)));

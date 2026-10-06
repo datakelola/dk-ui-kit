@@ -12,6 +12,7 @@
   import { Switch } from '$lib/components/ui/switch';
   import { Textarea } from '$lib/components/ui/textarea';
   import { toast, Toaster } from 'svelte-sonner';
+  import { api } from '$lib/api';
   import EmailCompose from '$lib/components/ui/email-compose.svelte';
   import { locale } from '$lib/i18n';
 
@@ -176,7 +177,18 @@
     {v:'thanks',label:'Terima Kasih',sub:'Terima kasih',body:'Terima kasih atas kepercayaan…'}];
   function applyTemplate(v:string){ const t=templates.find(t=>t.v===v); if(t){subject=t.sub;message=t.body;} }
   function addTag(){ const v=toInput.trim().replace(/,$/,''); if(v&&/^\S+@\S+\.\S+$/.test(v)&&!toTags.includes(v)){toTags=[...toTags,v];toInput='';} }
-  function send(){ if(!toTags.length){toast.error(s.minRecipient);return;} if(!subject.trim()){toast.error(s.subjectRequired);return;} toast.success(s.sentToast); }
+  async function send(){
+    if(!toTags.length){toast.error(s.minRecipient);return;}
+    if(!subject.trim()){toast.error(s.subjectRequired);return;}
+    try {
+      const created = (await api.createEmail({ to: toTags.join(','), subject, body: message, status: 'draft' })) as any;
+      await api.sendEmail(created.id);
+      toast.success(s.sentToast);
+      toTags = []; subject = ''; message = '';
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  }
 </script>
 <svelte:head><title>{s.docTitle}</title></svelte:head>
 <Toaster position="top-right"/>
