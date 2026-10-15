@@ -41,6 +41,12 @@
     }
   }
 
+  function enterUiMode() {
+    localStorage.setItem('dk_token', 'dev-ui-mode');
+    localStorage.setItem('dk_email', email || 'demo@dk-crm.local');
+    goto('/home');
+  }
+
   onMount(() => {
     if (localStorage.getItem('dk_token')) goto('/home');
   });
@@ -78,6 +84,7 @@
           {/if}
           {#if error}<p class="rounded-xl border border-rose-100 bg-rose-50 px-3 py-2 text-sm text-rose-600">{error}</p>{/if}
           <Button type="submit" class="w-full" disabled={loading}>{loading ? 'Memproses...' : 'Masuk →'}</Button>
+          <Button type="button" variant="outline" class="w-full" onclick={enterUiMode}>Masuk mode UI (tanpa backend)</Button>
         </form>
       </Card.Root>
       <Card.Root class="mt-4 p-4 text-xs text-slate-500">

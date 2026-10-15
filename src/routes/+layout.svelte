@@ -288,9 +288,10 @@
 	};
 	let pageTitle = $derived(pageTitles[page.url.pathname] ?? "DK CRM");
 	let isWallboard = $derived(page.url.pathname === "/wallboard");
+	let isPublicRoute = $derived(page.url.pathname === "/login");
 </script>
 
-{#if isWallboard}
+{#if isWallboard || isPublicRoute}
 	<div class="min-h-svh bg-slate-950 text-slate-100">
 		<Toaster position="top-right" />
 		{@render children()}
