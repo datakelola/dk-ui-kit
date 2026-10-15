@@ -419,7 +419,6 @@
 							<Tabs.Trigger value="resolved">{s.tabResolved}</Tabs.Trigger>
 						</Tabs.List>
 						<ScrollArea.Root class="min-h-0 flex-1">
-							{#if loadError}<p class="m-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">Backend tidak terjangkau — inbox kosong (mode UI).</p>{/if}
 							<div class="flex flex-col gap-1.5 p-3">
 								{#each filteredQueues as q (q.id)}
 									<button

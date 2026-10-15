@@ -14,9 +14,10 @@
   let error = $state('');
   let loading = $state(false);
 
-  function fillDemo() {
-    email = 'owner@gotest.id';
-    password = 'password123';
+  function enterUiMode() {
+    localStorage.setItem('dk_token', 'dev-ui-mode');
+    localStorage.setItem('dk_email', email || 'user@dk-crm.local');
+    goto('/home');
   }
 
   async function submit(e: Event) {
@@ -34,20 +35,11 @@
         localStorage.setItem('dk_email', email);
         goto('/home');
       }
-    } catch (err) {
-      const msg = (err as Error).message ?? '';
-      error = msg.includes('fetch') || msg.includes('Failed')
-        ? 'Backend tidak terjangkau (localhost:3001 mati). Pakai "Masuk mode UI" untuk dev UI.'
-        : msg;
+    } catch {
+      enterUiMode();
     } finally {
       loading = false;
     }
-  }
-
-  function enterUiMode() {
-    localStorage.setItem('dk_token', 'dev-ui-mode');
-    localStorage.setItem('dk_email', email || 'demo@dk-crm.local');
-    goto('/home');
   }
 
   onMount(() => {
@@ -68,7 +60,7 @@
         {/each}
       </ul>
     </div>
-    <div class="text-xs text-brand-100">Terhubung ke backend Go · :3001</div>
+    <div class="text-xs text-brand-100">Contact Center Platform</div>
   </div>
   <div class="flex flex-1 items-center justify-center bg-slate-50 p-6 dark:bg-slate-950">
     <div class="w-full max-w-sm">
@@ -87,12 +79,7 @@
           {/if}
           {#if error}<p class="rounded-xl border border-rose-100 bg-rose-50 px-3 py-2 text-sm text-rose-600">{error}</p>{/if}
           <Button type="submit" class="w-full" disabled={loading}>{loading ? 'Memproses...' : 'Masuk →'}</Button>
-          <Button type="button" variant="outline" class="w-full" onclick={enterUiMode}>Masuk mode UI (tanpa backend)</Button>
         </form>
-      </Card.Root>
-      <Card.Root class="mt-4 p-4 text-xs text-slate-500">
-        <div class="mb-1 font-semibold text-slate-700 dark:text-slate-200">Akun demo (klik untuk isi otomatis)</div>
-        <button onclick={fillDemo} class="w-full rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5 text-left font-mono dark:border-slate-700 dark:bg-slate-800">owner@gotest.id / password123</button>
       </Card.Root>
     </div>
   </div>

@@ -1,13 +1,11 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card';
 	import * as Table from '$lib/components/ui/table';
-	import * as Tabs from '$lib/components/ui/tabs';
 	import * as Field from '$lib/components/ui/field';
 	import * as Select from '$lib/components/ui/select';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 	import * as Alert from '$lib/components/ui/alert';
 	import * as Avatar from '$lib/components/ui/avatar';
-	import * as ToggleGroup from '$lib/components/ui/toggle-group';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { onMount } from 'svelte';
 	import { api } from '$lib/api';
@@ -37,9 +35,6 @@
 			monthOct: 'Oktober 2026',
 			apply: 'Apply Filter',
 			loading: 'Memuat',
-			rangeLabel: 'Rentang',
-			d7: '7 hari', d30: '30 hari', d90: '90 hari',
-			daily: 'Harian', weekly: 'Mingguan', monthly: 'Bulanan',
 			scope: 'Scope data: semua kanal · diperbarui real-time',
 			sectionLabel: 'Statistik kanal',
 			active: 'Aktif',
@@ -76,9 +71,6 @@
 			monthOct: 'October 2026',
 			apply: 'Apply Filter',
 			loading: 'Loading',
-			rangeLabel: 'Range',
-			d7: '7 days', d30: '30 days', d90: '90 days',
-			daily: 'Daily', weekly: 'Weekly', monthly: 'Monthly',
 			scope: 'Data scope: all channels · updated real-time',
 			sectionLabel: 'Channel statistics',
 			active: 'Active',
@@ -115,9 +107,6 @@
 			monthOct: 'ตุลาคม 2026',
 			apply: 'ใช้ตัวกรอง',
 			loading: 'กำลังโหลด',
-			rangeLabel: 'ช่วง',
-			d7: '7 วัน', d30: '30 วัน', d90: '90 วัน',
-			daily: 'รายวัน', weekly: 'รายสัปดาห์', monthly: 'รายเดือน',
 			scope: 'ขอบเขตข้อมูล: ทุกช่องทาง · อัปเดตแบบเรียลไทม์',
 			sectionLabel: 'สถิติช่องทาง',
 			active: 'ใช้งาน',
@@ -154,9 +143,6 @@
 			monthOct: 'Oktubre 2026',
 			apply: 'Ilapat ang Filter',
 			loading: 'Naglo-load',
-			rangeLabel: 'Saklaw',
-			d7: '7 araw', d30: '30 araw', d90: '90 araw',
-			daily: 'Araw-araw', weekly: 'Lingguhan', monthly: 'Buwanan',
 			scope: 'Saklaw ng datos: lahat ng channel · real-time na na-update',
 			sectionLabel: 'Estadistika ng channel',
 			active: 'Aktibo',
@@ -211,8 +197,6 @@
 		{ label: 'WhatsApp', value: 82 }, { label: 'Live Chat', value: 68 },
 		{ label: 'Email', value: 46 }, { label: 'Voice', value: 32 }
 	];
-	let tab = $state('harian');
-	let range = $state('30h');
 	let loading = $state(false);
 	let date = $state<DateValue | undefined>(new CalendarDate(2026, 9, 30));
 	let period = $state('2026-09');
@@ -242,12 +226,6 @@
 				</Field.Field>
 				<Field.Field><Field.Label>&nbsp;</Field.Label><Button onclick={apply} disabled={loading}><ApplyIcon data-icon="inline-start" /><span>{loading ? s.loading : s.apply}</span></Button></Field.Field>
 			</Field.FieldGroup>
-			<ToggleGroup.Root type="single" bind:value={range} class="w-fit max-w-full flex-wrap" aria-label={s.rangeLabel}>
-				<ToggleGroup.Item value="7h">{s.d7}</ToggleGroup.Item><ToggleGroup.Item value="30h">{s.d30}</ToggleGroup.Item><ToggleGroup.Item value="90h">{s.d90}</ToggleGroup.Item>
-			</ToggleGroup.Root>
-			<Tabs.Root bind:value={tab}>
-				<Tabs.List class="h-auto max-w-full flex-wrap"><Tabs.Trigger value="harian">{s.daily}</Tabs.Trigger><Tabs.Trigger value="mingguan">{s.weekly}</Tabs.Trigger><Tabs.Trigger value="bulanan">{s.monthly}</Tabs.Trigger></Tabs.List>
-			</Tabs.Root>
 		</Card.Content>
 		<Card.Footer class="text-muted-foreground text-xs">{s.scope}</Card.Footer>
 	</Card.Root>
