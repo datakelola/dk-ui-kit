@@ -4,6 +4,11 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+	optimizeDeps: {
+		// paneforge hanya publish kondisi `svelte` (tanpa export default),
+		// sehingga tidak bisa di-prebundle esbuild — sajikan native via plugin Svelte.
+		exclude: ['paneforge']
+	},
 	plugins: [
 		tailwindcss(),
 		sveltekit({
