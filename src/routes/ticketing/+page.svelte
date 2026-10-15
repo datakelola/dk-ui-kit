@@ -216,16 +216,20 @@
 	onMount(() => loadTickets());
 	const initials = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
 	const statusLabel = (st: string) => st === 'open' ? s.stOpen : st === 'pending' ? s.stPending : s.stResolved;
+	let ticketQuery = $state('');
+	let tab = $state('open');
+	let visibleTickets = $derived(tickets.filter((t) => !ticketQuery || `${t.id} ${t.number} ${t.subject} ${t.customer}`.toLowerCase().includes(ticketQuery.toLowerCase())));
+	function switchTab(v: string) { tab = v; loadTickets(v); }
 </script>
 
 <svelte:head><title>{s.title}</title></svelte:head>
 
 <div class="flex flex-col gap-3">
-	<Tabs.Root value="open">
+	<Tabs.Root bind:value={tab}>
 		<Tabs.List class="max-w-full overflow-x-auto [&>*]:whitespace-nowrap">
-			<Tabs.Trigger value="open" onclick={() => loadTickets('open')}>{s.tabOpen}</Tabs.Trigger>
-			<Tabs.Trigger value="pending" onclick={() => loadTickets('pending')}>{s.tabPending}</Tabs.Trigger>
-			<Tabs.Trigger value="resolved" onclick={() => loadTickets('resolved')}>{s.tabResolved}</Tabs.Trigger>
+			<Tabs.Trigger value="open" onclick={() => switchTab('open')}>{s.tabOpen}</Tabs.Trigger>
+			<Tabs.Trigger value="pending" onclick={() => switchTab('pending')}>{s.tabPending}</Tabs.Trigger>
+			<Tabs.Trigger value="resolved" onclick={() => switchTab('resolved')}>{s.tabResolved}</Tabs.Trigger>
 		</Tabs.List>
 	</Tabs.Root>
 	{#if loadError}<p class="rounded-xl border border-rose-100 bg-rose-50 px-3 py-2 text-sm text-rose-600">{loadError}</p>{/if}
@@ -234,20 +238,20 @@
 		<Resizable.Pane defaultSize={32} class="max-lg:min-h-[340px] max-lg:w-full">
 			<Card.Root class="flex h-full min-h-0 flex-col">
 				<Card.Header class="flex flex-row flex-wrap items-center gap-2">
-					<InputGroup.Root class="min-w-0 flex-1"><InputGroup.Addon><Search class="size-4" /></InputGroup.Addon><InputGroup.Input placeholder={s.searchPh} class="min-w-0" /></InputGroup.Root>
+					<InputGroup.Root class="min-w-0 flex-1"><InputGroup.Addon><Search class="size-4" /></InputGroup.Addon><InputGroup.Input bind:value={ticketQuery} placeholder={s.searchPh} class="min-w-0" /></InputGroup.Root>
 					<DropdownMenu.Root>
 						<DropdownMenu.Trigger>
 							{#snippet child({ props })}<Button size="icon" variant="outline" {...props}><MoreVertical class="size-4" /></Button>{/snippet}
 						</DropdownMenu.Trigger>
 						<DropdownMenu.Content>
-							<DropdownMenu.Group><DropdownMenu.GroupHeading>{s.statusH}</DropdownMenu.GroupHeading><DropdownMenu.Item>{s.tabOpen}</DropdownMenu.Item><DropdownMenu.Item>{s.tabPending}</DropdownMenu.Item><DropdownMenu.Item>{s.tabResolved}</DropdownMenu.Item></DropdownMenu.Group>
+							<DropdownMenu.Group><DropdownMenu.GroupHeading>{s.statusH}</DropdownMenu.GroupHeading><DropdownMenu.Item onclick={() => switchTab('open')}>{s.tabOpen}</DropdownMenu.Item><DropdownMenu.Item onclick={() => switchTab('pending')}>{s.tabPending}</DropdownMenu.Item><DropdownMenu.Item onclick={() => switchTab('resolved')}>{s.tabResolved}</DropdownMenu.Item></DropdownMenu.Group>
 						</DropdownMenu.Content>
 					</DropdownMenu.Root>
 				</Card.Header>
 				<Separator />
 				<ScrollArea.Root class="h-[55vh]">
 					<div class="flex flex-col gap-2 p-3">
-						{#each tickets as t (t.id)}
+						{#each visibleTickets as t (t.id)}
 							<button onclick={() => pick(t)} class={cn('flex min-w-0 items-center gap-3 rounded-lg p-3 text-left hover:bg-muted/50', sel?.id === t.id && 'bg-muted')}>
 								<Avatar.Root class="shrink-0"><Avatar.Fallback>{initials(t.customer)}</Avatar.Fallback></Avatar.Root>
 								<span class="min-w-0 flex-1"><span class="flex flex-wrap items-center gap-2"><Ticket class="size-3 shrink-0" /><strong class="min-w-0 flex-1 truncate text-sm">{t.id}</strong><Badge variant="outline" class="shrink-0 text-[10px]">{t.channel}</Badge></span>
@@ -265,7 +269,7 @@
 			<Card.Root class="flex h-full min-h-0 flex-col">
 				<Card.Header class="flex flex-row flex-wrap items-center gap-3">
 					<div class="flex min-w-0 flex-1 flex-col gap-0.5"><strong class="truncate text-sm">{sel.number} — {sel.subject}</strong><span class="truncate text-xs text-muted-foreground">{sel.customer} • {sel.channel}</span></div>
-					<Tooltip.Provider><Tooltip.Root><Tooltip.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props}>{s.assign}</Button>{/snippet}</Tooltip.Trigger><Tooltip.Content>{s.assignTip}</Tooltip.Content></Tooltip.Root></Tooltip.Provider>
+					<Tooltip.Provider><Tooltip.Root><Tooltip.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props} onclick={() => toast.success(`${s.assign}: ${sel.number}`)}>{s.assign}</Button>{/snippet}</Tooltip.Trigger><Tooltip.Content>{s.assignTip}</Tooltip.Content></Tooltip.Root></Tooltip.Provider>
 					<Sheet.Root>
 						<Sheet.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props}>{s.timeline}</Button>{/snippet}</Sheet.Trigger>
 						<Sheet.Content><Sheet.Header><Sheet.Title>{s.timelineTitle} {sel.id}</Sheet.Title></Sheet.Header><div class="flex flex-col gap-2 p-4 text-sm"><p>{s.timelineSteps}</p><Separator /><p class="text-muted-foreground">{s.timelineDesc}</p></div></Sheet.Content>

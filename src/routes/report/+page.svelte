@@ -129,12 +129,12 @@
 			{ title: 'CSAT Interaction', desc: 'Rating per interaksi & agent', to: '/report/csat-interaction', keys: 'csat interaction rating agent' }
 		]},
 		{ id: 'wallboards' as const, label: s.gWall, icon: Tv, cards: [
-			{ title: 'Wallboard AHU', desc: 'Traffic real-time', to: '/spv', keys: 'wallboard ahu live traffic' },
-			{ title: 'Wallboard Pimpinan', desc: 'Traffic real-time', to: '/spv', keys: 'wallboard pimpinan' },
-			{ title: 'Wallboard Agent', desc: 'Traffic real-time', to: '/spv', keys: 'wallboard agent' }
+			{ title: 'Wallboard AHU', desc: 'Traffic real-time', to: '/wallboard', keys: 'wallboard ahu live traffic' },
+			{ title: 'Wallboard Pimpinan', desc: 'Traffic real-time', to: '/wallboard', keys: 'wallboard pimpinan' },
+			{ title: 'Wallboard Agent', desc: 'Traffic real-time', to: '/wallboard', keys: 'wallboard agent' }
 		]},
 		{ id: 'omni' as const, label: s.gOmni, icon: Send, cards: [
-			{ title: 'Outbound Blast Dashboard', desc: 'KPI & analitik blast', to: '/settings', keys: 'outbound blast dashboard analytics whatsapp email campaign' },
+			{ title: 'Outbound Blast Dashboard', desc: 'KPI & analitik blast', to: '/email/history', keys: 'outbound blast dashboard analytics whatsapp email campaign' },
 			{ title: 'Blast History', desc: 'Log audit broadcast', to: '/email/history', keys: 'blast history audit logs campaign' },
 			{ title: 'Email Templates', desc: 'Kelola template email', to: '/email/templates', keys: 'email templates compose' }
 		]}

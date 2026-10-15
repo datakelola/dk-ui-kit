@@ -123,7 +123,7 @@
 	function statusLabel(st: string): string {
 		return st === 'Ready' ? s.ready : s.offline;
 	}
-	let q = $state(''); let range = $state('today'); let view = $state('semua'); let open = $state(false);
+	let q = $state(''); let range = $state('today'); let view = $state('semua'); let open = $state(false); let statusTab = $state('status');
 	let detail = $state(agents[0]); let loading = $state(false);
 	let filtered = $derived(agents.filter((a) => `${a.name} ${a.user}`.toLowerCase().includes(q.toLowerCase()) && (view === 'semua' || (view === 'ready' ? a.status === 'Ready' : a.status === 'Offline'))));
 	function reload() { loading = true; setTimeout(() => (loading = false), 500); }
@@ -153,34 +153,40 @@
 	<Card.Root>
 		<Card.Header><Card.Title>{s.statusTitle}</Card.Title><Card.Description>{s.statusDesc}</Card.Description></Card.Header>
 		<Card.Content class="flex flex-col gap-4">
-			<Tabs.Root value="status"><Tabs.List class="h-auto max-w-full flex-wrap"><Tabs.Trigger value="status">{s.tabStatus}</Tabs.Trigger><Tabs.Trigger value="history">{s.tabHistory}</Tabs.Trigger></Tabs.List></Tabs.Root>
+			<Tabs.Root bind:value={statusTab}><Tabs.List class="h-auto max-w-full flex-wrap"><Tabs.Trigger value="status">{s.tabStatus}</Tabs.Trigger><Tabs.Trigger value="history">{s.tabHistory}</Tabs.Trigger></Tabs.List></Tabs.Root>
 			{#if loading}
 				<div class="flex flex-col gap-2">{#each [1, 2, 3] as _}<Skeleton class="h-12 w-full" />{/each}</div>
+			{:else if statusTab === 'history'}
+				<p class="text-sm text-muted-foreground">{s.histDesc}</p>
+				<div class="overflow-x-auto"><Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thAgent}</Table.Head><Table.Head>{s.thTotal}</Table.Head><Table.Head>{s.thAvg}</Table.Head><Table.Head>{s.thRate}</Table.Head><Table.Head>{s.thRating}</Table.Head></Table.Row></Table.Header>
+				<Table.Body>{#each filtered as a}<Table.Row><Table.Cell class="font-medium">{a.name}</Table.Cell><Table.Cell>{a.total}</Table.Cell><Table.Cell>{a.avg}</Table.Cell><Table.Cell><div class="flex items-center gap-2"><Progress value={a.rate} class="w-20" /><span class="text-xs">{a.rate}%</span></div></Table.Cell><Table.Cell><span class="flex items-center gap-1 font-medium"><Star data-icon="inline" />{a.rating}</span></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root></div>
 			{:else if filtered.length === 0}
 				<Empty.Root><Empty.Header><Empty.Media><UserRound data-icon="empty" /></Empty.Media><Empty.Title>{s.emptyTitle}</Empty.Title><Empty.Description>{s.emptyDesc}</Empty.Description></Empty.Header></Empty.Root>
 			{:else}
-				<Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thAgent}</Table.Head><Table.Head>{s.thStatus}</Table.Head><Table.Head>{s.thHandle}</Table.Head><Table.Head>{s.thClosed}</Table.Head><Table.Head class="text-right">{s.thActions}</Table.Head></Table.Row></Table.Header>
+				<div class="overflow-x-auto"><Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thAgent}</Table.Head><Table.Head>{s.thStatus}</Table.Head><Table.Head>{s.thHandle}</Table.Head><Table.Head>{s.thClosed}</Table.Head><Table.Head class="text-right">{s.thActions}</Table.Head></Table.Row></Table.Header>
 				<Table.Body>{#each filtered as a}<Table.Row>
 					<Table.Cell><div class="flex min-w-0 items-center gap-2"><Avatar.Root class="size-8 shrink-0"><Avatar.Fallback>{a.name.slice(0, 1)}</Avatar.Fallback></Avatar.Root><div class="min-w-0"><div class="truncate font-medium">{a.name}</div><div class="text-muted-foreground truncate text-xs">{a.user}</div></div></div></Table.Cell>
 					<Table.Cell><Badge variant={a.status === 'Ready' ? 'success' : 'secondary'} class={cn(a.status === 'Ready' && 'border-green-500/30')}>{statusLabel(a.status)}</Badge></Table.Cell>
 					<Table.Cell>{a.handle}</Table.Cell><Table.Cell>{a.closed}</Table.Cell>
 					<Table.Cell class="text-right"><Tooltip.Root><Tooltip.Trigger><Button variant="ghost" size="sm" onclick={() => { detail = a; open = true; }}><Eye data-icon="inline-start" />{s.view}</Button></Tooltip.Trigger><Tooltip.Content>{s.viewTip} {a.name}</Tooltip.Content></Tooltip.Root></Table.Cell>
-				</Table.Row>{/each}</Table.Body></Table.Root>
+				</Table.Row>{/each}</Table.Body></Table.Root></div>
 			{/if}
 		</Card.Content>
 		<Card.Footer><Separator class="my-1" /><p class="text-muted-foreground flex items-center gap-1 text-xs"><Info data-icon="inline" /> {s.cols}</p></Card.Footer>
 	</Card.Root>
 
+	{#if statusTab === 'status'}
 	<Card.Root>
 		<Card.Header><Card.Title>{s.histTitle}</Card.Title><Card.Description>{s.histDesc}</Card.Description></Card.Header>
 		<Card.Content class="flex flex-col gap-4">
 			<div class="flex flex-col gap-2">{#each filtered as a}<div class="flex min-w-0 items-center gap-3"><Badge variant="outline" class="min-w-24 shrink-0 justify-center">{a.name.split(' ')[0]}</Badge><Progress value={Math.round((a.total / 128) * 100)} class="min-w-0 flex-1" /><span class="shrink-0 text-xs font-medium whitespace-nowrap">{a.total} {s.handled}</span></div>{/each}</div>
 
-			<Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thAgent}</Table.Head><Table.Head>{s.thTotal}</Table.Head><Table.Head>{s.thAvg}</Table.Head><Table.Head>{s.thRate}</Table.Head><Table.Head>{s.thRating}</Table.Head></Table.Row></Table.Header>
-			<Table.Body>{#each filtered as a}<Table.Row><Table.Cell class="font-medium">{a.name}</Table.Cell><Table.Cell>{a.total}</Table.Cell><Table.Cell>{a.avg}</Table.Cell><Table.Cell><div class="flex items-center gap-2"><Progress value={a.rate} class="w-20" /><span class="text-xs">{a.rate}%</span></div></Table.Cell><Table.Cell><span class="flex items-center gap-1 font-medium"><Star data-icon="inline" />{a.rating}</span></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
+			<div class="overflow-x-auto"><Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thAgent}</Table.Head><Table.Head>{s.thTotal}</Table.Head><Table.Head>{s.thAvg}</Table.Head><Table.Head>{s.thRate}</Table.Head><Table.Head>{s.thRating}</Table.Head></Table.Row></Table.Header>
+			<Table.Body>{#each filtered as a}<Table.Row><Table.Cell class="font-medium">{a.name}</Table.Cell><Table.Cell>{a.total}</Table.Cell><Table.Cell>{a.avg}</Table.Cell><Table.Cell><div class="flex items-center gap-2"><Progress value={a.rate} class="w-20" /><span class="text-xs">{a.rate}%</span></div></Table.Cell><Table.Cell><span class="flex items-center gap-1 font-medium"><Star data-icon="inline" />{a.rating}</span></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root></div>
 		</Card.Content>
 		<Card.Footer><Alert.Root variant="success"><Info data-icon="alert" /><Alert.Description>{s.alert}</Alert.Description></Alert.Root></Card.Footer>
 	</Card.Root>
+	{/if}
 </div>
 
 <Dialog.Root bind:open><Dialog.Content class="max-w-[calc(100vw-2rem)] sm:max-w-md"><Dialog.Header><Dialog.Title>{s.detail} — {detail.name}</Dialog.Title><Dialog.Description>{detail.user} · {statusLabel(detail.status)} · {detail.total} {s.handled}</Dialog.Description></Dialog.Header><Dialog.Footer><Button variant="outline" onclick={() => (open = false)}>{s.close}</Button></Dialog.Footer></Dialog.Content></Dialog.Root>

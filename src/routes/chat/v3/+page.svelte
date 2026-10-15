@@ -289,7 +289,8 @@
 		}
 	}
 	onMount(loadQueues);
-	const filteredQueues = $derived(queues.filter((q) => q.queue === inboxTab));
+	let inboxQuery = $state('');
+	const filteredQueues = $derived(queues.filter((q) => q.queue === inboxTab && (!inboxQuery || `${q.name} ${q.snippet} ${q.id}`.toLowerCase().includes(inboxQuery.toLowerCase()))));
 	let selectedId = $state('');
 	const selected = $derived(queues.find((q) => q.id === selectedId) ?? queues[0]);
 
@@ -401,7 +402,7 @@
 						</div>
 						<InputGroup.Root>
 							<InputGroup.Addon><Search data-icon="inline" class="size-4" /></InputGroup.Addon>
-							<InputGroup.Input placeholder={s.searchPh} />
+							<InputGroup.Input bind:value={inboxQuery} placeholder={s.searchPh} />
 						</InputGroup.Root>
 						<div class="flex flex-col gap-1">
 							<div class="flex items-center justify-between text-xs text-muted-foreground">
@@ -418,6 +419,7 @@
 							<Tabs.Trigger value="resolved">{s.tabResolved}</Tabs.Trigger>
 						</Tabs.List>
 						<ScrollArea.Root class="min-h-0 flex-1">
+							{#if loadError}<p class="m-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">Backend tidak terjangkau — inbox kosong (mode UI).</p>{/if}
 							<div class="flex flex-col gap-1.5 p-3">
 								{#each filteredQueues as q (q.id)}
 									<button

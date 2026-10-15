@@ -18,6 +18,7 @@
 	import * as Empty from '$lib/components/ui/empty';
 	import DatePicker from "$lib/components/ui/date-picker.svelte";
 	import { Spinner } from '$lib/components/ui/spinner';
+	import { toast } from 'svelte-sonner';
 	import { cn } from '$lib/utils.js';
 	import { Plus, Search, RefreshCw, ChevronRight, CalendarDays, Info, CalendarClock } from 'lucide-svelte';
 	import { CalendarDate, type DateValue } from '@internationalized/date';
@@ -130,13 +131,13 @@
 	let q = $state(''); let status = $state('semua'); let tab = $state('daftar'); let loading = $state(false); let open = $state(false);
 	let date = $state<DateValue | undefined>(new CalendarDate(2026, 9, 30));
 	let newDate = $state<DateValue | undefined>(new CalendarDate(2026, 9, 30));
-	const schedules = [
+	let schedules = $state([
 		{ date: '30 Sep 2026', agents: 12, channels: ['Omnichannel', 'Inbound Call'], statusKey: 'scheduled', cap: 92 },
 		{ date: '01 Okt 2026', agents: 14, channels: ['Omnichannel', 'Email', 'Inbound Call'], statusKey: 'scheduled', cap: 96 },
 		{ date: '02 Okt 2026', agents: 13, channels: ['Omnichannel', 'Email'], statusKey: 'scheduled', cap: 88 },
 		{ date: '03 Okt 2026', agents: 8, channels: ['Omnichannel'], statusKey: 'limited', cap: 55 },
 		{ date: '04 Okt 2026', agents: 0, channels: [] as string[], statusKey: 'off', cap: 0 }
-	];
+	]);
 	function statusLabel(key: string): string {
 		if (key === 'scheduled') return s.stScheduled;
 		if (key === 'limited') return s.stLimited;
@@ -147,8 +148,14 @@
 		if (key === 'limited') return 'limited';
 		return 'off';
 	}
-	let filtered = $derived(schedules.filter((x) => x.date.toLowerCase().includes(q.toLowerCase()) && (status === 'semua' || statusValue(x.statusKey) === status)));
+	let filtered = $derived(schedules.filter((x) => (!q || `${x.date} ${x.agents} ${x.channels.join(' ')}`.toLowerCase().includes(q.toLowerCase())) && (status === 'semua' || statusValue(x.statusKey) === status)));
 	function search() { loading = true; setTimeout(() => (loading = false), 500); }
+	function saveSchedule() {
+		const label = newDate?.toString() ?? '';
+		if (!label) return;
+		schedules = [...schedules, { date: label, agents: 0, channels: ['Omnichannel'], statusKey: 'scheduled', cap: 0 }];
+		open = false;
+	}
 	const BtnIcon = $derived(loading ? Spinner : Search);
 
 </script>
@@ -168,7 +175,6 @@
 				<Field.Field><Field.Label>&nbsp;</Field.Label><div class="flex flex-wrap gap-2"><Button onclick={search} disabled={loading}><BtnIcon data-icon="inline-start" /><span>{loading ? s.finding : s.find}</span></Button><Button variant="outline" onclick={() => (q = '')}><RefreshCw data-icon="inline-start" />{s.reset}</Button></div></Field.Field>
 			</Field.FieldGroup>
 			<ToggleGroup.Root type="single" bind:value={tab} aria-label={s.viewLabel} class="max-w-full flex-wrap"><ToggleGroup.Item value="daftar">{s.list}</ToggleGroup.Item><ToggleGroup.Item value="kalender">{s.calendar}</ToggleGroup.Item></ToggleGroup.Root>
-			<Tabs.Root bind:value={tab}><Tabs.List class="h-auto max-w-full flex-wrap"><Tabs.Trigger value="daftar">{s.list}</Tabs.Trigger><Tabs.Trigger value="kalender">{s.calendar}</Tabs.Trigger></Tabs.List></Tabs.Root>
 		</Card.Content>
 		<Card.Footer class="text-muted-foreground text-xs">{s.showingPre} {filtered.length} {s.showingMid} {schedules.length} {s.showingPost}</Card.Footer>
 	</Card.Root>
@@ -185,8 +191,8 @@
 				{:else if filtered.length === 0}
 					<Empty.Root><Empty.Header><Empty.Media><CalendarClock data-icon="empty" /></Empty.Media><Empty.Title>{s.emptyTitle}</Empty.Title><Empty.Description>{s.emptyDesc}</Empty.Description></Empty.Header><Empty.Content><Button size="sm" onclick={() => (open = true)}><Plus data-icon="inline-start" />{s.add}</Button></Empty.Content></Empty.Root>
 				{:else}
-					<Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thNo}</Table.Head><Table.Head>{s.thDate}</Table.Head><Table.Head>{s.thCount}</Table.Head><Table.Head>{s.thChannel}</Table.Head><Table.Head>{s.thCap}</Table.Head><Table.Head class="text-right">{s.thAct}</Table.Head></Table.Row></Table.Header>
-					<Table.Body>{#each filtered as x, i}<Table.Row><Table.Cell class="text-muted-foreground">{i + 1}</Table.Cell><Table.Cell class="font-medium">{x.date}</Table.Cell><Table.Cell><span class="flex items-center gap-2"><Avatar.Root class="size-6"><Avatar.Fallback>{String(x.agents)}</Avatar.Fallback></Avatar.Root>{x.agents} {s.agentSuffix}</span></Table.Cell><Table.Cell><div class="flex min-w-48 flex-wrap gap-1.5">{#each x.channels as c}<Badge variant="secondary">{c}</Badge>{:else}<span class="text-muted-foreground text-sm">-</span>{/each}</div></Table.Cell><Table.Cell><div class="flex items-center gap-2"><Progress value={x.cap} class={cn('w-20', x.cap < 60 && 'opacity-70')} /><span class="text-xs">{x.cap}%</span></div></Table.Cell><Table.Cell class="text-right"><Tooltip.Root><Tooltip.Trigger><Button variant="ghost" size="sm">{s.detail}<ChevronRight data-icon="inline-end" /></Button></Tooltip.Trigger><Tooltip.Content>{s.schedTipPre} {x.date}</Tooltip.Content></Tooltip.Root></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
+					<div class="overflow-x-auto"><Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thNo}</Table.Head><Table.Head>{s.thDate}</Table.Head><Table.Head>{s.thCount}</Table.Head><Table.Head>{s.thChannel}</Table.Head><Table.Head>{s.thCap}</Table.Head><Table.Head class="text-right">{s.thAct}</Table.Head></Table.Row></Table.Header>
+					<Table.Body>{#each filtered as x, i}<Table.Row><Table.Cell class="text-muted-foreground">{i + 1}</Table.Cell><Table.Cell class="font-medium">{x.date}</Table.Cell><Table.Cell><span class="flex items-center gap-2"><Avatar.Root class="size-6"><Avatar.Fallback>{String(x.agents)}</Avatar.Fallback></Avatar.Root>{x.agents} {s.agentSuffix}</span></Table.Cell><Table.Cell><div class="flex min-w-48 flex-wrap gap-1.5">{#each x.channels as c}<Badge variant="secondary">{c}</Badge>{:else}<span class="text-muted-foreground text-sm">-</span>{/each}</div></Table.Cell><Table.Cell><div class="flex items-center gap-2"><Progress value={x.cap} class={cn('w-20', x.cap < 60 && 'opacity-70')} /><span class="text-xs">{x.cap}%</span></div></Table.Cell><Table.Cell class="text-right"><Tooltip.Root><Tooltip.Trigger><Button variant="ghost" size="sm" onclick={() => toast.success(`${s.detail}: ${x.date}`)}>{s.detail}<ChevronRight data-icon="inline-end" /></Button></Tooltip.Trigger><Tooltip.Content>{s.schedTipPre} {x.date}</Tooltip.Content></Tooltip.Root></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root></div>
 				{/if}
 			</Card.Content>
 			<Card.Footer><Separator class="my-1" /><Alert.Root variant="success"><CalendarDays data-icon="alert" /><Alert.Description>{s.alert}</Alert.Description></Alert.Root></Card.Footer>
@@ -195,4 +201,4 @@
 	<p class="text-muted-foreground flex items-center gap-1 text-xs"><Info data-icon="inline" /> {s.channelInfo}</p>
 </div>
 
-<Dialog.Root bind:open><Dialog.Content class="max-w-[calc(100vw-2rem)] sm:max-w-md"><Dialog.Header><Dialog.Title>{s.dlgTitle}</Dialog.Title><Dialog.Description>{s.dlgDesc}</Dialog.Description></Dialog.Header><Field.FieldGroup class="flex flex-col gap-4 py-2"><Field.Field><Field.Label>{s.dateLabel}</Field.Label><DatePicker bind:value={newDate} label={s.newDateLabel} /></Field.Field></Field.FieldGroup><Dialog.Footer><Button variant="outline" onclick={() => (open = false)}>{s.cancel}</Button><Button onclick={() => (open = false)}>{s.save}</Button></Dialog.Footer></Dialog.Content></Dialog.Root>
+<Dialog.Root bind:open><Dialog.Content class="max-w-[calc(100vw-2rem)] sm:max-w-md"><Dialog.Header><Dialog.Title>{s.dlgTitle}</Dialog.Title><Dialog.Description>{s.dlgDesc}</Dialog.Description></Dialog.Header><Field.FieldGroup class="flex flex-col gap-4 py-2"><Field.Field><Field.Label>{s.dateLabel}</Field.Label><DatePicker bind:value={newDate} label={s.newDateLabel} /></Field.Field></Field.FieldGroup><Dialog.Footer><Button variant="outline" onclick={() => (open = false)}>{s.cancel}</Button><Button onclick={saveSchedule}>{s.save}</Button></Dialog.Footer></Dialog.Content></Dialog.Root>

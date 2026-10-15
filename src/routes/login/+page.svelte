@@ -35,7 +35,10 @@
         goto('/home');
       }
     } catch (err) {
-      error = (err as Error).message;
+      const msg = (err as Error).message ?? '';
+      error = msg.includes('fetch') || msg.includes('Failed')
+        ? 'Backend tidak terjangkau (localhost:3001 mati). Pakai "Masuk mode UI" untuk dev UI.'
+        : msg;
     } finally {
       loading = false;
     }

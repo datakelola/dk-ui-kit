@@ -154,9 +154,19 @@
 	let q = $state('');
 	let loading = $state(false);
 	let range = $state<DateRange | undefined>(undefined);
-	let filtered = $derived(rows.filter((r) => !q || r.user.toLowerCase().includes(q.toLowerCase())));
+	let channelFilter = $state('all');
+	function inRange(dateStr: string) {
+		if (!range?.start || !range?.end || !dateStr) return true;
+		try {
+			const d = dateStr.slice(0, 10);
+			const s = range.start.toString().slice(0, 10);
+			const e = range.end.toString().slice(0, 10);
+			return d >= s && d <= e;
+		} catch { return true; }
+	}
+	let filtered = $derived(rows.filter((r) => (!q || r.user.toLowerCase().includes(q.toLowerCase()) || r.id.toLowerCase().includes(q.toLowerCase())) && (channelFilter === 'all' || r.channel.toLowerCase() === channelFilter) && inRange(r.date)));
 	const initials = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
-	function search() { loading = true; setTimeout(() => { loading = false; toast.success(`${s.found} ${filtered.length} ${s.threadUnit}`); }, 600); }
+	function search() { loading = true; setTimeout(() => { loading = false; toast.success(`${s.found} ${filtered.length} ${s.threadUnit}`); }, 300); }
 </script>
 
 <svelte:head><title>{s.title}</title></svelte:head>
@@ -169,11 +179,11 @@
 				<InputGroup.Root class="w-full min-w-0 max-w-full sm:max-w-md"><InputGroup.Addon><Search class="size-4" /></InputGroup.Addon><InputGroup.Input bind:value={q} placeholder={s.searchPh} class="min-w-0" /></InputGroup.Root>
 				<DateRangePicker bind:value={range} label={s.rangeLabel} class="w-full min-w-0 max-w-full sm:max-w-xs" />
 			</div>
-			<Button variant="outline" size="sm" onclick={() => (q = '')}>{s.clear}</Button>
+			<Button variant="outline" size="sm" onclick={() => { q = ''; range = undefined; channelFilter = 'all'; }}>{s.clear}</Button>
 			<Button size="sm" onclick={search}>{s.search}</Button>
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props}><Filter class="size-4" /> {s.filter}</Button>{/snippet}</DropdownMenu.Trigger>
-				<DropdownMenu.Content><DropdownMenu.Group><DropdownMenu.GroupHeading>{s.channelH}</DropdownMenu.GroupHeading><DropdownMenu.Item onclick={() => toast.success(`${s.filterPrefix}: ${s.all}`)}>{s.all}</DropdownMenu.Item><DropdownMenu.Item onclick={() => toast.success(`${s.filterPrefix}: Chat`)}>Chat</DropdownMenu.Item><DropdownMenu.Item onclick={() => toast.success(`${s.filterPrefix}: Email`)}>Email</DropdownMenu.Item><DropdownMenu.Item onclick={() => toast.success(`${s.filterPrefix}: Inbound`)}>Inbound</DropdownMenu.Item></DropdownMenu.Group></DropdownMenu.Content>
+				<DropdownMenu.Content><DropdownMenu.Group><DropdownMenu.GroupHeading>{s.channelH}</DropdownMenu.GroupHeading><DropdownMenu.Item onclick={() => (channelFilter = 'all')}>{s.all}</DropdownMenu.Item><DropdownMenu.Item onclick={() => (channelFilter = 'whatsapp')}>Chat</DropdownMenu.Item><DropdownMenu.Item onclick={() => (channelFilter = 'email')}>Email</DropdownMenu.Item><DropdownMenu.Item onclick={() => (channelFilter = 'inbound')}>Inbound</DropdownMenu.Item></DropdownMenu.Group></DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</Card.Header>
 	</Card.Root>
@@ -193,7 +203,7 @@
 									<Avatar.Root class="shrink-0"><Avatar.Fallback>{initials(r.user)}</Avatar.Fallback></Avatar.Root>
 									<span class="min-w-0 flex-1 basis-40"><span class="flex flex-wrap items-center gap-2"><strong class="min-w-0 truncate text-sm">{r.user}</strong><Badge variant="outline" class="shrink-0 text-[10px]">{r.channel}</Badge><Badge variant="secondary" class="shrink-0">{r.count} {s.messages}</Badge></span>
 									<span class="block truncate text-xs text-muted-foreground">{r.preview} • {r.agent} • {r.date}</span></span>
-									<Tooltip.Provider><Tooltip.Root><Tooltip.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props} onclick={() => goto('/chat/v3')}>{s.open}</Button>{/snippet}</Tooltip.Trigger><Tooltip.Content>{s.openTip}</Tooltip.Content></Tooltip.Root></Tooltip.Provider>
+									<Tooltip.Provider><Tooltip.Root><Tooltip.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props} onclick={() => goto(`/chat/v3?thread=${r.id}`)}>{s.open}</Button>{/snippet}</Tooltip.Trigger><Tooltip.Content>{s.openTip}</Tooltip.Content></Tooltip.Root></Tooltip.Provider>
 									<Dialog.Root>
 										<Dialog.Trigger>{#snippet child({ props })}<Button size="sm" {...props}>{s.detail}</Button>{/snippet}</Dialog.Trigger>
 										<Dialog.Content class="max-w-[calc(100vw-2rem)]"><Dialog.Header><Dialog.Title class="truncate">{s.threadPrefix}{r.id} — {r.user}</Dialog.Title></Dialog.Header>
