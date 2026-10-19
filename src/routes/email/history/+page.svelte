@@ -26,7 +26,7 @@
     id: {
       docTitle: 'Email History — DK UI Kit',
       title: 'Email History',
-      desc: 'Kolom blade: From, To, Subject, Status, Date, Actions.',
+      desc: 'Kolom: From, To, Subject, Status, Date, Actions.',
       tabAll: 'Semua',
       tabSent: 'Sent',
       tabDraft: 'Draft',
@@ -106,7 +106,7 @@
     th: {
       docTitle: 'ประวัติอีเมล — DK UI Kit',
       title: 'ประวัติอีเมล',
-      desc: 'คอลัมน์ blade: จาก ถึง หัวข้อ สถานะ วันที่ การดำเนินการ',
+      desc: 'คอลัมน์: จาก ถึง หัวข้อ สถานะ วันที่ การดำเนินการ',
       tabAll: 'ทั้งหมด',
       tabSent: 'ส่งแล้ว',
       tabDraft: 'ร่าง',
@@ -146,7 +146,7 @@
     tl: {
       docTitle: 'History ng Email — DK UI Kit',
       title: 'History ng Email',
-      desc: 'Mga column ng blade: From, To, Subject, Status, Date, Actions.',
+      desc: 'Mga column: From, To, Subject, Status, Date, Actions.',
       tabAll: 'Lahat',
       tabSent: 'Naipadala',
       tabDraft: 'Draft',

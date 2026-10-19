@@ -25,7 +25,7 @@
     id: {
       docTitle: 'Email Terkirim — DK UI Kit',
       title: 'Email Terkirim',
-      desc: 'Kolom blade: From, To, Subject, Date, attachment, aksi view/download.',
+      desc: 'Kolom: From, To, Subject, Date, attachment, aksi view/download.',
       compose: 'Compose',
       inbox: 'Inbox',
       tabAll: 'Semua',
@@ -83,7 +83,7 @@
     th: {
       docTitle: 'อีเมลที่ส่งแล้ว — DK UI Kit',
       title: 'อีเมลที่ส่งแล้ว',
-      desc: 'คอลัมน์ blade: จาก ถึง หัวข้อ วันที่ ไฟล์แนบ การดู/ดาวน์โหลด',
+      desc: 'คอลัมน์: จาก ถึง หัวข้อ วันที่ ไฟล์แนบ การดู/ดาวน์โหลด',
       compose: 'เขียนอีเมล',
       inbox: 'กล่องจดหมาย',
       tabAll: 'ทั้งหมด',
@@ -112,7 +112,7 @@
     tl: {
       docTitle: 'Naipadalang Email — DK UI Kit',
       title: 'Naipadalang Email',
-      desc: 'Mga column ng blade: From, To, Subject, Date, attachment, view/download na aksyon.',
+      desc: 'Mga column: From, To, Subject, Date, attachment, view/download na aksyon.',
       compose: 'Sumulat',
       inbox: 'Inbox',
       tabAll: 'Lahat',

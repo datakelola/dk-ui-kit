@@ -42,7 +42,7 @@
 			send: 'Kirim',
 			system: 'Sistem',
 			resultPrefix: 'Hasil untuk',
-			bladeDesc: 'Meniru dashboard result-ticket blade: timeline horizontal + detail + modal email body.',
+			detailDesc: 'Timeline horizontal + detail + modal email body.',
 			toastSent: 'Email hasil dikirim',
 			stSuccess: 'success',
 			stPending: 'pending'
@@ -69,7 +69,7 @@
 			send: 'Send',
 			system: 'System',
 			resultPrefix: 'Result for',
-			bladeDesc: 'Mimics the result-ticket blade dashboard: horizontal timeline + details + email body modal.',
+			detailDesc: 'Horizontal timeline + details + email body modal.',
 			toastSent: 'Result email sent',
 			stSuccess: 'success',
 			stPending: 'pending'
@@ -96,7 +96,7 @@
 			send: 'ส่ง',
 			system: 'ระบบ',
 			resultPrefix: 'ผลลัพธ์สำหรับ',
-			bladeDesc: 'เลียนแบบแดชบอร์ด result-ticket blade: ไทม์ไลน์แนวนอน + รายละเอียด + โมดัลเนื้อหาอีเมล',
+			detailDesc: 'ไทม์ไลน์แนวนอน + รายละเอียด + โมดัลเนื้อหาอีเมล',
 			toastSent: 'ส่งอีเมลผลลัพธ์แล้ว',
 			stSuccess: 'สำเร็จ',
 			stPending: 'รอดำเนินการ'
@@ -123,7 +123,7 @@
 			send: 'Ipadala',
 			system: 'System',
 			resultPrefix: 'Resulta para kay',
-			bladeDesc: 'Ginagaya ang result-ticket blade dashboard: pahalang na timeline + detalye + email body modal.',
+			detailDesc: 'Pahalang na timeline + detalye + email body modal.',
 			toastSent: 'Naipadala ang result email',
 			stSuccess: 'success',
 			stPending: 'pending'
@@ -193,7 +193,7 @@
 					<Message.Root><Message.Avatar><Avatar.Root><Avatar.Fallback>SY</Avatar.Fallback></Avatar.Root></Message.Avatar><div class="flex flex-col gap-1"><Message.Header>{s.system}</Message.Header><Bubble.Root variant="received"><Bubble.Content>{s.resultPrefix} {sel.customer}: {sel.result}.</Bubble.Content></Bubble.Root><Message.Footer>{sel.time}</Message.Footer></div></Message.Root>
 				</Message.Group>
 				<Separator />
-				<p class="text-xs text-muted-foreground">{s.bladeDesc}</p>
+				<p class="text-xs text-muted-foreground">{s.detailDesc}</p>
 			</Card.Content>
 		</Card.Root>
 	</div>
