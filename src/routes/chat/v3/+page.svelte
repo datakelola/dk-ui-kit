@@ -21,18 +21,16 @@
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { toast } from 'svelte-sonner';
 	import { cn } from '$lib/utils';
-	import {
-		Search,
-		Send,
-		Paperclip,
-		Smile,
-		Phone,
-		Inbox,
-		CheckCheck,
-		Save,
-		PhoneOff,
-		History
-	} from 'lucide-svelte';
+	import Search from '@lucide/svelte/icons/search';
+import Send from '@lucide/svelte/icons/send';
+import Paperclip from '@lucide/svelte/icons/paperclip';
+import Smile from '@lucide/svelte/icons/smile';
+import Phone from '@lucide/svelte/icons/phone';
+import Inbox from '@lucide/svelte/icons/inbox';
+import CheckCheck from '@lucide/svelte/icons/check-check';
+import Save from '@lucide/svelte/icons/save';
+import PhoneOff from '@lucide/svelte/icons/phone-off';
+import History from '@lucide/svelte/icons/history';
 	import { locale } from '$lib/i18n';
 	import { onMount } from 'svelte';
 	import { api } from '$lib/api';
@@ -259,7 +257,6 @@
 		status: string; awaiting_since?: string;
 	};
 	let queues = $state<Conv[]>([]);
-	let loadError = $state('');
 	const queueOf = (status: string): Queue => (status === 'resolved' ? 'resolved' : status === 'pending' ? 'served' : 'myopen');
 
 	async function loadQueues() {
@@ -284,8 +281,8 @@
 				awaiting_since: c.awaiting_since
 			}));
 			if (!queues.some((q) => q.id === selectedId) && queues.length) selectedId = queues[0].id;
-		} catch (e) {
-			loadError = (e as Error).message;
+		} catch {
+			// backend tidak tersedia — pertahankan data bawaan
 		}
 	}
 	onMount(loadQueues);

@@ -16,7 +16,10 @@
   import { Switch } from '$lib/components/ui/switch';
   import { toast, Toaster } from 'svelte-sonner';
   import EmailItem from '$lib/components/ui/email-item.svelte';
-  import { ChevronLeft, ChevronRight, Search, Send } from 'lucide-svelte';
+  import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+import ChevronRight from '@lucide/svelte/icons/chevron-right';
+import Search from '@lucide/svelte/icons/search';
+import Send from '@lucide/svelte/icons/send';
   import { locale } from '$lib/i18n';
   import { onMount } from 'svelte';
   import { api } from '$lib/api';

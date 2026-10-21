@@ -17,7 +17,13 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { Slider } from '$lib/components/ui/slider';
 	import { Switch } from '$lib/components/ui/switch';
-	import { Search, Star, Download, RotateCcw, TriangleAlert, MessagesSquare, SlidersHorizontal } from 'lucide-svelte';
+	import Search from '@lucide/svelte/icons/search';
+import Star from '@lucide/svelte/icons/star';
+import Download from '@lucide/svelte/icons/download';
+import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
+import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+import MessagesSquare from '@lucide/svelte/icons/messages-square';
+import SlidersHorizontal from '@lucide/svelte/icons/sliders-horizontal';
 	import { locale } from '$lib/i18n';
 
 	const STR = {

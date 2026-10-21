@@ -21,7 +21,13 @@
   import { cn } from '$lib/utils.js';
   import EmailItem from '$lib/components/ui/email-item.svelte';
   import EmailCompose from '$lib/components/ui/email-compose.svelte';
-  import { ChevronLeft, ChevronRight, Inbox, Search, Archive, Trash2, MailOpen } from 'lucide-svelte';
+  import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+import ChevronRight from '@lucide/svelte/icons/chevron-right';
+import Inbox from '@lucide/svelte/icons/inbox';
+import Search from '@lucide/svelte/icons/search';
+import Archive from '@lucide/svelte/icons/archive';
+import Trash2 from '@lucide/svelte/icons/trash-2';
+import MailOpen from '@lucide/svelte/icons/mail-open';
   import { locale } from '$lib/i18n';
   import { onMount } from 'svelte';
   import { api } from '$lib/api';

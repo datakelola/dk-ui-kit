@@ -20,7 +20,14 @@
 	import DatePicker from "$lib/components/ui/date-picker.svelte";
 	import { Spinner } from '$lib/components/ui/spinner';
 	import { cn } from '$lib/utils.js';
-	import { Plus, Upload, Search, Pencil, Trash2, CalendarDays, Info, Palmtree } from 'lucide-svelte';
+	import Plus from '@lucide/svelte/icons/plus';
+import Upload from '@lucide/svelte/icons/upload';
+import Search from '@lucide/svelte/icons/search';
+import Pencil from '@lucide/svelte/icons/pencil';
+import Trash2 from '@lucide/svelte/icons/trash-2';
+import CalendarDays from '@lucide/svelte/icons/calendar-days';
+import Info from '@lucide/svelte/icons/info';
+import Palmtree from '@lucide/svelte/icons/palmtree';
 	import { CalendarDate, type DateValue } from '@internationalized/date';
 	import { locale } from '$lib/i18n';
 	import { get } from 'svelte/store';

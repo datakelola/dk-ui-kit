@@ -21,7 +21,15 @@
 	import DatePicker from "$lib/components/ui/date-picker.svelte";
 	import { CalendarDate, type DateValue } from '@internationalized/date';
 	import { toast } from 'svelte-sonner';
-	import { RefreshCw, Users, Hourglass, MessagesSquare, CircleCheck, Search, UserPlus, ShieldCheck, TriangleAlert } from 'lucide-svelte';
+	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
+import Users from '@lucide/svelte/icons/users';
+import Hourglass from '@lucide/svelte/icons/hourglass';
+import MessagesSquare from '@lucide/svelte/icons/messages-square';
+import CircleCheck from '@lucide/svelte/icons/circle-check';
+import Search from '@lucide/svelte/icons/search';
+import UserPlus from '@lucide/svelte/icons/user-plus';
+import ShieldCheck from '@lucide/svelte/icons/shield-check';
+import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 	import { locale } from '$lib/i18n';
 
 	const STR = {

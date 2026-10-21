@@ -20,7 +20,15 @@
 	import { CalendarDate, type DateValue } from '@internationalized/date';
 
 	import { toast } from 'svelte-sonner';
-	import { Settings, Mail, Send, LayoutTemplate, Search, CircleCheck, TriangleAlert, KeyRound, History } from 'lucide-svelte';
+	import Settings from '@lucide/svelte/icons/settings';
+import Mail from '@lucide/svelte/icons/mail';
+import Send from '@lucide/svelte/icons/send';
+import LayoutTemplate from '@lucide/svelte/icons/layout-template';
+import Search from '@lucide/svelte/icons/search';
+import CircleCheck from '@lucide/svelte/icons/circle-check';
+import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+import KeyRound from '@lucide/svelte/icons/key-round';
+import History from '@lucide/svelte/icons/history';
 	import { locale } from '$lib/i18n';
 
 	const STR = {

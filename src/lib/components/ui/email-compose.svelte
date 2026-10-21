@@ -1,6 +1,9 @@
 <script lang="ts">
   import { cn } from '$lib/utils';
-  import { X, Send, Paperclip, MoreHorizontal } from 'lucide-svelte';
+  import X from '@lucide/svelte/icons/x';
+import Send from '@lucide/svelte/icons/send';
+import Paperclip from '@lucide/svelte/icons/paperclip';
+import MoreHorizontal from '@lucide/svelte/icons/more-horizontal';
   import { Button } from '$lib/components/ui/button';
 
   type Props = {

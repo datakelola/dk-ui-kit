@@ -16,7 +16,9 @@
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import EmailItem from '$lib/components/ui/email-item.svelte';
 	import { toast } from 'svelte-sonner';
-	import { Search, Mail, MoreVertical } from 'lucide-svelte';
+	import Search from '@lucide/svelte/icons/search';
+import Mail from '@lucide/svelte/icons/mail';
+import MoreVertical from '@lucide/svelte/icons/more-vertical';
 	import { locale } from '$lib/i18n';
 
 	const STR = {

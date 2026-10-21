@@ -18,13 +18,42 @@
 	import { toast } from "svelte-sonner";
 	import { locale, initLocale, setLocale, locales, type Locale } from "$lib/i18n";
 	import { get } from "svelte/store";
-	import {
-		House, LayoutDashboard, MessagesSquare, Ticket, TicketCheck, MessagesSquare as ThreadsIcon,
-		Star, Mail, PenSquare, Inbox, Send, FileEdit, LayoutTemplate, History,
-		MonitorDot, Radio, PhoneCall, Archive, Radar, ChartColumn, Settings,
-		CalendarClock, CalendarDays, CalendarRange, Clock, Sun, Moon, Search, Bell,
-		ChevronDown, LogOut, Gauge, Trophy, LayoutGrid, Tv, Globe
-	} from "lucide-svelte";
+	import House from '@lucide/svelte/icons/house';
+import LayoutDashboard from '@lucide/svelte/icons/layout-dashboard';
+import MessagesSquare from '@lucide/svelte/icons/messages-square';
+import ThreadsIcon from '@lucide/svelte/icons/messages-square';
+import Ticket from '@lucide/svelte/icons/ticket';
+import TicketCheck from '@lucide/svelte/icons/ticket-check';
+import Star from '@lucide/svelte/icons/star';
+import Mail from '@lucide/svelte/icons/mail';
+import PenSquare from '@lucide/svelte/icons/pen-square';
+import Inbox from '@lucide/svelte/icons/inbox';
+import Send from '@lucide/svelte/icons/send';
+import FileEdit from '@lucide/svelte/icons/file-edit';
+import LayoutTemplate from '@lucide/svelte/icons/layout-template';
+import History from '@lucide/svelte/icons/history';
+import MonitorDot from '@lucide/svelte/icons/monitor-dot';
+import Radio from '@lucide/svelte/icons/radio';
+import PhoneCall from '@lucide/svelte/icons/phone-call';
+import Archive from '@lucide/svelte/icons/archive';
+import Radar from '@lucide/svelte/icons/radar';
+import ChartColumn from '@lucide/svelte/icons/chart-column';
+import Settings from '@lucide/svelte/icons/settings';
+import CalendarClock from '@lucide/svelte/icons/calendar-clock';
+import CalendarDays from '@lucide/svelte/icons/calendar-days';
+import CalendarRange from '@lucide/svelte/icons/calendar-range';
+import Clock from '@lucide/svelte/icons/clock';
+import Sun from '@lucide/svelte/icons/sun';
+import Moon from '@lucide/svelte/icons/moon';
+import Search from '@lucide/svelte/icons/search';
+import Bell from '@lucide/svelte/icons/bell';
+import ChevronDown from '@lucide/svelte/icons/chevron-down';
+import LogOut from '@lucide/svelte/icons/log-out';
+import Gauge from '@lucide/svelte/icons/gauge';
+import Trophy from '@lucide/svelte/icons/trophy';
+import LayoutGrid from '@lucide/svelte/icons/layout-grid';
+import Tv from '@lucide/svelte/icons/tv';
+import Globe from '@lucide/svelte/icons/globe';
 	import "../app.css";
 
 	type Sub = { key: string; to: string; icon: typeof Mail };

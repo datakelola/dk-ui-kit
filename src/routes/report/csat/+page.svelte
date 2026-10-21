@@ -16,7 +16,18 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { CalendarDate } from '@internationalized/date';
 	import type { DateRange } from 'bits-ui';
-	import { Download, Filter, RotateCcw, Search, Smile, Meh, Frown, Info, Phone, CircleCheck, ChartLine, CircleX } from 'lucide-svelte';
+	import Download from '@lucide/svelte/icons/download';
+import Filter from '@lucide/svelte/icons/filter';
+import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
+import Search from '@lucide/svelte/icons/search';
+import Smile from '@lucide/svelte/icons/smile';
+import Meh from '@lucide/svelte/icons/meh';
+import Frown from '@lucide/svelte/icons/frown';
+import Info from '@lucide/svelte/icons/info';
+import Phone from '@lucide/svelte/icons/phone';
+import CircleCheck from '@lucide/svelte/icons/circle-check';
+import ChartLine from '@lucide/svelte/icons/chart-line';
+import CircleX from '@lucide/svelte/icons/circle-x';
 	import { locale } from '$lib/i18n';
 
 	const STR = {

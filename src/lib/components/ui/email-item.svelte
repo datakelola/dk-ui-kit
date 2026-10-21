@@ -1,6 +1,7 @@
 <script lang="ts">
   import { cn } from '$lib/utils';
-  import { Star, Paperclip } from 'lucide-svelte';
+  import Star from '@lucide/svelte/icons/star';
+import Paperclip from '@lucide/svelte/icons/paperclip';
 
   type Props = {
     class?: string;

@@ -17,7 +17,10 @@
   import * as RadioGroup from '$lib/components/ui/radio-group';
   import { Switch } from '$lib/components/ui/switch';
   import { toast, Toaster } from 'svelte-sonner';
-  import { ChevronLeft, ChevronRight, Search, PhoneCall } from 'lucide-svelte';
+  import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+import ChevronRight from '@lucide/svelte/icons/chevron-right';
+import Search from '@lucide/svelte/icons/search';
+import PhoneCall from '@lucide/svelte/icons/phone-call';
   import DateRangePicker from '$lib/components/ui/date-range-picker.svelte';
   import type { DateRange } from 'bits-ui';
   import { locale } from '$lib/i18n';

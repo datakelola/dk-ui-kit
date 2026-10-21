@@ -8,10 +8,20 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Separator } from '$lib/components/ui/separator';
 	import { Progress } from '$lib/components/ui/progress';
-	import {
-		LayoutGrid, PhoneCall, Ticket, Tv, Send, Search, Star, MessageSquareText, Mail,
-		Users, ChartColumn, Inbox, ArrowUpRight, FolderOpen
-	} from 'lucide-svelte';
+	import LayoutGrid from '@lucide/svelte/icons/layout-grid';
+import PhoneCall from '@lucide/svelte/icons/phone-call';
+import Ticket from '@lucide/svelte/icons/ticket';
+import Tv from '@lucide/svelte/icons/tv';
+import Send from '@lucide/svelte/icons/send';
+import Search from '@lucide/svelte/icons/search';
+import Star from '@lucide/svelte/icons/star';
+import MessageSquareText from '@lucide/svelte/icons/message-square-text';
+import Mail from '@lucide/svelte/icons/mail';
+import Users from '@lucide/svelte/icons/users';
+import ChartColumn from '@lucide/svelte/icons/chart-column';
+import Inbox from '@lucide/svelte/icons/inbox';
+import ArrowUpRight from '@lucide/svelte/icons/arrow-up-right';
+import FolderOpen from '@lucide/svelte/icons/folder-open';
 	import { locale } from '$lib/i18n';
 
 	const STR = {

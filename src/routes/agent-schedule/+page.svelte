@@ -20,7 +20,13 @@
 	import { Spinner } from '$lib/components/ui/spinner';
 	import { toast } from 'svelte-sonner';
 	import { cn } from '$lib/utils.js';
-	import { Plus, Search, RefreshCw, ChevronRight, CalendarDays, Info, CalendarClock } from 'lucide-svelte';
+	import Plus from '@lucide/svelte/icons/plus';
+import Search from '@lucide/svelte/icons/search';
+import RefreshCw from '@lucide/svelte/icons/refresh-cw';
+import ChevronRight from '@lucide/svelte/icons/chevron-right';
+import CalendarDays from '@lucide/svelte/icons/calendar-days';
+import Info from '@lucide/svelte/icons/info';
+import CalendarClock from '@lucide/svelte/icons/calendar-clock';
 	import { CalendarDate, type DateValue } from '@internationalized/date';
 	import { locale } from '$lib/i18n';
 

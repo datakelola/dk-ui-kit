@@ -14,7 +14,9 @@
 	import * as Empty from '$lib/components/ui/empty';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import { toast } from 'svelte-sonner';
-	import { Search, RotateCcw, MoreVertical } from 'lucide-svelte';
+	import Search from '@lucide/svelte/icons/search';
+import RotateCcw from '@lucide/svelte/icons/rotate-ccw';
+import MoreVertical from '@lucide/svelte/icons/more-vertical';
 	import { locale } from '$lib/i18n';
 
 	const STR = {

@@ -19,7 +19,8 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { api } from '$lib/api';
-	import { Search, Filter } from 'lucide-svelte';
+	import Search from '@lucide/svelte/icons/search';
+import Filter from '@lucide/svelte/icons/filter';
 	import type { DateRange } from 'bits-ui';
 	import { locale } from '$lib/i18n';
 

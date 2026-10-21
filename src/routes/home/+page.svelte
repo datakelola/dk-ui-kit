@@ -17,7 +17,16 @@
 	import DatePicker from "$lib/components/ui/date-picker.svelte";
 	import { Spinner } from '$lib/components/ui/spinner';
 	import { cn } from '$lib/utils.js';
-	import { Phone, MessageCircle, Mail, Share2, Star, TriangleAlert, CircleCheck, Info, CalendarDays, Inbox } from 'lucide-svelte';
+	import Phone from '@lucide/svelte/icons/phone';
+import MessageCircle from '@lucide/svelte/icons/message-circle';
+import Mail from '@lucide/svelte/icons/mail';
+import Share2 from '@lucide/svelte/icons/share-2';
+import Star from '@lucide/svelte/icons/star';
+import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+import CircleCheck from '@lucide/svelte/icons/circle-check';
+import Info from '@lucide/svelte/icons/info';
+import CalendarDays from '@lucide/svelte/icons/calendar-days';
+import Inbox from '@lucide/svelte/icons/inbox';
 	import { CalendarDate, type DateValue } from '@internationalized/date';
 	import { locale } from '$lib/i18n';
 

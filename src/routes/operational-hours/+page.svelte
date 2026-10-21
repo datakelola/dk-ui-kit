@@ -17,7 +17,14 @@
 	import TimePicker from '$lib/components/ui/time-picker.svelte';
 	import { toast } from 'svelte-sonner';
 	import { cn } from '$lib/utils.js';
-	import { Clock, Plus, Pencil, Trash2, Info, CalendarOff, TriangleAlert, CircleCheck } from 'lucide-svelte';
+	import Clock from '@lucide/svelte/icons/clock';
+import Plus from '@lucide/svelte/icons/plus';
+import Pencil from '@lucide/svelte/icons/pencil';
+import Trash2 from '@lucide/svelte/icons/trash-2';
+import Info from '@lucide/svelte/icons/info';
+import CalendarOff from '@lucide/svelte/icons/calendar-off';
+import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+import CircleCheck from '@lucide/svelte/icons/circle-check';
 	import { locale } from '$lib/i18n';
 	import { get } from 'svelte/store';
 

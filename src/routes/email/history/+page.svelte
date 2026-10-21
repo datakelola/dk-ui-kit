@@ -17,7 +17,10 @@
   import { Switch } from '$lib/components/ui/switch';
   import { Textarea } from '$lib/components/ui/textarea';
   import { toast, Toaster } from 'svelte-sonner';
-  import { ChevronLeft, ChevronRight, Search, History } from 'lucide-svelte';
+  import ChevronLeft from '@lucide/svelte/icons/chevron-left';
+import ChevronRight from '@lucide/svelte/icons/chevron-right';
+import Search from '@lucide/svelte/icons/search';
+import History from '@lucide/svelte/icons/history';
   import { locale } from '$lib/i18n';
   import { onMount } from 'svelte';
   import { api } from '$lib/api';

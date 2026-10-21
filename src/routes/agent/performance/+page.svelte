@@ -19,7 +19,12 @@
 	import * as Empty from '$lib/components/ui/empty';
 	import { Spinner } from '$lib/components/ui/spinner';
 	import { cn } from '$lib/utils.js';
-	import { Users, Eye, Search, Star, Info, UserRound } from 'lucide-svelte';
+	import Users from '@lucide/svelte/icons/users';
+import Eye from '@lucide/svelte/icons/eye';
+import Search from '@lucide/svelte/icons/search';
+import Star from '@lucide/svelte/icons/star';
+import Info from '@lucide/svelte/icons/info';
+import UserRound from '@lucide/svelte/icons/user-round';
 	import { locale } from '$lib/i18n';
 
 	const STR = {

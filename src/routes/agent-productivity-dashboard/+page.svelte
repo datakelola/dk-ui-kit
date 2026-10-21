@@ -18,7 +18,12 @@
 	import DateRangePicker from "$lib/components/ui/date-range-picker.svelte";
 	import { Spinner } from '$lib/components/ui/spinner';
 	import { cn } from '$lib/utils.js';
-	import { Handshake, Ticket, TriangleAlert, CircleCheck, Info, Gauge } from 'lucide-svelte';
+	import Handshake from '@lucide/svelte/icons/handshake';
+import Ticket from '@lucide/svelte/icons/ticket';
+import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
+import CircleCheck from '@lucide/svelte/icons/circle-check';
+import Info from '@lucide/svelte/icons/info';
+import Gauge from '@lucide/svelte/icons/gauge';
 	import { CalendarDate } from '@internationalized/date';
 	import { goto } from '$app/navigation';
 	import { toast } from 'svelte-sonner';

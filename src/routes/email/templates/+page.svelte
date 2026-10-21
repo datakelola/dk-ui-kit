@@ -15,7 +15,7 @@
   import { Checkbox } from '$lib/components/ui/checkbox';
   import * as RadioGroup from '$lib/components/ui/radio-group';
   import { toast, Toaster } from 'svelte-sonner';
-  import { FileText } from 'lucide-svelte';
+  import FileText from '@lucide/svelte/icons/file-text';
   import { locale } from '$lib/i18n';
   import { onMount } from 'svelte';
   import { api } from '$lib/api';

@@ -1,6 +1,8 @@
 <script lang="ts">
   import { cn } from '$lib/utils';
-  import { Send, Paperclip, Smile } from 'lucide-svelte';
+  import Send from '@lucide/svelte/icons/send';
+import Paperclip from '@lucide/svelte/icons/paperclip';
+import Smile from '@lucide/svelte/icons/smile';
 
   type Props = {
     class?: string;

@@ -7,7 +7,15 @@ export default defineConfig({
 	optimizeDeps: {
 		// paneforge hanya publish kondisi `svelte` (tanpa export default),
 		// sehingga tidak bisa di-prebundle esbuild — sajikan native via plugin Svelte.
-		exclude: ['paneforge']
+		exclude: ['paneforge', '@lucide/svelte'],
+		// Prebundle sekali di awal agar tidak ada optimizer ulang saat navigasi.
+		include: [
+			'@internationalized/date',
+			'class-variance-authority',
+			'clsx',
+			'tailwind-merge',
+			'tailwind-variants'
+		]
 	},
 	plugins: [
 		tailwindcss(),
