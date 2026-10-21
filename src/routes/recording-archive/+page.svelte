@@ -27,7 +27,7 @@
     id: {
       docTitle: 'Recording Archive — DK UI Kit',
       title: 'Recording Archive',
-      desc: 'Kolom blade: File Name/ID, Call Date, Path, Size, Recording, Actions. Cari via phone/recording ID + range tanggal.',
+      desc: 'Kolom: File Name/ID, Call Date, Path, Size, Recording, Actions. Cari via phone/recording ID + range tanggal.',
       audioOnly: 'Hanya ada audio',
       tabAll: 'Semua',
       tabAudio: 'Ada audio',
@@ -101,7 +101,7 @@
     th: {
       docTitle: 'คลังบันทึกเสียง — DK UI Kit',
       title: 'คลังบันทึกเสียง',
-      desc: 'คอลัมน์ blade: ชื่อไฟล์/รหัส วันที่โทร เส้นทาง ขนาด เสียงบันทึก การดำเนินการ ค้นหาด้วยเบอร์โทร/รหัส + ช่วงวันที่',
+      desc: 'คอลัมน์: ชื่อไฟล์/รหัส วันที่โทร เส้นทาง ขนาด เสียงบันทึก การดำเนินการ ค้นหาด้วยเบอร์โทร/รหัส + ช่วงวันที่',
       audioOnly: 'เฉพาะที่มีเสียง',
       tabAll: 'ทั้งหมด',
       tabAudio: 'มีเสียง',
@@ -138,7 +138,7 @@
     tl: {
       docTitle: 'Archive ng Recording — DK UI Kit',
       title: 'Archive ng Recording',
-      desc: 'Mga column ng blade: File Name/ID, Petsa ng Tawag, Path, Size, Recording, Mga Aksyon. Maghanap via phone/recording ID + saklaw ng petsa.',
+      desc: 'Mga column: File Name/ID, Petsa ng Tawag, Path, Size, Recording, Mga Aksyon. Maghanap via phone/recording ID + saklaw ng petsa.',
       audioOnly: 'May audio lamang',
       tabAll: 'Lahat',
       tabAudio: 'May audio',

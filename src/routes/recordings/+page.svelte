@@ -26,7 +26,7 @@
     id: {
       docTitle: 'Call Recordings — DK UI Kit',
       title: 'Call Recordings',
-      desc: 'Kolom blade: Unique ID, Call Date, Disposition, Customer, Agent, Duration, Recording, STT, QA.',
+      desc: 'Kolom: Unique ID, Call Date, Disposition, Customer, Agent, Duration, Recording, STT, QA.',
       autoRefresh: 'Auto refresh',
       tabTable: 'Tabel',
       tabCompact: 'Ringkas',
@@ -104,7 +104,7 @@
     th: {
       docTitle: 'บันทึกการโทร — DK UI Kit',
       title: 'บันทึกการโทร',
-      desc: 'คอลัมน์ blade: รหัสเฉพาะ วันที่โทร การจัดการ ลูกค้า เจ้าหน้าที่ ระยะเวลา เสียงบันทึก STT QA',
+      desc: 'คอลัมน์: รหัสเฉพาะ วันที่โทร การจัดการ ลูกค้า เจ้าหน้าที่ ระยะเวลา เสียงบันทึก STT QA',
       autoRefresh: 'รีเฟรชอัตโนมัติ',
       tabTable: 'ตาราง',
       tabCompact: 'แบบย่อ',
@@ -143,7 +143,7 @@
     tl: {
       docTitle: 'Mga Recording ng Tawag — DK UI Kit',
       title: 'Mga Recording ng Tawag',
-      desc: 'Mga column ng blade: Unique ID, Petsa ng Tawag, Disposition, Customer, Agent, Tagal, Recording, STT, QA.',
+      desc: 'Mga column: Unique ID, Petsa ng Tawag, Disposition, Customer, Agent, Tagal, Recording, STT, QA.',
       autoRefresh: 'Awtomatikong refresh',
       tabTable: 'Talahanayan',
       tabCompact: 'Maikli',

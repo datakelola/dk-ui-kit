@@ -24,7 +24,7 @@
     id: {
       docTitle: 'Email Templates — DK UI Kit',
       title: 'Email Templates',
-      desc: 'Kolom blade: Nama, Subject, Aksi Edit/Hapus. Form: nama, subject, body HTML.',
+      desc: 'Kolom: Nama, Subject, Aksi Edit/Hapus. Form: nama, subject, body HTML.',
       back: 'Kembali',
       listTitle: 'Daftar Template',
       tabAll: 'Semua',
@@ -100,7 +100,7 @@
     th: {
       docTitle: 'เทมเพลตอีเมล — DK UI Kit',
       title: 'เทมเพลตอีเมล',
-      desc: 'คอลัมน์ blade: ชื่อ หัวข้อ ปุ่มแก้ไข/ลบ ฟอร์ม: ชื่อ หัวข้อ เนื้อหา HTML',
+      desc: 'คอลัมน์: ชื่อ หัวข้อ ปุ่มแก้ไข/ลบ ฟอร์ม: ชื่อ หัวข้อ เนื้อหา HTML',
       back: 'กลับ',
       listTitle: 'รายการเทมเพลต',
       tabAll: 'ทั้งหมด',
@@ -138,7 +138,7 @@
     tl: {
       docTitle: 'Mga Template ng Email — DK UI Kit',
       title: 'Mga Template ng Email',
-      desc: 'Mga column ng blade: Pangalan, Paksa, aksyong Edit/Delete. Form: pangalan, paksa, HTML body.',
+      desc: 'Mga column: Pangalan, Paksa, aksyong Edit/Delete. Form: pangalan, paksa, HTML body.',
       back: 'Bumalik',
       listTitle: 'Listahan ng Template',
       tabAll: 'Lahat',
