@@ -1,12 +1,10 @@
 <script lang="ts">
 	import * as Card from '$lib/components/ui/card';
-	import * as Tabs from '$lib/components/ui/tabs';
 	import * as Field from '$lib/components/ui/field';
 	import * as ToggleGroup from '$lib/components/ui/toggle-group';
 	import * as Empty from '$lib/components/ui/empty';
 	import * as Alert from '$lib/components/ui/alert';
 	import * as Dialog from '$lib/components/ui/dialog';
-	import * as Select from '$lib/components/ui/select';
 	import * as Table from '$lib/components/ui/table';
 	import * as Pagination from '$lib/components/ui/pagination';
 	import { Badge } from '$lib/components/ui/badge';
@@ -20,8 +18,48 @@
 	import { CalendarDate, type DateValue } from '@internationalized/date';
 
 	import { toast } from 'svelte-sonner';
-	import { Settings, Mail, Send, LayoutTemplate, Search, CircleCheck, TriangleAlert, KeyRound, History } from 'lucide-svelte';
+	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
+	import {
+		SlidersHorizontal,
+		Mail,
+		Megaphone,
+		ClipboardList,
+		Search,
+		CircleCheck,
+		TriangleAlert,
+		KeyRound,
+		History,
+		Users,
+		Route,
+		Building2,
+		Settings2,
+		RadioTower,
+		Bot,
+		Phone,
+		RefreshCw,
+		Server,
+		Reply,
+		Tags,
+		FileText,
+		Send,
+		FileUp,
+		CircleDot,
+		ListOrdered,
+		FolderTree,
+		Shapes,
+		TextCursorInput,
+		Blocks
+	} from 'lucide-svelte';
 	import { locale } from '$lib/i18n';
+
+	type IconComponent = typeof Mail;
+	type TabId = 'general' | 'email' | 'blasting' | 'form';
+	type ModuleItem = { title: string; desc: string; icon: IconComponent; action: string };
+	const TAB_IDS: TabId[] = ['general', 'email', 'blasting', 'form'];
+	function isTabId(value: string | null): value is TabId {
+		return value !== null && (TAB_IDS as string[]).includes(value);
+	}
 
 	const STR = {
 		id: {
@@ -34,8 +72,8 @@
 			quotaUsed: 'Kuota blast terpakai',
 			gT: 'General Settings', gD: 'Modul perusahaan, user, channel, dan PBX.',
 			modulesUnit: 'modul', fMod: 'Cari modul', fModPh: 'Cari modul setting…',
-			viewMode: 'Mode tampilan', grid: 'Grid kartu', list: 'Daftar',
 			manage: 'Kelola', openBtn: 'Buka', viewHist: 'Lihat riwayat',
+			openAria: 'Buka {title}',
 			toastModule: 'Membuka modul', toastTemplate: 'Membuka template', toastHist: 'Membuka riwayat blast', toastForm: 'Membuka form',
 			emptyModT: 'Modul tidak ditemukan', emptyModPre: 'Tidak ada modul',
 			dUser: 'Kelola user & peran', dGroup: 'Aturan routing grup', dDiv: 'Kelola divisi user',
@@ -82,8 +120,8 @@
 			quotaUsed: 'Blast quota used',
 			gT: 'General Settings', gD: 'Company modules, users, channels, and PBX.',
 			modulesUnit: 'modules', fMod: 'Search modules', fModPh: 'Search setting modules…',
-			viewMode: 'View mode', grid: 'Card grid', list: 'List',
 			manage: 'Manage', openBtn: 'Open', viewHist: 'View history',
+			openAria: 'Open {title}',
 			toastModule: 'Opening module', toastTemplate: 'Opening template', toastHist: 'Opening blast history', toastForm: 'Opening form',
 			emptyModT: 'Module not found', emptyModPre: 'No module',
 			dUser: 'Manage users & roles', dGroup: 'Group routing rules', dDiv: 'Manage user divisions',
@@ -130,8 +168,8 @@
 			quotaUsed: 'ใช้โควตาบลาสต์แล้ว',
 			gT: 'ตั้งค่าทั่วไป', gD: 'โมดูลบริษัท ผู้ใช้ ช่องทาง และ PBX',
 			modulesUnit: 'โมดูล', fMod: 'ค้นหาโมดูล', fModPh: 'ค้นหาโมดูลตั้งค่า…',
-			viewMode: 'โหมดแสดงผล', grid: 'กริดการ์ด', list: 'รายการ',
 			manage: 'จัดการ', openBtn: 'เปิด', viewHist: 'ดูประวัติ',
+			openAria: 'เปิด {title}',
 			toastModule: 'กำลังเปิดโมดูล', toastTemplate: 'กำลังเปิดเทมเพลต', toastHist: 'กำลังเปิดประวัติบลาสต์', toastForm: 'กำลังเปิดฟอร์ม',
 			emptyModT: 'ไม่พบโมดูล', emptyModPre: 'ไม่มีโมดูล',
 			dUser: 'จัดการผู้ใช้ & บทบาท', dGroup: 'กฎการกำหนดเส้นทางกลุ่ม', dDiv: 'จัดการแผนกผู้ใช้',
@@ -178,8 +216,8 @@
 			quotaUsed: 'Nagastos na blast quota',
 			gT: 'General Settings', gD: 'Mga module ng kumpanya, user, channel, at PBX.',
 			modulesUnit: 'module', fMod: 'Maghanap ng module', fModPh: 'Maghanap ng setting module…',
-			viewMode: 'Mode ng display', grid: 'Card grid', list: 'Listahan',
 			manage: 'Pamahalaan', openBtn: 'Buksan', viewHist: 'Tingnan ang kasaysayan',
+			openAria: 'Buksan ang {title}',
 			toastModule: 'Binubuksan ang module', toastTemplate: 'Binubuksan ang template', toastHist: 'Binubuksan ang blast history', toastForm: 'Binubuksan ang form',
 			emptyModT: 'Hindi nahanap ang module', emptyModPre: 'Walang module',
 			dUser: 'Pamahalaan ang user & tungkulin', dGroup: 'Mga panuntunan sa routing ng grupo', dDiv: 'Pamahalaan ang dibisyon ng user',
@@ -219,59 +257,68 @@
 	} as const;
 	let s = $derived(STR[$locale]);
 
-	let tab = $state('general');
 	let blastView: string | undefined = $state('wa');
 	let search = $state('');
 	let quota = $state(65);
 	let smtpOn = $state(true);
 	let autoreplyOn = $state(false);
 	let testOpen = $state(false);
-	let page = $state(1);
+	let currentPage = $state(1);
 	let deployDate = $state<DateValue | undefined>(new CalendarDate(2026, 10, 5));
 	const perPage = 4;
 
-	let generalCards = $derived([
-		{ title: 'User Management', desc: s.dUser, tag: 'General' },
-		{ title: 'Group Route', desc: s.dGroup, tag: 'General' },
-		{ title: 'User Divisions', desc: s.dDiv, tag: 'General' },
-		{ title: 'Config', desc: s.dConfig, tag: 'General' },
-		{ title: 'Channel', desc: s.dChannel, tag: 'General' },
-		{ title: 'Bot Interaction', desc: s.dBot, tag: 'General' },
-		{ title: 'Config PBX', desc: s.dPbx, tag: 'General' },
-		{ title: 'Kirana Execute Manual', desc: s.dKirana, tag: 'General' }
+	let tabParam = $derived(page.url.searchParams.get('tab'));
+	let tab = $derived(isTabId(tabParam) ? tabParam : 'general');
+
+	function selectTab(next: TabId) {
+		if (next === tab) return;
+		const url = new URL(page.url);
+		url.searchParams.set('tab', next);
+		goto(`${url.pathname}${url.search}`, { keepFocus: true, noScroll: true });
+	}
+
+	let generalCards: ModuleItem[] = $derived([
+		{ title: 'User Management', desc: s.dUser, icon: Users, action: 'toastModule' },
+		{ title: 'Group Route', desc: s.dGroup, icon: Route, action: 'toastModule' },
+		{ title: 'User Divisions', desc: s.dDiv, icon: Building2, action: 'toastModule' },
+		{ title: 'Config', desc: s.dConfig, icon: SlidersHorizontal, action: 'toastModule' },
+		{ title: 'Channel', desc: s.dChannel, icon: RadioTower, action: 'toastModule' },
+		{ title: 'Bot Interaction', desc: s.dBot, icon: Bot, action: 'toastModule' },
+		{ title: 'Config PBX', desc: s.dPbx, icon: Phone, action: 'toastModule' },
+		{ title: 'Kirana Execute Manual', desc: s.dKirana, icon: RefreshCw, action: 'toastModule' }
 	]);
 	let emailCards = $derived([
-		{ title: 'Config SMTP', desc: s.dSmtp, auto: false },
-		{ title: 'Config Autoreply Email', desc: s.dAuto, auto: true },
-		{ title: 'Config Email', desc: s.dEmail, auto: false }
+		{ title: 'Config SMTP', desc: s.dSmtp, icon: Server, auto: false },
+		{ title: 'Config Autoreply Email', desc: s.dAuto, icon: Reply, auto: true },
+		{ title: 'Config Email', desc: s.dEmail, icon: Mail, auto: false }
 	]);
-	let waCards = $derived([
-		{ title: 'Template Category & Variables', desc: s.dTmplCat },
-		{ title: 'HSM Message Templates', desc: s.dHsm },
-		{ title: 'Blast WhatsApp', desc: s.dBlastWa }
+	let waCards: ModuleItem[] = $derived([
+		{ title: 'Template Category & Variables', desc: s.dTmplCat, icon: Tags, action: 'toastTemplate' },
+		{ title: 'HSM Message Templates', desc: s.dHsm, icon: FileText, action: 'toastTemplate' },
+		{ title: 'Blast WhatsApp', desc: s.dBlastWa, icon: Send, action: 'toastTemplate' }
 	]);
-	let emailBlastCards = $derived([
-		{ title: 'Email Category & Variables', desc: s.dEmailCat },
-		{ title: 'Outbound Email Templates', desc: s.dEmailTmpl },
-		{ title: 'Blast Email', desc: s.dBlastEmail }
+	let emailBlastCards: ModuleItem[] = $derived([
+		{ title: 'Email Category & Variables', desc: s.dEmailCat, icon: Tags, action: 'toastTemplate' },
+		{ title: 'Outbound Email Templates', desc: s.dEmailTmpl, icon: FileUp, action: 'toastTemplate' },
+		{ title: 'Blast Email', desc: s.dBlastEmail, icon: Send, action: 'toastTemplate' }
 	]);
-	let dataCards = $derived([
-		{ title: 'Import Data', desc: s.dImport },
-		{ title: 'Blast History', desc: s.dHist, hist: true }
+	let dataCards: ModuleItem[] = $derived([
+		{ title: 'Import Data', desc: s.dImport, icon: FileUp, action: 'toastModule' },
+		{ title: 'Blast History', desc: s.dHist, icon: History, action: 'toastHist' }
 	]);
-	let formCards = $derived([
-		{ title: 'Status', desc: s.fStatusD },
-		{ title: 'Priority', desc: s.fPrioD },
-		{ title: 'Kategori', desc: s.fCatD },
-		{ title: 'Jenis Pengaduan', desc: s.fJenisD },
-		{ title: 'Field', desc: s.fFieldD },
-		{ title: 'Components', desc: s.fCompD }
+	let formCards: ModuleItem[] = $derived([
+		{ title: 'Status', desc: s.fStatusD, icon: CircleDot, action: 'toastForm' },
+		{ title: 'Priority', desc: s.fPrioD, icon: ListOrdered, action: 'toastForm' },
+		{ title: 'Kategori', desc: s.fCatD, icon: FolderTree, action: 'toastForm' },
+		{ title: 'Jenis Pengaduan', desc: s.fJenisD, icon: Shapes, action: 'toastForm' },
+		{ title: 'Field', desc: s.fFieldD, icon: TextCursorInput, action: 'toastForm' },
+		{ title: 'Components', desc: s.fCompD, icon: Blocks, action: 'toastForm' }
 	]);
 	let menuItems = $derived([
-		{ id: 'general', label: s.mGeneral, desc: s.mGeneralD, icon: Settings },
-		{ id: 'email', label: s.mEmail, desc: s.mEmailD, icon: Mail },
-		{ id: 'blasting', label: s.mBlast, desc: s.mBlastD, icon: Send },
-		{ id: 'form', label: s.mForm, desc: s.mFormD, icon: LayoutTemplate }
+		{ id: 'general' as TabId, label: s.mGeneral, desc: s.mGeneralD, icon: SlidersHorizontal },
+		{ id: 'email' as TabId, label: s.mEmail, desc: s.mEmailD, icon: Mail },
+		{ id: 'blasting' as TabId, label: s.mBlast, desc: s.mBlastD, icon: Megaphone },
+		{ id: 'form' as TabId, label: s.mForm, desc: s.mFormD, icon: ClipboardList }
 	]);
 	const history = [
 		{ id: 'BL-2041', channel: 'WhatsApp', template: 'promo_okt', target: 1250, sent: 1218, date: '28 Sep 2026', status: 'Selesai' },
@@ -282,14 +329,14 @@
 	];
 	const historyFiltered = $derived(history.filter((h) => !search.trim() || `${h.id} ${h.template} ${h.channel}`.toLowerCase().includes(search.trim().toLowerCase())));
 	const pageCount = $derived(Math.max(1, Math.ceil(historyFiltered.length / perPage)));
-	const safePage = $derived(Math.min(page, pageCount));
+	const safePage = $derived(Math.min(currentPage, pageCount));
 	const pageRows = $derived(historyFiltered.slice((safePage - 1) * perPage, safePage * perPage));
 	const usage = [
 		{ label: 'WA', value: 78 }, { label: 'Email', value: 52 }, { label: 'HSM', value: 64 }
 	];
 
 
-	function filteredCards(list: { title: string; desc: string }[]) {
+	function filteredCards<T extends { title: string; desc: string }>(list: T[]): T[] {
 		const q = search.trim().toLowerCase();
 		if (!q) return list;
 		return list.filter((c) => `${c.title} ${c.desc}`.toLowerCase().includes(q));
@@ -298,54 +345,75 @@
 
 <svelte:head><title>{s.docTitle}</title></svelte:head>
 
+{#snippet moduleRow(item: ModuleItem, message: string)}
+	<button
+		type="button"
+		onclick={() => toast.success(message)}
+		aria-label={s.openAria.replace('{title}', item.title)}
+		class="group flex w-full min-w-0 items-start gap-3 rounded-lg border border-transparent p-3 text-left transition-colors hover:border-primary/40 hover:bg-primary/5 focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+	>
+		<span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-muted text-muted-foreground transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+			<item.icon size={17} />
+		</span>
+		<span class="min-w-0">
+			<span class="block truncate text-sm font-medium text-foreground transition-colors group-hover:text-primary-text">{item.title}</span>
+			<span class="mt-0.5 block text-meta text-muted-foreground">{item.desc}</span>
+		</span>
+	</button>
+{/snippet}
+
 <div class="flex flex-col gap-6 lg:flex-row">
 	<Card.Root class="w-full shrink-0 lg:w-80">
-		<Card.Header><Card.Title class="flex items-center gap-2"><Settings size={17} />{s.menuT}</Card.Title><p class="text-sm text-muted-foreground">{s.menuD}</p></Card.Header>
+		<Card.Header><Card.Title class="flex items-center gap-2"><SlidersHorizontal size={17} />{s.menuT}</Card.Title><p class="text-sm text-muted-foreground">{s.menuD}</p></Card.Header>
 		<Card.Content class="flex flex-col gap-1">
 			{#each menuItems as m}
-				<button type="button" onclick={() => (tab = m.id)} class="flex w-full min-w-0 items-start gap-3 rounded-xl p-3 text-left transition-colors {tab === m.id ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-accent hover:text-foreground'}">
-					<m.icon size={19} class="mt-0.5 shrink-0" /><span class="min-w-0"><span class="block truncate text-sm font-medium">{m.label}</span><span class="block truncate text-xs opacity-70">{m.desc}</span></span>
+				<button
+					type="button"
+					onclick={() => selectTab(m.id)}
+					aria-current={tab === m.id ? 'page' : undefined}
+					class="flex w-full min-w-0 items-start gap-3 rounded-lg border px-3 py-2.5 text-left transition-colors {tab === m.id
+						? 'border-primary/30 bg-primary/10 text-primary-text'
+						: 'border-transparent text-muted-foreground hover:bg-accent hover:text-foreground'}"
+				>
+					<m.icon size={18} class="mt-0.5 shrink-0" />
+					<span class="min-w-0">
+						<span class="block truncate text-sm font-medium">{m.label}</span>
+						<span class="block truncate text-meta opacity-70">{m.desc}</span>
+					</span>
 				</button>
 			{/each}
 			<Separator class="my-2" />
-			<div class="rounded-xl bg-muted/40 p-3 text-xs"><div class="mb-2 flex justify-between"><span class="text-muted-foreground">{s.quotaUsed}</span><span class="font-semibold">{quota}%</span></div><Progress value={quota} /></div>
+			<div class="rounded-lg bg-muted/40 p-3 text-meta"><div class="mb-2 flex justify-between"><span class="text-muted-foreground">{s.quotaUsed}</span><span class="font-semibold">{quota}%</span></div><Progress value={quota} /></div>
 		</Card.Content>
 	</Card.Root>
 
 	<div class="flex-1">
-		<Tabs.Root bind:value={tab}>
-
-			<Tabs.Content value="general" class="mt-0">
-				<Card.Root>
-					<Card.Header class="flex-row flex-wrap items-center justify-between gap-2 space-y-0"><div class="min-w-0"><Card.Title class="truncate">{s.gT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{s.gD}</p></div><Badge variant="secondary" class="shrink-0">{generalCards.length} {s.modulesUnit}</Badge></Card.Header>
-					<Card.Content>
-						<Field.FieldGroup class="mb-4 grid grid-cols-1 gap-3 md:grid-cols-[1fr_auto]">
-							<Field.Field><Field.Label for="set-q">{s.fMod}</Field.Label><div class="relative"><Search size={15} class="absolute top-1/2 left-2.5 -translate-y-1/2 text-muted-foreground" /><Input id="set-q" bind:value={search} placeholder={s.fModPh} class="pl-8" /></div></Field.Field>
-							<Field.Field><Field.Label>{s.viewMode}</Field.Label>
-								<Select.Root type="single" value="grid"><Select.Trigger><Select.Value placeholder={s.grid} /></Select.Trigger><Select.Content><Select.Item value="grid">{s.grid}</Select.Item><Select.Item value="list">{s.list}</Select.Item></Select.Content></Select.Root>
-							</Field.Field>
-						</Field.FieldGroup>
-						{#if filteredCards(generalCards).length > 0}
-							<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-								{#each filteredCards(generalCards) as c}
-									<Card.Root class="transition-shadow hover:shadow-md"><Card.Header><Card.Title class="text-base">{c.title}</Card.Title><p class="text-xs text-muted-foreground">{c.desc}</p></Card.Header><Card.Content><Button size="sm" variant="secondary" class="w-full" onclick={() => toast.success(s.toastModule)}>{s.manage}</Button></Card.Content></Card.Root>
-								{/each}
-							</div>
-						{:else}
-							<Empty.Root class="border border-dashed"><Empty.Header><Empty.Media><Search size={20} /></Empty.Media><Empty.Title>{s.emptyModT}</Empty.Title><Empty.Description>{s.emptyModPre} “{search}”.</Empty.Description></Empty.Header></Empty.Root>
-						{/if}
-					</Card.Content>
-				</Card.Root>
-			</Tabs.Content>
-
-			<Tabs.Content value="email" class="mt-0">
+		{#if tab === 'general'}
+			<Card.Root>
+				<Card.Header class="flex-row flex-wrap items-center justify-between gap-2 space-y-0"><div class="min-w-0"><Card.Title class="truncate">{s.gT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{s.gD}</p></div><Badge variant="secondary" class="shrink-0">{generalCards.length} {s.modulesUnit}</Badge></Card.Header>
+				<Card.Content>
+					<Field.FieldGroup class="mb-4">
+						<Field.Field><Field.Label for="set-q">{s.fMod}</Field.Label><div class="relative"><Search size={15} class="absolute top-1/2 left-2.5 -translate-y-1/2 text-muted-foreground" /><Input id="set-q" bind:value={search} placeholder={s.fModPh} class="pl-8" /></div></Field.Field>
+					</Field.FieldGroup>
+					{#if filteredCards(generalCards).length > 0}
+						<div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+							{#each filteredCards(generalCards) as c}
+								{@render moduleRow(c, s.toastModule)}
+							{/each}
+						</div>
+					{:else}
+						<Empty.Root class="border border-dashed"><Empty.Header><Empty.Media><Search size={20} /></Empty.Media><Empty.Title>{s.emptyModT}</Empty.Title><Empty.Description>{s.emptyModPre} “{search}”.</Empty.Description></Empty.Header></Empty.Root>
+					{/if}
+				</Card.Content>
+			</Card.Root>
+		{:else if tab === 'email'}
 				<div class="flex flex-col gap-4">
 					<Alert.Root variant="success"><CircleCheck /><Alert.Title>{s.alertSmtpT}</Alert.Title><Alert.Description>{s.alertRelay} {autoreplyOn ? s.active.toLowerCase() : s.inactive.toLowerCase()}.</Alert.Description></Alert.Root>
 					<Card.Root>
 						<Card.Header><Card.Title>{s.emailT}</Card.Title><p class="text-sm text-muted-foreground">{s.emailD}</p></Card.Header>
 						<Card.Content class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
 							{#each emailCards as c}
-								<Card.Root><Card.Header><Card.Title class="text-base">{c.title}</Card.Title><p class="text-xs text-muted-foreground">{c.desc}</p></Card.Header>
+								<Card.Root><Card.Header class="flex-row items-start gap-3 space-y-0"><span class="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary-text"><c.icon size={17} /></span><div class="min-w-0"><Card.Title class="truncate text-base">{c.title}</Card.Title><p class="text-meta text-muted-foreground">{c.desc}</p></div></Card.Header>
 								<Card.Content class="flex items-center justify-between"><Badge variant={c.auto ? (autoreplyOn ? 'success' : 'secondary') : smtpOn ? 'success' : 'secondary'}>{c.auto ? (autoreplyOn ? s.active : s.inactive) : smtpOn ? s.active : s.inactive}</Badge><Button size="sm" variant="outline" onclick={() => (testOpen = true)}>{s.testBtn}</Button></Card.Content></Card.Root>
 							{/each}
 						</Card.Content>
@@ -362,26 +430,24 @@
 						</Card.Content>
 					</Card.Root>
 				</div>
-			</Tabs.Content>
-
-			<Tabs.Content value="blasting" class="mt-0">
-				<div class="flex flex-col gap-4">
-					<Card.Root>
-						<Card.Header class="flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><div class="min-w-0"><Card.Title class="truncate">{s.bT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{s.bD}</p></div>
-						<ToggleGroup.Root type="single" bind:value={blastView} class="max-w-full flex-wrap justify-start overflow-x-auto"><ToggleGroup.Item value="wa">{s.waTab}</ToggleGroup.Item><ToggleGroup.Item value="email">{s.emailTab}</ToggleGroup.Item><ToggleGroup.Item value="data">{s.dataTab}</ToggleGroup.Item></ToggleGroup.Root></Card.Header>
-						<Card.Content>
-							{#if blastView === 'wa'}
-								<p class="mb-3 text-sm font-medium">{s.waT} <span class="font-normal text-muted-foreground">{s.waD}</span></p>
-								<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">{#each filteredCards(waCards) as c}<Card.Root><Card.Header><Card.Title class="text-base">{c.title}</Card.Title><p class="text-xs text-muted-foreground">{c.desc}</p></Card.Header><Card.Content><Button size="sm" variant="secondary" class="w-full" onclick={() => toast.success(s.toastTemplate)}>{s.openBtn}</Button></Card.Content></Card.Root>{/each}</div>
-							{:else if blastView === 'email'}
-								<p class="mb-3 text-sm font-medium">{s.emailBT} <span class="font-normal text-muted-foreground">{s.emailBD}</span></p>
-								<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">{#each filteredCards(emailBlastCards) as c}<Card.Root><Card.Header><Card.Title class="text-base">{c.title}</Card.Title><p class="text-xs text-muted-foreground">{c.desc}</p></Card.Header><Card.Content><Button size="sm" variant="secondary" class="w-full" onclick={() => toast.success(s.toastTemplate)}>{s.openBtn}</Button></Card.Content></Card.Root>{/each}</div>
-							{:else}
-								<p class="mb-3 text-sm font-medium">{s.dataT} <span class="font-normal text-muted-foreground">{s.dataDD}</span></p>
-								<div class="grid grid-cols-1 gap-3 sm:grid-cols-2">{#each dataCards as c}<Card.Root><Card.Header><Card.Title class="text-base">{c.title}</Card.Title><p class="text-xs text-muted-foreground">{c.desc}</p></Card.Header><Card.Content><Button size="sm" variant="secondary" class="w-full" onclick={() => toast.success(s.toastHist)}>{'hist' in c && c.hist ? s.viewHist : s.manage}</Button></Card.Content></Card.Root>{/each}</div>
-							{/if}
-						</Card.Content>
-					</Card.Root>
+		{:else if tab === 'blasting'}
+			<div class="flex flex-col gap-4">
+				<Card.Root>
+					<Card.Header class="flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><div class="min-w-0"><Card.Title class="truncate">{s.bT}</Card.Title><p class="mt-1 text-sm text-muted-foreground">{s.bD}</p></div>
+					<ToggleGroup.Root type="single" bind:value={blastView} class="max-w-full flex-wrap justify-start overflow-x-auto"><ToggleGroup.Item value="wa">{s.waTab}</ToggleGroup.Item><ToggleGroup.Item value="email">{s.emailTab}</ToggleGroup.Item><ToggleGroup.Item value="data">{s.dataTab}</ToggleGroup.Item></ToggleGroup.Root></Card.Header>
+					<Card.Content>
+						{#if blastView === 'wa'}
+							<p class="mb-3 text-sm font-medium">{s.waT} <span class="font-normal text-muted-foreground">{s.waD}</span></p>
+							<div class="grid grid-cols-1 gap-2 sm:grid-cols-2">{#each filteredCards(waCards) as c}{@render moduleRow(c, s.toastTemplate)}{/each}</div>
+						{:else if blastView === 'email'}
+							<p class="mb-3 text-sm font-medium">{s.emailBT} <span class="font-normal text-muted-foreground">{s.emailBD}</span></p>
+							<div class="grid grid-cols-1 gap-2 sm:grid-cols-2">{#each filteredCards(emailBlastCards) as c}{@render moduleRow(c, s.toastTemplate)}{/each}</div>
+						{:else}
+							<p class="mb-3 text-sm font-medium">{s.dataT} <span class="font-normal text-muted-foreground">{s.dataDD}</span></p>
+							<div class="grid grid-cols-1 gap-2 sm:grid-cols-2">{#each filteredCards(dataCards) as c}{@render moduleRow(c, c.action === 'toastHist' ? s.toastHist : s.toastModule)}{/each}</div>
+						{/if}
+					</Card.Content>
+				</Card.Root>
 
 					<div class="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_320px]">
 						<Card.Root>
@@ -389,11 +455,11 @@
 							<Card.Content>
 								<div class="overflow-x-auto rounded-xl border">
 									<Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.hID}</Table.Head><Table.Head>{s.hChannel}</Table.Head><Table.Head>{s.hTemplate}</Table.Head><Table.Head class="text-right">{s.hTarget}</Table.Head><Table.Head class="text-right">{s.hSent}</Table.Head><Table.Head>{s.hDate}</Table.Head><Table.Head>{s.hStatus}</Table.Head></Table.Row></Table.Header>
-									<Table.Body>{#each pageRows as h}<Table.Row><Table.Cell class="font-mono text-xs whitespace-nowrap">{h.id}</Table.Cell><Table.Cell><Badge variant="outline">{h.channel}</Badge></Table.Cell><Table.Cell class="max-w-[140px] truncate font-mono text-xs">{h.template}</Table.Cell><Table.Cell class="text-right whitespace-nowrap">{h.target.toLocaleString('id-ID')}</Table.Cell><Table.Cell class="text-right whitespace-nowrap">{h.sent.toLocaleString('id-ID')}</Table.Cell><Table.Cell class="whitespace-nowrap">{h.date}</Table.Cell><Table.Cell><Badge variant={h.status === 'Selesai' ? 'success' : h.status === 'Berjalan' ? 'warning' : 'destructive'}>{h.status}</Badge></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
+									<Table.Body>{#each pageRows as h}<Table.Row><Table.Cell class="font-mono text-meta whitespace-nowrap">{h.id}</Table.Cell><Table.Cell><Badge variant="outline">{h.channel}</Badge></Table.Cell><Table.Cell class="max-w-[140px] truncate font-mono text-meta">{h.template}</Table.Cell><Table.Cell class="text-right whitespace-nowrap">{h.target.toLocaleString('id-ID')}</Table.Cell><Table.Cell class="text-right whitespace-nowrap">{h.sent.toLocaleString('id-ID')}</Table.Cell><Table.Cell class="whitespace-nowrap">{h.date}</Table.Cell><Table.Cell><Badge variant={h.status === 'Selesai' ? 'success' : h.status === 'Berjalan' ? 'warning' : 'destructive'}>{h.status}</Badge></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
 								</div>
-								<div class="mt-3 flex flex-col gap-2">{#each pageRows as h}<div><div class="flex justify-between text-xs"><span class="text-muted-foreground">{h.id}</span><span class="font-medium">{Math.round((h.sent / Math.max(1, h.target)) * 100)}%</span></div><Progress value={(h.sent / Math.max(1, h.target)) * 100} /></div>{/each}</div>
+								<div class="mt-3 flex flex-col gap-2">{#each pageRows as h}<div><div class="flex justify-between text-meta"><span class="text-muted-foreground">{h.id}</span><span class="font-medium">{Math.round((h.sent / Math.max(1, h.target)) * 100)}%</span></div><Progress value={(h.sent / Math.max(1, h.target)) * 100} /></div>{/each}</div>
 								<div class="mt-4 flex justify-center">
-									<Pagination.Root bind:page count={historyFiltered.length} perPage={perPage} siblingCount={1}>
+									<Pagination.Root bind:page={currentPage} count={historyFiltered.length} perPage={perPage} siblingCount={1}>
 										{#snippet children({ pages })}
 											<Pagination.Content>
 												<Pagination.Item><Pagination.Previous /></Pagination.Item>
@@ -410,32 +476,29 @@
 							<Card.Content>
 								<div class="flex flex-wrap gap-2">{#each usage as u}<Badge variant="outline">{u.label}: {u.value}%</Badge>{/each}</div>
 								<Separator class="my-3" />
-								{#each usage as u}<div class="mb-2 flex items-center justify-between text-xs"><span class="text-muted-foreground">{u.label}</span><span class="font-semibold">{u.value}%</span></div><Progress value={u.value} class="mb-3" />{/each}
+								{#each usage as u}<div class="mb-2 flex items-center justify-between text-meta"><span class="text-muted-foreground">{u.label}</span><span class="font-semibold">{u.value}%</span></div><Progress value={u.value} class="mb-3" />{/each}
 							</Card.Content>
 						</Card.Root>
 					</div>
 				</div>
-			</Tabs.Content>
-
-			<Tabs.Content value="form" class="mt-0">
-				<Card.Root>
-					<Card.Header><Card.Title>{s.formT}</Card.Title><p class="text-sm text-muted-foreground">{s.formD}</p></Card.Header>
-					<Card.Content>
-						{#if filteredCards(formCards).length > 0}
-							<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-								{#each filteredCards(formCards) as c}
-									<Card.Root><Card.Header><Card.Title class="text-base">{c.title}</Card.Title><p class="text-xs text-muted-foreground">{c.desc}</p></Card.Header><Card.Content><Button size="sm" variant="secondary" class="w-full" onclick={() => toast.success(s.toastForm)}>{s.manage}</Button></Card.Content></Card.Root>
-								{/each}
-							</div>
-						{:else}
-							<Empty.Root class="border border-dashed"><Empty.Header><Empty.Media><LayoutTemplate size={20} /></Empty.Media><Empty.Title>{s.emptyFieldT}</Empty.Title><Empty.Description>{s.emptyFieldD}</Empty.Description></Empty.Header></Empty.Root>
-						{/if}
-						<Alert.Root variant="warning" class="mt-4"><TriangleAlert /><Alert.Title>{s.apiT}</Alert.Title><Alert.Description>{s.apiD}</Alert.Description></Alert.Root>
-						<div class="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground"><KeyRound size={14} class="shrink-0" /><span class="min-w-0 break-words">{s.keyEx} WA-HSM-****-OKT · SMTP-RELAY-****</span></div>
-					</Card.Content>
-				</Card.Root>
-			</Tabs.Content>
-		</Tabs.Root>
+		{:else if tab === 'form'}
+			<Card.Root>
+				<Card.Header><Card.Title>{s.formT}</Card.Title><p class="text-sm text-muted-foreground">{s.formD}</p></Card.Header>
+				<Card.Content>
+					{#if filteredCards(formCards).length > 0}
+						<div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+							{#each filteredCards(formCards) as c}
+								{@render moduleRow(c, s.toastForm)}
+							{/each}
+						</div>
+					{:else}
+						<Empty.Root class="border border-dashed"><Empty.Header><Empty.Media><ClipboardList size={20} /></Empty.Media><Empty.Title>{s.emptyFieldT}</Empty.Title><Empty.Description>{s.emptyFieldD}</Empty.Description></Empty.Header></Empty.Root>
+					{/if}
+					<Alert.Root variant="warning" class="mt-4"><TriangleAlert /><Alert.Title>{s.apiT}</Alert.Title><Alert.Description>{s.apiD}</Alert.Description></Alert.Root>
+					<div class="mt-3 flex flex-wrap items-center gap-2 text-meta text-muted-foreground"><KeyRound size={14} class="shrink-0" /><span class="min-w-0 break-words">{s.keyEx} WA-HSM-****-OKT · SMTP-RELAY-****</span></div>
+				</Card.Content>
+			</Card.Root>
+		{/if}
 	</div>
 
 	<Dialog.Root bind:open={testOpen}>

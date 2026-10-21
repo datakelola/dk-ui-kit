@@ -38,7 +38,7 @@
       class={cn(
         'rounded-2xl px-4 py-2 text-sm shadow-sm',
         variant === 'sent'
-          ? 'rounded-br-md bg-primary text-primary-foreground'
+          ? 'rounded-br-md bg-bubble-sent text-bubble-sent-foreground'
           : 'rounded-bl-md border bg-background dark:bg-card'
       )}
     >
@@ -46,7 +46,7 @@
     </div>
     
     {#if timestamp}
-      <span class="text-[10px] text-muted-foreground">
+      <span class="text-xs text-muted-foreground">
         {timestamp}
       </span>
     {/if}

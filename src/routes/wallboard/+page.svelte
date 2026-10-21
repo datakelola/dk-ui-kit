@@ -173,8 +173,8 @@
 			<h1 class="truncate text-xl font-bold tracking-tight">{s.heading}</h1>
 		</div>
 		<div class="ms-auto max-w-full rounded-lg border border-slate-800 bg-slate-900/70 px-3 py-1.5 text-right max-sm:ms-0 max-sm:w-full">
-			<p class="text-xs font-semibold tracking-wide uppercase">{dayFmt.format(now)} {s.at} {timeFmt.format(now)}</p>
-			<p class="text-[10px] tracking-wide text-slate-400 uppercase">{s.lastUpdated} {timeFmt.format(lastUpdated)}</p>
+			<p class="text-meta font-semibold tracking-wide uppercase">{dayFmt.format(now)} {s.at} {timeFmt.format(now)}</p>
+			<p class="text-meta tracking-wide text-slate-400 uppercase">{s.lastUpdated} {timeFmt.format(lastUpdated)}</p>
 		</div>
 	</header>
 
@@ -182,43 +182,43 @@
 		<!-- Kolom kiri -->
 		<div class="grid min-w-0 grid-cols-1 content-start gap-3 min-[420px]:grid-cols-2">
 			<section class="rounded-xl border border-slate-800 bg-blue-600 p-3" aria-label="SCR">
-				<p class="inline-block rounded bg-blue-800/60 px-1.5 py-0.5 text-[10px] font-bold tracking-wider">SCR</p>
+				<p class="inline-block rounded bg-blue-800/60 px-1.5 py-0.5 text-meta font-bold tracking-wider">SCR</p>
 				<p class="mt-1 text-4xl font-bold tabular-nums">82<span class="text-lg">.9</span><span class="text-sm font-medium"> %</span></p>
 			</section>
 			<section class="rounded-xl border border-slate-800 bg-amber-500 p-3 text-slate-950" aria-label="ABN">
-				<p class="inline-block rounded bg-amber-700/40 px-1.5 py-0.5 text-[10px] font-bold tracking-wider">ABN</p>
+				<p class="inline-block rounded bg-amber-700/40 px-1.5 py-0.5 text-meta font-bold tracking-wider">ABN</p>
 				<p class="mt-1 text-4xl font-bold tabular-nums">17<span class="text-lg">.1</span><span class="text-sm font-medium"> %</span></p>
 			</section>
 			<section class="rounded-xl border border-slate-800 bg-slate-900/70 p-3" aria-label="Incoming">
-				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.incoming}</p>
+				<p class="text-sm font-semibold tracking-wider text-slate-400">{s.incoming}</p>
 				<p class="text-4xl font-bold tabular-nums">{incoming}</p>
 			</section>
 			<section class="rounded-xl border border-slate-800 bg-slate-900/70 p-3" aria-label="Queue">
-				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.queue}</p>
+				<p class="text-sm font-semibold tracking-wider text-slate-400">{s.queue}</p>
 				<p class="text-4xl font-bold tabular-nums text-amber-400">{queue}</p>
 			</section>
 			<section class="rounded-xl border border-slate-800 bg-slate-900/70 p-3" aria-label="Answered">
-				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.answered}</p>
+				<p class="text-sm font-semibold tracking-wider text-slate-400">{s.answered}</p>
 				<p class="text-4xl font-bold tabular-nums text-green-400">{answered}</p>
 			</section>
 			<section class="rounded-xl border border-slate-800 bg-slate-900/70 p-3" aria-label="Abandoned">
-				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.abandoned}</p>
+				<p class="text-sm font-semibold tracking-wider text-slate-400">{s.abandoned}</p>
 				<p class="text-4xl font-bold tabular-nums text-red-400">{abandoned}</p>
 			</section>
 			<section class="col-span-1 min-w-0 rounded-xl border border-slate-800 bg-blue-600 p-3 min-[420px]:col-span-2" aria-label="SCR Email">
-				<p class="inline-block rounded bg-blue-800/60 px-1.5 py-0.5 text-[10px] font-bold tracking-wider">SCR EMAIL</p>
+				<p class="inline-block rounded bg-blue-800/60 px-1.5 py-0.5 text-meta font-bold tracking-wider">SCR EMAIL</p>
 				<p class="mt-1 text-4xl font-bold tabular-nums">74<span class="text-lg">.5</span><span class="text-sm font-medium"> %</span></p>
 			</section>
 			<section class="rounded-xl border border-slate-800 bg-slate-900/70 p-3" aria-label="Total Email">
-				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.totalEmail}</p>
+				<p class="text-sm font-semibold tracking-wider text-slate-400">{s.totalEmail}</p>
 				<p class="text-4xl font-bold tabular-nums">470</p>
 			</section>
 			<section class="rounded-xl border border-slate-800 bg-slate-900/70 p-3" aria-label="Distributed">
-				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.distributed}</p>
+				<p class="text-sm font-semibold tracking-wider text-slate-400">{s.distributed}</p>
 				<p class="text-4xl font-bold tabular-nums text-amber-400">161</p>
 			</section>
 			<section class="col-span-1 flex min-w-0 items-center justify-between gap-2 rounded-xl border border-slate-800 bg-slate-900/70 p-3 min-[420px]:col-span-2" aria-label="Email Answered">
-				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.answered}</p>
+				<p class="text-sm font-semibold tracking-wider text-slate-400">{s.answered}</p>
 				<p class="text-4xl font-bold tabular-nums text-green-400">120</p>
 			</section>
 		</div>
@@ -229,7 +229,7 @@
 				<div class="overflow-x-auto">
 					<table class="w-full min-w-[640px] text-sm">
 						<thead>
-							<tr class="text-left text-[11px] tracking-wider text-slate-400">
+							<tr class="text-left text-sm tracking-wider text-slate-400">
 								<th class="px-4 py-2.5 font-semibold">{s.skill}</th>
 								<th class="px-4 py-2.5 text-center font-semibold">{s.que}</th>
 								<th class="px-4 py-2.5 text-center font-semibold">{s.notReady}</th>
@@ -260,7 +260,7 @@
 					<div class="overflow-x-auto">
 					<table class="w-full min-w-[640px] text-sm">
 						<thead>
-							<tr class="text-left text-[11px] tracking-wider text-slate-400">
+							<tr class="text-left text-sm tracking-wider text-slate-400">
 								<th class="px-4 py-2.5 font-semibold">{s.consult}</th>
 								<th class="px-4 py-2.5 font-semibold">{s.subcategory}</th>
 								<th class="px-4 py-2.5 text-right font-semibold">{s.total}</th>
@@ -278,7 +278,7 @@
 					<div class="overflow-x-auto">
 					<table class="w-full min-w-[640px] text-sm">
 						<thead>
-							<tr class="text-left text-[11px] tracking-wider text-slate-400">
+							<tr class="text-left text-sm tracking-wider text-slate-400">
 								<th class="px-4 py-2.5 font-semibold">{s.complaint}</th>
 								<th class="px-4 py-2.5 font-semibold">{s.subcategory}</th>
 								<th class="px-4 py-2.5 text-right font-semibold">{s.total}</th>
@@ -298,35 +298,35 @@
 		<!-- Kolom kanan -->
 		<div class="grid min-w-0 grid-cols-1 content-start gap-3 min-[420px]:grid-cols-2">
 			<section class="col-span-1 min-w-0 rounded-xl border border-slate-800 bg-green-600 p-3 min-[420px]:col-span-2" aria-label="SCR WA Chat">
-				<p class="inline-block rounded bg-green-800/60 px-1.5 py-0.5 text-[10px] font-bold tracking-wider">SCR WA CHAT</p>
+				<p class="inline-block rounded bg-green-800/60 px-1.5 py-0.5 text-meta font-bold tracking-wider">SCR WA CHAT</p>
 				<p class="mt-1 text-4xl font-bold tabular-nums">0<span class="text-sm font-medium"> %</span></p>
 			</section>
 			<section class="rounded-xl border border-slate-800 bg-slate-900/70 p-3" aria-label="Wait in Queue">
-				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.waitQueue}</p>
+				<p class="text-sm font-semibold tracking-wider text-slate-400">{s.waitQueue}</p>
 				<p class="text-3xl font-bold tabular-nums text-amber-400">0</p>
 			</section>
 			<section class="rounded-xl border border-slate-800 bg-slate-900/70 p-3" aria-label="Incoming Chat">
-				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.incomingChat}</p>
+				<p class="text-sm font-semibold tracking-wider text-slate-400">{s.incomingChat}</p>
 				<p class="text-3xl font-bold tabular-nums text-purple-400">0</p>
 			</section>
 			<section class="col-span-1 flex min-w-0 items-center justify-between gap-2 rounded-xl border border-slate-800 bg-slate-900/70 p-3 min-[420px]:col-span-2" aria-label="Chat Answered">
-				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.answered}</p>
+				<p class="text-sm font-semibold tracking-wider text-slate-400">{s.answered}</p>
 				<p class="text-3xl font-bold tabular-nums text-blue-400">0</p>
 			</section>
 			<section class="col-span-1 min-w-0 rounded-xl border border-slate-800 bg-green-600 p-3 min-[420px]:col-span-2" aria-label="SCR WA Call">
-				<p class="inline-block rounded bg-green-800/60 px-1.5 py-0.5 text-[10px] font-bold tracking-wider">SCR WA CALL</p>
+				<p class="inline-block rounded bg-green-800/60 px-1.5 py-0.5 text-meta font-bold tracking-wider">SCR WA CALL</p>
 				<p class="mt-1 text-4xl font-bold tabular-nums">64<span class="text-lg">.3</span><span class="text-sm font-medium"> %</span></p>
 			</section>
 			<section class="rounded-xl border border-slate-800 bg-slate-900/70 p-3" aria-label="Wait in Queue Call">
-				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.waitQueue}</p>
+				<p class="text-sm font-semibold tracking-wider text-slate-400">{s.waitQueue}</p>
 				<p class="text-3xl font-bold tabular-nums text-amber-400">{waitQueue}</p>
 			</section>
 			<section class="rounded-xl border border-slate-800 bg-slate-900/70 p-3" aria-label="Incoming Call">
-				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.incomingCall}</p>
+				<p class="text-sm font-semibold tracking-wider text-slate-400">{s.incomingCall}</p>
 				<p class="text-3xl font-bold tabular-nums text-purple-400">{incomingCall}</p>
 			</section>
 			<section class="col-span-1 flex min-w-0 items-center justify-between gap-2 rounded-xl border border-slate-800 bg-slate-900/70 p-3 min-[420px]:col-span-2" aria-label="Call Answered">
-				<p class="text-[11px] font-semibold tracking-wider text-slate-400">{s.answered}</p>
+				<p class="text-sm font-semibold tracking-wider text-slate-400">{s.answered}</p>
 				<p class="text-3xl font-bold tabular-nums text-blue-400">{answeredCall}</p>
 			</section>
 		</div>
@@ -335,11 +335,11 @@
 	<footer class="flex gap-3 overflow-x-auto pb-1" aria-label="MPP">
 		{#each mpps as m (m.name)}
 			<section class="min-w-[190px] flex-1 rounded-xl border border-slate-800 bg-slate-900/70 p-3">
-				<p class="truncate text-[11px] font-semibold tracking-wider text-slate-300">{m.name}</p>
+				<p class="truncate text-sm font-semibold tracking-wider text-slate-300">{m.name}</p>
 				<div class="mt-2 grid grid-cols-3 text-center tabular-nums">
-					<div><p class="text-[10px] tracking-wider text-slate-500">KON</p><p class="text-lg font-bold text-blue-400">{m.kon}</p></div>
-					<div><p class="text-[10px] tracking-wider text-slate-500">ADU</p><p class="text-lg font-bold text-amber-400">{m.adu}</p></div>
-					<div><p class="text-[10px] tracking-wider text-slate-500">CET</p><p class="text-lg font-bold text-green-400">{m.cet}</p></div>
+					<div><p class="text-meta tracking-wider text-slate-500">KON</p><p class="text-lg font-bold text-blue-400">{m.kon}</p></div>
+					<div><p class="text-meta tracking-wider text-slate-500">ADU</p><p class="text-lg font-bold text-amber-400">{m.adu}</p></div>
+					<div><p class="text-meta tracking-wider text-slate-500">CET</p><p class="text-lg font-bold text-green-400">{m.cet}</p></div>
 				</div>
 			</section>
 		{/each}

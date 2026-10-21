@@ -163,19 +163,19 @@
 		<Card.Header>
 			<div class="flex items-center gap-3">
 				<div class="flex size-10 items-center justify-center rounded-xl bg-primary text-primary-foreground"><ChartColumn size={19} /></div>
-				<div><Card.Title>{s.hubTitle}</Card.Title><p class="text-xs font-medium tracking-wider text-primary uppercase">{s.version}</p></div>
+				<div><Card.Title>{s.hubTitle}</Card.Title><p class="text-meta font-medium tracking-wider text-primary-text uppercase">{s.version}</p></div>
 			</div>
 		</Card.Header>
 		<Card.Content class="flex flex-col gap-1">
-			<p class="px-2 text-[0.65rem] font-bold tracking-widest text-muted-foreground uppercase">{s.categories}</p>
+			<p class="px-2 text-meta font-bold tracking-widest text-muted-foreground uppercase">{s.categories}</p>
 			{#each cats as c}
 				<button type="button" onclick={() => (category = c.id)} class="flex w-full min-w-0 items-start gap-3 rounded-xl p-3 text-left transition-colors {category === c.id ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-accent hover:text-foreground'}">
 					<c.icon size={20} class="mt-0.5 shrink-0" />
-					<span class="min-w-0"><span class="block truncate text-sm font-medium">{c.label}</span><span class="block truncate text-xs opacity-70">{c.desc}</span></span>
+					<span class="min-w-0"><span class="block truncate text-sm font-medium">{c.label}</span><span class="block truncate text-meta opacity-70">{c.desc}</span></span>
 				</button>
 			{/each}
 			<Separator class="my-2" />
-			<div class="flex flex-col gap-2 rounded-xl bg-muted/40 p-3 text-xs text-muted-foreground">
+			<div class="flex flex-col gap-2 rounded-xl bg-muted/40 p-3 text-meta text-muted-foreground">
 				<div class="flex justify-between"><span>{s.totalReports}</span><span class="font-semibold text-foreground">{totalVisible}</span></div>
 				<Progress value={Math.min(100, totalVisible * 8)} />
 				<span>{s.activeCat} <span class="font-medium text-foreground">{meta[category].title}</span></span>
@@ -204,17 +204,17 @@
 						<div class="mb-4 flex items-center gap-3">
 							<Badge variant="secondary"><group.icon size={13} />{group.label}</Badge>
 							<Separator class="flex-1" />
-							<span class="text-xs text-muted-foreground">{cards.length} {s.unit}</span>
+							<span class="text-meta text-muted-foreground">{cards.length} {s.unit}</span>
 						</div>
 						{#if cards.length > 0}
 							<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
 								{#each cards as card}
 									<Card.Root class="transition-shadow hover:shadow-md">
 										<Card.Header class="flex-row items-center gap-3">
-											<div class="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+											<div class="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary-text">
 												{#if group.id === 'calls'}<PhoneCall size={18} />{:else if group.id === 'tickets'}<Ticket size={18} />{:else if group.id === 'wallboards'}<Tv size={18} />{:else}<Send size={18} />{/if}
 											</div>
-											<div class="min-w-0"><Card.Title class="truncate text-base">{card.title}</Card.Title><p class="truncate text-xs text-muted-foreground">{card.desc}</p></div>
+											<div class="min-w-0"><Card.Title class="truncate text-base">{card.title}</Card.Title><p class="truncate text-meta text-muted-foreground">{card.desc}</p></div>
 										</Card.Header>
 										<Card.Content><Button href={card.to} size="sm" variant="secondary" class="w-full">{s.open}<ArrowUpRight data-icon="inline-end" /></Button></Card.Content>
 									</Card.Root>
@@ -234,7 +234,7 @@
 					</Empty.Root>
 				{/if}
 			</div>
-			<div class="mt-6 flex flex-wrap items-center gap-2 text-xs text-muted-foreground"><Star size={14} class="shrink-0" /><MessageSquareText size={14} class="shrink-0" /><Mail size={14} class="shrink-0" /><Users size={14} class="shrink-0" /><span class="min-w-0">{s.scPre} <a class="underline" href="/report/csat">/report/csat</a>{s.scMid} <a class="underline" href="/report/csat-interaction">/report/csat-interaction</a>.</span></div>
+			<div class="mt-6 flex flex-wrap items-center gap-2 text-meta text-muted-foreground"><Star size={14} class="shrink-0" /><MessageSquareText size={14} class="shrink-0" /><Mail size={14} class="shrink-0" /><Users size={14} class="shrink-0" /><span class="min-w-0">{s.scPre} <a class="underline" href="/report/csat">/report/csat</a>{s.scMid} <a class="underline" href="/report/csat-interaction">/report/csat-interaction</a>.</span></div>
 		</Card.Content>
 	</Card.Root>
 </div>

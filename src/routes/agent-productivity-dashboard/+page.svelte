@@ -170,7 +170,7 @@
 			<ToggleGroup.Root type="single" bind:value={tab} aria-label={s.viewLabel} class="max-w-full flex-wrap"><ToggleGroup.Item value="ringkasan">{s.tabSum}</ToggleGroup.Item><ToggleGroup.Item value="sla">{s.tabSla}</ToggleGroup.Item><ToggleGroup.Item value="tren">{s.tabTrend}</ToggleGroup.Item></ToggleGroup.Root>
 			<Tabs.Root bind:value={tab}><Tabs.List class="h-auto max-w-full flex-wrap"><Tabs.Trigger value="ringkasan">{s.tabSum}</Tabs.Trigger><Tabs.Trigger value="sla">{s.tabSla}</Tabs.Trigger><Tabs.Trigger value="tren">{s.tabTrend}</Tabs.Trigger></Tabs.List></Tabs.Root>
 		</Card.Content>
-		<Card.Footer class="text-muted-foreground text-xs">{s.welcome}</Card.Footer>
+		<Card.Footer class="text-muted-foreground text-meta">{s.welcome}</Card.Footer>
 	</Card.Root>
 
 	{#if loading}
@@ -179,8 +179,8 @@
 		<section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
 			{#each kpi as k}
 				<Card.Root class={cn(!k.ok && 'border-amber-500/40')}>
-					<Card.Header class="flex-row items-center gap-3"><div class="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary"><k.icon data-icon="card" /></div><Card.Title class="text-sm">{k.label}</Card.Title></Card.Header>
-					<Card.Content><div class="text-2xl font-bold">{k.value}</div><p class="text-muted-foreground text-xs">{k.target}</p></Card.Content>
+					<Card.Header class="flex-row items-center gap-3"><div class="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary-text"><k.icon data-icon="card" /></div><Card.Title class="text-sm">{k.label}</Card.Title></Card.Header>
+					<Card.Content><div class="text-2xl font-bold">{k.value}</div><p class="text-muted-foreground text-meta">{k.target}</p></Card.Content>
 					<Card.Footer><Badge variant={k.ok ? 'success' : 'warning'}>{k.ok ? s.above : s.watch}</Badge></Card.Footer>
 				</Card.Root>
 			{/each}
@@ -190,15 +190,15 @@
 	<Card.Root>
 		<Card.Header><Card.Title>{s.utilTitle}</Card.Title><Card.Description>{s.utilDesc}</Card.Description></Card.Header>
 		<Card.Content class="flex flex-col gap-4">
-			<div class="flex flex-col gap-2">{#each rows as r}<div class="flex min-w-0 items-center gap-3"><Badge variant="outline" class="min-w-24 shrink-0 justify-center">{r.name.split(' ')[0]}</Badge><Progress value={r.util} class="min-w-0 flex-1" /><span class="shrink-0 text-xs font-medium whitespace-nowrap">{r.util}%</span></div>{/each}</div>
+			<div class="flex flex-col gap-2">{#each rows as r}<div class="flex min-w-0 items-center gap-3"><Badge variant="outline" class="min-w-24 shrink-0 justify-center">{r.name.split(' ')[0]}</Badge><Progress value={r.util} class="min-w-0 flex-1" /><span class="shrink-0 text-meta font-medium whitespace-nowrap">{r.util}%</span></div>{/each}</div>
 			{#if rows.length === 0}
 				<Empty.Root><Empty.Header><Empty.Title>{s.emptyTitle}</Empty.Title><Empty.Description>{s.emptyDesc}</Empty.Description></Empty.Header></Empty.Root>
 			{:else}
 				<Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thAgent}</Table.Head><Table.Head>{s.thTotal}</Table.Head><Table.Head>{s.thTicket}</Table.Head><Table.Head>{s.thNear}</Table.Head><Table.Head>{s.thOver}</Table.Head><Table.Head>{s.thUtil}</Table.Head></Table.Row></Table.Header>
-				<Table.Body>{#each rows as r}<Table.Row><Table.Cell><div class="flex min-w-0 items-center gap-2"><Avatar.Root class="size-7 shrink-0"><Avatar.Fallback>{r.name.slice(0, 1)}</Avatar.Fallback></Avatar.Root><span class="min-w-0 truncate font-medium">{r.name}</span></div></Table.Cell><Table.Cell>{r.interaksi}</Table.Cell><Table.Cell>{r.tiket}</Table.Cell><Table.Cell><Tooltip.Root><Tooltip.Trigger><Badge variant="warning">{r.near}</Badge></Tooltip.Trigger><Tooltip.Content>{s.nearTip}</Tooltip.Content></Tooltip.Root></Table.Cell><Table.Cell><Badge variant="destructive">{r.over}</Badge></Table.Cell><Table.Cell><div class="flex items-center gap-2"><Progress value={r.util} class="w-24" /><span class="text-xs">{r.util}%</span></div></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
+				<Table.Body>{#each rows as r}<Table.Row><Table.Cell><div class="flex min-w-0 items-center gap-2"><Avatar.Root class="size-7 shrink-0"><Avatar.Fallback>{r.name.slice(0, 1)}</Avatar.Fallback></Avatar.Root><span class="min-w-0 truncate font-medium">{r.name}</span></div></Table.Cell><Table.Cell>{r.interaksi}</Table.Cell><Table.Cell>{r.tiket}</Table.Cell><Table.Cell><Tooltip.Root><Tooltip.Trigger><Badge variant="warning">{r.near}</Badge></Tooltip.Trigger><Tooltip.Content>{s.nearTip}</Tooltip.Content></Tooltip.Root></Table.Cell><Table.Cell><Badge variant="destructive">{r.over}</Badge></Table.Cell><Table.Cell><div class="flex items-center gap-2"><Progress value={r.util} class="w-24" /><span class="text-meta">{r.util}%</span></div></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
 			{/if}
 		</Card.Content>
-		<Card.Footer><Separator class="my-1" /><div class="flex flex-wrap items-center justify-between gap-2"><p class="text-muted-foreground flex min-w-0 flex-1 items-center gap-1 text-xs"><Info data-icon="inline" class="shrink-0" /> <span class="min-w-0">{s.footInfo}</span></p><Button size="sm" variant="outline" onclick={() => (open = true)} class="shrink-0">{s.viewSla}</Button></div></Card.Footer>
+		<Card.Footer><Separator class="my-1" /><div class="flex flex-wrap items-center justify-between gap-2"><p class="text-muted-foreground flex min-w-0 flex-1 items-center gap-1 text-meta"><Info data-icon="inline" class="shrink-0" /> <span class="min-w-0">{s.footInfo}</span></p><Button size="sm" variant="outline" onclick={() => (open = true)} class="shrink-0">{s.viewSla}</Button></div></Card.Footer>
 	</Card.Root>
 
 	<Alert.Root variant="warning"><TriangleAlert data-icon="alert" /><Alert.Description>{s.alert}</Alert.Description></Alert.Root>

@@ -176,29 +176,29 @@
 			</Field.FieldGroup>
 			<ToggleGroup.Root type="single" bind:value={tab} aria-label={s.viewLabel} class="max-w-full flex-wrap"><ToggleGroup.Item value="daftar">{s.list}</ToggleGroup.Item><ToggleGroup.Item value="kalender">{s.calendar}</ToggleGroup.Item></ToggleGroup.Root>
 		</Card.Content>
-		<Card.Footer class="text-muted-foreground text-xs">{s.showingPre} {filtered.length} {s.showingMid} {schedules.length} {s.showingPost}</Card.Footer>
+		<Card.Footer class="text-muted-foreground text-meta">{s.showingPre} {filtered.length} {s.showingMid} {schedules.length} {s.showingPost}</Card.Footer>
 	</Card.Root>
 
 	{#if tab === 'kalender'}
-		<Card.Root><Card.Header><Card.Title>{s.calTitle}</Card.Title><Card.Description>{s.calDesc}</Card.Description></Card.Header><Card.Content><DatePicker bind:value={date} label={s.pickDate} placeholder={s.pickPh} /></Card.Content><Card.Footer><p class="text-muted-foreground text-xs">{s.picked} {date?.toString() ?? '-'}</p></Card.Footer></Card.Root>
+		<Card.Root><Card.Header><Card.Title>{s.calTitle}</Card.Title><Card.Description>{s.calDesc}</Card.Description></Card.Header><Card.Content><DatePicker bind:value={date} label={s.pickDate} placeholder={s.pickPh} /></Card.Content><Card.Footer><p class="text-muted-foreground text-meta">{s.picked} {date?.toString() ?? '-'}</p></Card.Footer></Card.Root>
 	{:else}
 		<Card.Root>
 			<Card.Header><Card.Title>{s.perDateTitle}</Card.Title><Card.Description>{s.perDateDesc}</Card.Description></Card.Header>
 			<Card.Content class="flex flex-col gap-4">
-				<div class="flex flex-col gap-2">{#each filtered as x}<div class="flex min-w-0 items-center gap-3"><Badge variant="outline" class="min-w-24 shrink-0 justify-center">{x.date}</Badge><Progress value={x.cap} class="min-w-0 flex-1" /><span class="shrink-0 text-xs font-medium tabular-nums whitespace-nowrap">{x.cap}%</span></div>{/each}</div>
+				<div class="flex flex-col gap-2">{#each filtered as x}<div class="flex min-w-0 items-center gap-3"><Badge variant="outline" class="min-w-24 shrink-0 justify-center">{x.date}</Badge><Progress value={x.cap} class="min-w-0 flex-1" /><span class="shrink-0 text-meta font-medium tabular-nums whitespace-nowrap">{x.cap}%</span></div>{/each}</div>
 				{#if loading}
 					<div class="flex flex-col gap-2">{#each [1, 2, 3] as _}<Skeleton class="h-12 w-full" />{/each}</div>
 				{:else if filtered.length === 0}
 					<Empty.Root><Empty.Header><Empty.Media><CalendarClock data-icon="empty" /></Empty.Media><Empty.Title>{s.emptyTitle}</Empty.Title><Empty.Description>{s.emptyDesc}</Empty.Description></Empty.Header><Empty.Content><Button size="sm" onclick={() => (open = true)}><Plus data-icon="inline-start" />{s.add}</Button></Empty.Content></Empty.Root>
 				{:else}
 					<div class="overflow-x-auto"><Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thNo}</Table.Head><Table.Head>{s.thDate}</Table.Head><Table.Head>{s.thCount}</Table.Head><Table.Head>{s.thChannel}</Table.Head><Table.Head>{s.thCap}</Table.Head><Table.Head class="text-right">{s.thAct}</Table.Head></Table.Row></Table.Header>
-					<Table.Body>{#each filtered as x, i}<Table.Row><Table.Cell class="text-muted-foreground">{i + 1}</Table.Cell><Table.Cell class="font-medium">{x.date}</Table.Cell><Table.Cell><span class="flex items-center gap-2"><Avatar.Root class="size-6"><Avatar.Fallback>{String(x.agents)}</Avatar.Fallback></Avatar.Root>{x.agents} {s.agentSuffix}</span></Table.Cell><Table.Cell><div class="flex min-w-48 flex-wrap gap-1.5">{#each x.channels as c}<Badge variant="secondary">{c}</Badge>{:else}<span class="text-muted-foreground text-sm">-</span>{/each}</div></Table.Cell><Table.Cell><div class="flex items-center gap-2"><Progress value={x.cap} class={cn('w-20', x.cap < 60 && 'opacity-70')} /><span class="text-xs">{x.cap}%</span></div></Table.Cell><Table.Cell class="text-right"><Tooltip.Root><Tooltip.Trigger><Button variant="ghost" size="sm" onclick={() => toast.success(`${s.detail}: ${x.date}`)}>{s.detail}<ChevronRight data-icon="inline-end" /></Button></Tooltip.Trigger><Tooltip.Content>{s.schedTipPre} {x.date}</Tooltip.Content></Tooltip.Root></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root></div>
+					<Table.Body>{#each filtered as x, i}<Table.Row><Table.Cell class="text-muted-foreground">{i + 1}</Table.Cell><Table.Cell class="font-medium">{x.date}</Table.Cell><Table.Cell><span class="flex items-center gap-2"><Avatar.Root class="size-6"><Avatar.Fallback>{String(x.agents)}</Avatar.Fallback></Avatar.Root>{x.agents} {s.agentSuffix}</span></Table.Cell><Table.Cell><div class="flex min-w-48 flex-wrap gap-1.5">{#each x.channels as c}<Badge variant="secondary">{c}</Badge>{:else}<span class="text-muted-foreground text-sm">-</span>{/each}</div></Table.Cell><Table.Cell><div class="flex items-center gap-2"><Progress value={x.cap} class={cn('w-20', x.cap < 60 && 'opacity-70')} /><span class="text-meta">{x.cap}%</span></div></Table.Cell><Table.Cell class="text-right"><Tooltip.Root><Tooltip.Trigger><Button variant="ghost" size="sm" onclick={() => toast.success(`${s.detail}: ${x.date}`)}>{s.detail}<ChevronRight data-icon="inline-end" /></Button></Tooltip.Trigger><Tooltip.Content>{s.schedTipPre} {x.date}</Tooltip.Content></Tooltip.Root></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root></div>
 				{/if}
 			</Card.Content>
 			<Card.Footer><Separator class="my-1" /><Alert.Root variant="success"><CalendarDays data-icon="alert" /><Alert.Description>{s.alert}</Alert.Description></Alert.Root></Card.Footer>
 		</Card.Root>
 	{/if}
-	<p class="text-muted-foreground flex items-center gap-1 text-xs"><Info data-icon="inline" /> {s.channelInfo}</p>
+	<p class="text-muted-foreground flex items-center gap-1 text-meta"><Info data-icon="inline" /> {s.channelInfo}</p>
 </div>
 
 <Dialog.Root bind:open><Dialog.Content class="max-w-[calc(100vw-2rem)] sm:max-w-md"><Dialog.Header><Dialog.Title>{s.dlgTitle}</Dialog.Title><Dialog.Description>{s.dlgDesc}</Dialog.Description></Dialog.Header><Field.FieldGroup class="flex flex-col gap-4 py-2"><Field.Field><Field.Label>{s.dateLabel}</Field.Label><DatePicker bind:value={newDate} label={s.newDateLabel} /></Field.Field></Field.FieldGroup><Dialog.Footer><Button variant="outline" onclick={() => (open = false)}>{s.cancel}</Button><Button onclick={saveSchedule}>{s.save}</Button></Dialog.Footer></Dialog.Content></Dialog.Root>

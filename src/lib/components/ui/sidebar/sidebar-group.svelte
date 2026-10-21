@@ -14,7 +14,10 @@
 	bind:this={ref}
 	data-slot="sidebar-group"
 	data-sidebar="group"
-	class={cn("p-2 relative flex w-full min-w-0 flex-col", className)}
+	class={cn(
+		"p-2 relative flex w-full min-w-0 flex-col transition-[padding,margin] duration-200 ease-linear group-data-[collapsible=icon]:my-1 group-data-[collapsible=icon]:py-0 motion-reduce:transition-none",
+		className
+	)}
 	{...restProps}
 >
 	{@render children?.()}

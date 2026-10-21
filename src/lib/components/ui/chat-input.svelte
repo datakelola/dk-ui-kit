@@ -101,7 +101,7 @@
     type="button"
     onclick={handleSubmit}
     disabled={disabled || !value.trim()}
-    class="shrink-0 rounded-md p-2 text-primary hover:bg-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
+    class="shrink-0 rounded-md p-2 text-primary-text hover:bg-primary/10 disabled:cursor-not-allowed disabled:opacity-50"
     aria-label="Send message"
   >
     <Send size={20} />

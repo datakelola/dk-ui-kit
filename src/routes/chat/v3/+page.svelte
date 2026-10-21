@@ -405,7 +405,7 @@
 							<InputGroup.Input bind:value={inboxQuery} placeholder={s.searchPh} />
 						</InputGroup.Root>
 						<div class="flex flex-col gap-1">
-							<div class="flex items-center justify-between text-xs text-muted-foreground">
+							<div class="flex items-center justify-between text-meta text-muted-foreground">
 								<span>{s.adminLoad}</span><span>65%</span>
 							</div>
 							<Progress value={65} class="h-1.5" />
@@ -442,15 +442,15 @@
 										<span class="flex min-w-0 flex-1 flex-col gap-0.5">
 											<span class="flex items-center justify-between gap-2">
 												<strong class="truncate text-sm">{q.name}</strong>
-												<span class="shrink-0 text-[11px] text-muted-foreground">{q.time}</span>
+												<span class="shrink-0 text-meta text-muted-foreground">{q.time}</span>
 											</span>
 											<span class="flex items-center justify-between gap-2">
-												<span class="flex min-w-0 flex-1 items-center gap-1 text-xs text-muted-foreground">
+												<span class="flex min-w-0 flex-1 items-center gap-1 text-meta text-muted-foreground">
 													{#if q.read}<CheckCheck data-icon="inline" class="size-3.5 shrink-0 text-sky-500" />{/if}
 													<span class="truncate">{q.snippet}</span>
 												</span>
 												{#if q.unread > 0}
-													<Badge variant="destructive" class="h-5 min-w-5 justify-center px-1 text-[10px]">{q.unread}</Badge>
+													<Badge variant="destructive" class="h-5 min-w-5 justify-center px-1 text-meta">{q.unread}</Badge>
 												{/if}
 											</span>
 										</span>
@@ -473,7 +473,7 @@
 							</Avatar.Root>
 							<div class="flex min-w-0 flex-1 flex-col gap-0.5">
 								<strong class="truncate text-sm">{selected.name}</strong>
-								<span class="truncate text-xs text-muted-foreground">{selected.handle}</span>
+								<span class="truncate text-meta text-muted-foreground">{selected.handle}</span>
 							</div>
 							<Tooltip.Provider>
 								<Tooltip.Root>
@@ -489,18 +489,18 @@
 							</Tooltip.Provider>
 						</div>
 						<div class="flex flex-wrap items-center gap-2">
-							<span class="text-xs font-medium text-muted-foreground">{s.userInteraction}</span>
-							<Badge variant="secondary" class="max-w-full truncate text-[11px]">{TICKET_ID}</Badge>
+							<span class="text-meta font-medium text-muted-foreground">{s.userInteraction}</span>
+							<Badge variant="secondary" class="max-w-full truncate text-meta">{TICKET_ID}</Badge>
 						</div>
 					</div>
 					<Separator />
 					<div class="flex flex-col gap-1.5 px-3 pt-3">
 						<div
-							class="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-700 dark:text-emerald-300"
+							class="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-meta text-emerald-700 dark:text-emerald-300"
 						>
 							{s.connected}
 						</div>
-						<p class="text-center text-[11px] text-muted-foreground">{s.today}</p>
+						<p class="text-center text-meta text-muted-foreground">{s.today}</p>
 					</div>
 					<ScrollArea.Root class="min-h-0 flex-1">
 						<div class="p-3">
@@ -657,7 +657,7 @@
 									<div class="flex flex-col gap-3">
 										<div class="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm">
 											<PhoneOff data-icon="inline" class="size-4 shrink-0 text-destructive" />
-											<p class="text-xs">{s.endChatDesc}</p>
+											<p class="text-meta">{s.endChatDesc}</p>
 										</div>
 										<Dialog.Root bind:open={endOpen}>
 											<Button variant="destructive" onclick={() => (endOpen = true)}>
@@ -677,7 +677,7 @@
 									</div>
 								{:else}
 									<div class="flex flex-col gap-2">
-										<p class="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
+										<p class="flex items-center gap-1.5 text-meta font-medium text-muted-foreground">
 											<History data-icon="inline" class="size-3.5" />{s.historyTitle}
 										</p>
 										<Separator />
@@ -685,8 +685,8 @@
 											<div class="flex items-start gap-2.5 rounded-lg border p-2.5">
 												<span class="mt-1.5 size-2 shrink-0 rounded-full bg-primary"></span>
 												<div class="flex min-w-0 flex-1 flex-col gap-0.5">
-													<p class="text-xs font-medium">{h.text}</p>
-													<span class="text-[11px] text-muted-foreground">{h.time}</span>
+													<p class="text-meta font-medium">{h.text}</p>
+													<span class="text-meta text-muted-foreground">{h.time}</span>
 												</div>
 											</div>
 										{/each}

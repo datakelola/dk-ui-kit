@@ -8,9 +8,11 @@
 	let {
 		ref = $bindable(null),
 		class: className,
+		srLabel = "Toggle Sidebar",
 		onclick,
 		...restProps
 	}: ComponentProps<typeof Button> & {
+		srLabel?: string;
 		onclick?: (e: MouseEvent) => void;
 	} = $props();
 
@@ -32,5 +34,5 @@
 	{...restProps}
 >
 	<PanelLeftIcon class="cn-rtl-flip" />
-	<span class="sr-only">Toggle Sidebar</span>
+	<span class="sr-only">{srLabel}</span>
 </Button>

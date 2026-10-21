@@ -235,9 +235,9 @@
 	{:else}
 		<section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3" aria-label={s.sectionLabel}>
 			{#each channels as c}
-				<Card.Root class={cn('transition-shadow hover:shadow-md', c.key === 'wa' && 'border-primary/40')}>
+				<Card.Root class={cn('transition-shadow hover:shadow-md', c.key === 'wa' && 'border-primary-text/40')}>
 					<Card.Header class="flex flex-row items-center gap-3">
-						<div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary"><c.icon data-icon="card" /></div>
+						<div class="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary-text"><c.icon data-icon="card" /></div>
 						<div class="min-w-0 flex-1"><Card.Title class="truncate text-base">{c.label}</Card.Title><Card.Description class="truncate">{s.totalPrefix} {c.total}</Card.Description></div>
 						<Tooltip.Root><Tooltip.Trigger class="shrink-0"><Badge variant="secondary" class="shrink-0 whitespace-nowrap">{s.active}</Badge></Tooltip.Trigger><Tooltip.Content>{s.channelConnected}</Tooltip.Content></Tooltip.Root>
 					</Card.Header>
@@ -271,8 +271,8 @@
 				{#if tickets.length === 0}
 					<Empty.Root><Empty.Header><Empty.Media><Inbox data-icon="empty" /></Empty.Media><Empty.Title>{s.emptyTitle}</Empty.Title><Empty.Description>{s.emptyDesc}</Empty.Description></Empty.Header></Empty.Root>
 				{:else}
-					<div class="overflow-x-auto"><Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thId}</Table.Head><Table.Head>{s.thSubject}</Table.Head><Table.Head>{s.thOwner}</Table.Head><Table.Head class="text-right">{s.thStatus}</Table.Head></Table.Row></Table.Header>
-					<Table.Body>{#each tickets as t}<Table.Row><Table.Cell class="font-mono text-xs">{t.id}</Table.Cell><Table.Cell><div class="flex min-w-0 items-center gap-2"><Avatar.Root class="size-6 shrink-0"><Avatar.Fallback>{t.owner.slice(0, 1)}</Avatar.Fallback></Avatar.Root><span class="min-w-0 truncate font-medium">{t.subject}</span></div></Table.Cell><Table.Cell>{t.owner}</Table.Cell><Table.Cell class="text-right"><Badge variant={t.status === 'Urgent' ? 'destructive' : 'secondary'}>{statusLabel(t.status)}</Badge></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root></div>
+					<Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thId}</Table.Head><Table.Head>{s.thSubject}</Table.Head><Table.Head>{s.thOwner}</Table.Head><Table.Head class="text-right">{s.thStatus}</Table.Head></Table.Row></Table.Header>
+					<Table.Body>{#each tickets as t}<Table.Row><Table.Cell class="font-mono text-xs">{t.id}</Table.Cell><Table.Cell><div class="flex min-w-0 items-center gap-2"><Avatar.Root class="size-6 shrink-0"><Avatar.Fallback>{t.owner.slice(0, 1)}</Avatar.Fallback></Avatar.Root><span class="min-w-0 truncate font-medium">{t.subject}</span></div></Table.Cell><Table.Cell>{t.owner}</Table.Cell><Table.Cell class="text-right"><Badge variant={t.status === 'Urgent' ? 'destructive' : 'secondary'}>{statusLabel(t.status)}</Badge></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root>
 				{/if}
 			</Card.Content>
 			<Card.Footer><Separator class="my-1" /><p class="text-muted-foreground flex items-center gap-1 text-xs"><Info data-icon="inline" /> {s.showing3}</p></Card.Footer>

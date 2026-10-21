@@ -148,7 +148,7 @@
 <div class="flex flex-col gap-3">
 	<Card.Root class="min-w-0">
 		<Card.Content class="flex max-w-full items-center gap-3 overflow-x-auto p-4">
-			{#each stages as st, i}<div class="flex shrink-0 items-center gap-2"><span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">{i + 1}</span><span class="whitespace-nowrap text-xs font-medium">{st}</span>{#if i < stages.length - 1}<span class="h-0.5 w-8 shrink-0 bg-border"></span>{/if}</div>{/each}
+			{#each stages as st, i}<div class="flex shrink-0 items-center gap-2"><span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary-text">{i + 1}</span><span class="whitespace-nowrap text-xs font-medium">{st}</span>{#if i < stages.length - 1}<span class="h-0.5 w-8 shrink-0 bg-border"></span>{/if}</div>{/each}
 		</Card.Content>
 	</Card.Root>
 

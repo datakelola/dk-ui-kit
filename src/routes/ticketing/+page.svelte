@@ -224,7 +224,7 @@
 
 <svelte:head><title>{s.title}</title></svelte:head>
 
-<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-4">
 	<Tabs.Root bind:value={tab}>
 		<Tabs.List class="max-w-full overflow-x-auto [&>*]:whitespace-nowrap">
 			<Tabs.Trigger value="open" onclick={() => switchTab('open')}>{s.tabOpen}</Tabs.Trigger>
@@ -254,7 +254,7 @@
 						{#each visibleTickets as t (t.id)}
 							<button onclick={() => pick(t)} class={cn('flex min-w-0 items-center gap-3 rounded-lg p-3 text-left hover:bg-muted/50', sel?.id === t.id && 'bg-muted')}>
 								<Avatar.Root class="shrink-0"><Avatar.Fallback>{initials(t.customer)}</Avatar.Fallback></Avatar.Root>
-								<span class="min-w-0 flex-1"><span class="flex flex-wrap items-center gap-2"><Ticket class="size-3 shrink-0" /><strong class="min-w-0 flex-1 truncate text-sm">{t.id}</strong><Badge variant="outline" class="shrink-0 text-[10px]">{t.channel}</Badge></span>
+								<span class="min-w-0 flex-1"><span class="flex flex-wrap items-center gap-2"><Ticket class="size-3 shrink-0" /><strong class="min-w-0 flex-1 truncate text-sm">{t.id}</strong><Badge variant="outline" class="shrink-0">{t.channel}</Badge></span>
 								<span class="block truncate text-xs text-muted-foreground">{t.subject}</span></span>
 								<Badge variant={t.status === 'open' ? 'default' : t.status === 'pending' ? 'secondary' : 'outline'} class="shrink-0">{statusLabel(t.status)}</Badge>
 							</button>

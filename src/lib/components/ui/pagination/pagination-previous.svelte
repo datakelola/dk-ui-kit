@@ -7,6 +7,7 @@
 	let {
 		ref = $bindable(null),
 		class: className,
+		children,
 		...restProps
 	}: PaginationPrimitive.PrevButtonProps = $props();
 </script>
@@ -21,6 +22,10 @@
 	)}
 	{...restProps}
 >
-	<ChevronLeftIcon data-icon="inline-start" class="cn-rtl-flip" />
-	<span class="hidden sm:block">Previous</span>
+	{#if children}
+		{@render children()}
+	{:else}
+		<ChevronLeftIcon data-icon="inline-start" class="cn-rtl-flip" />
+		<span class="hidden sm:block">Previous</span>
+	{/if}
 </PaginationPrimitive.PrevButton>

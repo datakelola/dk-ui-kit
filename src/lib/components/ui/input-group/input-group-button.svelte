@@ -5,10 +5,10 @@
 		base: "gap-2 text-sm flex items-center shadow-none",
 		variants: {
 			size: {
-				xs: "h-6 gap-1 rounded-[calc(var(--radius)_-_3px)] px-1.5 [&>svg:not([class*='size-'])]:size-3.5",
+xs: "h-8 gap-1 rounded-[4px] px-2 [&>svg:not([class*='size-'])]:size-4",
 				sm: "",
-				"icon-xs": "size-6 rounded-[calc(var(--radius)_-_3px)] p-0 has-[>svg]:p-0",
-				"icon-sm": "size-8 p-0 has-[>svg]:p-0",
+				"icon-xs": "size-8 rounded-[4px] p-0 has-[>svg]:p-0",
+				"icon-sm": "size-10 p-0 has-[>svg]:p-0",
 			},
 		},
 		defaultVariants: {
