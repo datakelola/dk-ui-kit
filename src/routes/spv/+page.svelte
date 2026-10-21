@@ -202,7 +202,7 @@ import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 
 <div class="flex flex-col gap-6">
 	<div class="flex flex-col justify-between gap-3 lg:flex-row lg:items-center">
-		<div><h1 class="flex items-center gap-2 text-xl font-bold"><ShieldCheck size={20} class="text-primary" />{s.heading}</h1><p class="mt-1 text-sm text-muted-foreground">{s.sub}</p></div>
+		<div><h1 class="flex items-center gap-2 text-xl font-bold"><ShieldCheck size={20} class="text-primary-text" />{s.heading}</h1><p class="mt-1 text-sm text-muted-foreground">{s.sub}</p></div>
 		<div class="flex flex-wrap items-center gap-3">
 			<label class="flex items-center gap-2 text-sm"><Switch bind:checked={autoRefresh} />{s.autoRefresh}</label>
 			<Button size="sm" onclick={refresh}><RefreshCw data-icon="inline-start" />{s.refreshBtn}</Button>
@@ -266,7 +266,7 @@ import TriangleAlert from '@lucide/svelte/icons/triangle-alert';
 				<Card.Header><Card.Title>{s.sumT}</Card.Title></Card.Header>
 				<Card.Content class="flex flex-col gap-3">
 					{#each summaryCards as sc}
-						<div class="flex items-center gap-3 rounded-xl border p-3"><div class="flex size-9 items-center justify-center rounded-full bg-primary/10 text-primary"><sc.icon size={16} /></div><div class="flex-1"><p class="text-xs text-muted-foreground">{sc.label}</p><p class="text-base font-bold">{sc.value}</p></div></div>
+						<div class="flex items-center gap-3 rounded-xl border p-3"><div class="flex size-9 items-center justify-center rounded-full bg-primary/10 text-primary-text"><sc.icon size={16} /></div><div class="flex-1"><p class="text-xs text-muted-foreground">{sc.label}</p><p class="text-base font-bold">{sc.value}</p></div></div>
 					{/each}
 					<Separator />
 					<div class="flex items-center justify-between text-xs"><span class="text-muted-foreground">{s.loadHandled}</span><span class="font-semibold">{Math.round((onHandled / Math.max(1, totalOpen + totalClosed)) * 100)}%</span></div>

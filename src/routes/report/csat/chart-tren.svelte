@@ -21,9 +21,9 @@
 				stroke="var(--color-primary)"
 			 /><Area
 				y1="filled"
-				fill="var(--color-success, #16a34a)"
+				fill="var(--color-success)"
 				fillOpacity={0.2}
-				stroke="var(--color-success, #16a34a)"
+				stroke="var(--color-success)"
 			 /></Svg
 		>
 	</LCChart>

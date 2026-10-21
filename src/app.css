@@ -3,117 +3,323 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Custom variants — map shadcn-svelte's bare data-* utilities onto the
+   attributes bits-ui actually emits (data-state / data-orientation / presence). */
+@custom-variant data-open {
+  &:where([data-state="open"]),
+  &:where([data-open]:not([data-open="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-closed {
+  &:where([data-state="closed"]),
+  &:where([data-closed]:not([data-closed="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-checked {
+  &:where([data-state="checked"]),
+  &:where([data-checked]:not([data-checked="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-unchecked {
+  &:where([data-state="unchecked"]),
+  &:where([data-unchecked]:not([data-unchecked="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-selected {
+  &:where([data-selected="true"]) {
+    @slot;
+  }
+}
+
+@custom-variant data-disabled {
+  &:where([data-disabled="true"]),
+  &:where([data-disabled]:not([data-disabled="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-active {
+  &:where([data-state="active"]),
+  &:where([data-active]:not([data-active="false"])) {
+    @slot;
+  }
+}
+
+@custom-variant data-horizontal {
+  &:where([data-orientation="horizontal"]) {
+    @slot;
+  }
+}
+
+@custom-variant data-vertical {
+  &:where([data-orientation="vertical"]) {
+    @slot;
+  }
+}
+
 :root {
   --radius: 0.5rem;
+  /* Control radius measured from design-systems/Button.png: r=8px on the
+     40/48/56px buttons, r=4px on the 24/32px ones. */
+  --radius-control: 0.5rem;
+  /* Menu/overlay panels (Dropdown.png ≈10px, Context Menu.png 10-16px) */
+  --radius-control-lg: 0.625rem;
 
-  /* Theme accent — change this one value to re-theme the app */
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-foreground: #ffffff;
-  --primary-muted: #dbeafe;
-  --primary-muted-foreground: #1e40af;
-  --primary-border: #93c5fd;
+  /* ==========================================================================
+     Figma colour ramps — 10 steps, 900 (darkest) → 50 (lightest)
+     Extracted from design-systems/Colors.png. Ramps are theme-agnostic;
+     only the semantic block below flips in .dark
+     ========================================================================== */
+
+  /* Brand — vivid blue */
+  --brand-900: #003f6b;
+  --brand-800: #00528c;
+  --brand-700: #006ab5;
+  --brand-600: #0088e8;
+  --brand-500: #0095ff;
+  --brand-400: #33aaff;
+  --brand-300: #54b8ff;
+  --brand-200: #8aceff;
+  --brand-100: #b0deff;
+  --brand-50: #e6f4ff;
+
+  /* Azure — soft blue (default button / bubble fill) */
+  --azure-900: #2c4a70;
+  --azure-800: #375d8b;
+  --azure-700: #4a7ab5;
+  --azure-600: #5691d9;
+  --azure-500: #60a5f9;
+  --azure-400: #7cb7ff;
+  --azure-300: #a1cbff;
+  --azure-200: #bedbff;
+  --azure-100: #ddecff;
+  --azure-50: #eaf3ff;
+
+  /* Success — green */
+  --success-900: #1c4d27;
+  --success-800: #256533;
+  --success-700: #308242;
+  --success-600: #3da755;
+  --success-500: #43b75d;
+  --success-400: #69c57d;
+  --success-300: #81cf92;
+  --success-200: #a9deb4;
+  --success-100: #c5e9cd;
+  --success-50: #ecf8ef;
+
+  /* Danger — red */
+  --danger-900: #641d1a;
+  --danger-800: #832523;
+  --danger-700: #a9302d;
+  --danger-600: #d93e39;
+  --danger-500: #ee443f;
+  --danger-400: #f16965;
+  --danger-300: #f4827e;
+  --danger-200: #f7a9a7;
+  --danger-100: #fac5c3;
+  --danger-50: #fdecec;
+
+  /* Warning — yellow */
+  --warning-900: #6b4700;
+  --warning-800: #8c5e00;
+  --warning-700: #b57900;
+  --warning-600: #e89b00;
+  --warning-500: #ffaa00;
+  --warning-400: #ffbb33;
+  --warning-300: #ffc654;
+  --warning-200: #ffd88a;
+  --warning-100: #ffe5b0;
+  --warning-50: #fff7e6;
+
+  /* Neutral */
+  --neutral-900: #131927;
+  --neutral-800: #212936;
+  --neutral-700: #394050;
+  --neutral-600: #4d5461;
+  --neutral-500: #6d717f;
+  --neutral-400: #9ea2ae;
+  --neutral-300: #d2d5db;
+  --neutral-200: #e5e7ea;
+  --neutral-100: #f3f4f6;
+  --neutral-50: #f9fafb;
+
+  /* ==========================================================================
+     Semantic tokens — LIGHT
+     ========================================================================== */
 
   --background: #ffffff;
-  --foreground: #0f172a;
+  --foreground: #131927;
   --card: #ffffff;
-  --card-foreground: #0f172a;
+  --card-foreground: #131927;
   --popover: #ffffff;
-  --popover-foreground: #0f172a;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #1e293b;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
-  --accent: #f1f5f9;
-  --accent-foreground: #1e293b;
-  --destructive: #ef4444;
+  --popover-foreground: #131927;
+
+  /* pages-design/ "User Interaction active (default).jpg" measures the light
+     primary button fill at #61a5fa (brand step 500, #60a5f9) with a white
+     label, so --primary is the brand azure and --primary-foreground is white.
+     That pair is 2.55:1 — below WCAG AA — but no lighter ramp step exists, so
+     the fill follows the design and legibility is carried by the interaction
+     ramp: hover #5691d9 (3.26:1) and active #4a7ab5 (4.43:1) darken on press.
+     Text/border/icon accents therefore do NOT use --primary; they use
+     --primary-text (ramp step 900, 9.05:1 on white). */
+  --primary: #60a5f9;
+  --primary-hover: #5691d9;
+  --primary-active: #4a7ab5;
+  --primary-foreground: #ffffff;
+  --primary-text: #2c4a70;
+  --primary-muted: #eaf3ff;
+  --primary-muted-foreground: #2c4a70;
+  --primary-border: #bedbff;
+
+  --secondary: #f3f4f6;
+  --secondary-foreground: #131927;
+  --muted: #f3f4f6;
+  --muted-foreground: #4d5461;
+  --accent: #f3f4f6;
+  --accent-foreground: #131927;
+
+  /* danger-700: 6.67:1 as text on white AND as paper-on-fill. */
+  --destructive: #a9302d;
   --destructive-foreground: #ffffff;
-  --success: #059669;
-  --warning: #d97706;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --ring: #2563eb;
+  --success: #43b75d;
+  --success-foreground: #131927;
+  --warning: #ffaa00;
+  --warning-foreground: #131927;
+  --info: #0088e8;
+  --info-foreground: #131927;
 
-  /* Custom sidebar (dark navy) */
-  --sidebar-bg: #172554;
-  --sidebar-bg-hover: #172554;
-  --sidebar-text: #f1f5f9;
-  --sidebar-text-muted: #cbd5e1;
-  --sidebar-active: #172554;
-  --sidebar-active-text: #ffffff;
-  --sidebar-border: #172554;
-  --sidebar-logo-bg: #172554;
+  --border: #e5e7ea;
+  --input: #e5e7ea;
+  /* #60a5f9 sits at 2.06:1 against --border, so the focus ring steps down to
+     #4a7ab5 (3.57:1) to stay visible against the resting control outline. */
+  --ring: #4a7ab5;
 
-  /* Standard shadcn sidebar tokens */
-  --sidebar: #172554;
-  --sidebar-foreground: #f1f5f9;
-  --sidebar-primary: #172554;
-  --sidebar-primary-foreground: #f1f5f9;
-  --sidebar-accent: #172554;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-ring: #172554;
+  /* Chat bubbles */
+  --bubble-sent: #60a5f9;
+  --bubble-sent-foreground: #131927;
+  --bubble-received: #f3f4f6;
+  --bubble-received-foreground: #131927;
+  --bubble-system: #ecf8ef;
+  --bubble-system-foreground: #1c4d27;
 
-  --chart-1: #2563eb;
-  --chart-2: #0ea5e9;
-  --chart-3: #8b5cf6;
-  --chart-4: #f59e0b;
-  --chart-5: #10b981;
+  /* Sidebar — white surface in light mode */
+  --sidebar-bg: #ffffff;
+  --sidebar-bg-hover: #f3f4f6;
+  --sidebar-text: #131927;
+  --sidebar-text-muted: #4d5461;
+  --sidebar-active: #eaf3ff;
+  --sidebar-active-text: #2c4a70;
+  --sidebar-border: #e5e7ea;
+  --sidebar-logo-bg: #ffffff;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #131927;
+  --sidebar-primary: #60a5f9;
+  --sidebar-primary-foreground: #131927;
+  --sidebar-accent: #f3f4f6;
+  --sidebar-accent-foreground: #131927;
+  --sidebar-ring: #4a7ab5;
+
+  --chart-1: #60a5f9;
+  --chart-2: #43b75d;
+  --chart-3: #ffaa00;
+  --chart-4: #0095ff;
+  --chart-5: #ee443f;
 }
 
 .dark {
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-foreground: #ffffff;
-  --primary-muted: #1e3a8a;
-  --primary-muted-foreground: #93c5fd;
-  --primary-border: #1e3a8a;
+  /* ==========================================================================
+     Semantic tokens — DARK
+     ========================================================================== */
 
-  --background: #111827;
+  --background: #131927;
   --foreground: #f9fafb;
-  --card: #1f2937;
+  --card: #212936;
   --card-foreground: #f9fafb;
-  --popover: #1f2937;
+  --popover: #212936;
   --popover-foreground: #f9fafb;
-  --secondary: #374151;
-  --secondary-foreground: #f1f5f9;
-  --muted: #374151;
-  --muted-foreground: #9ca3af;
-  --accent: #374151;
-  --accent-foreground: #f1f5f9;
-  --destructive: #dc2626;
+
+  /* pages-design/ "User Interaction (Dark Mode).jpg" measures the dark primary
+     fill at #79b4fa — user-confirmed as #79b3fa — and its label is DARK ink
+     (#111828), not white. So the dark theme deliberately breaks from the light
+     one: the dark-theme primary carries #131927 (8.06:1) instead of white
+     (2.18:1), and the interaction ramp inverts to LIGHTEN on interaction
+     (#a1cbff 10.45:1 -> #bedbff 12.35:1) so contrast keeps rising as the user
+     hovers and presses — the dark-mode convention, and the mirror of the light
+     ramp which darkens for the same reason. Accent text/icons use
+     --primary-text (#a1cbff). */
+  --primary: #79b3fa;
+  --primary-hover: #a1cbff;
+  --primary-active: #bedbff;
+  --primary-foreground: #131927;
+  --primary-text: #a1cbff;
+  --primary-muted: #2c4a70;
+  --primary-muted-foreground: #a1cbff;
+  --primary-border: #375d8b;
+
+  --secondary: #394050;
+  --secondary-foreground: #f9fafb;
+  --muted: #394050;
+  --muted-foreground: #c1c5cd;
+  --accent: #394050;
+  --accent-foreground: #f9fafb;
+
+  --destructive: #a9302d;
   --destructive-foreground: #ffffff;
-  --success: #34d399;
-  --warning: #fbbf24;
-  --border: #374151;
-  --input: #374151;
-  --ring: #2563eb;
+  --success: #43b75d;
+  --success-foreground: #131927;
+  --warning: #ffaa00;
+  --warning-foreground: #131927;
+  --info: #33aaff;
+  --info-foreground: #131927;
 
-  --sidebar-bg: #172554;
-  --sidebar-bg-hover: #172554;
-  --sidebar-text: #d1d5db;
-  --sidebar-text-muted: #9ca3af;
-  --sidebar-active: #172554;
-  --sidebar-active-text: #ffffff;
-  --sidebar-border: #172554;
-  --sidebar-logo-bg: #172554;
+  --border: #394050;
+  --input: #394050;
+  --ring: #79b3fa;
 
-  --sidebar: #172554;
-  --sidebar-foreground: #f1f5f9;
-  --sidebar-primary: #172554;
-  --sidebar-primary-foreground: #f1f5f9;
-  --sidebar-accent: #172554;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-ring: #172554;
+  --bubble-sent: #79b3fa;
+  --bubble-sent-foreground: #131927;
+  --bubble-received: #394050;
+  --bubble-received-foreground: #f9fafb;
+  --bubble-system: #1c4d27;
+  --bubble-system-foreground: #c5e9cd;
 
-  --chart-1: #3b82f6;
-  --chart-2: #38bdf8;
-  --chart-3: #a78bfa;
-  --chart-4: #fbbf24;
-  --chart-5: #34d399;
+  --sidebar-bg: #131927;
+  --sidebar-bg-hover: #212936;
+  --sidebar-text: #d2d5db;
+  --sidebar-text-muted: #c1c5cd;
+  --sidebar-active: #2c4a70;
+  --sidebar-active-text: #a1cbff;
+  --sidebar-border: #212936;
+  --sidebar-logo-bg: #131927;
+
+  --sidebar: #131927;
+  --sidebar-foreground: #f9fafb;
+  --sidebar-primary: #79b3fa;
+  --sidebar-primary-foreground: #131927;
+  --sidebar-accent: #212936;
+  --sidebar-accent-foreground: #f9fafb;
+  --sidebar-ring: #79b3fa;
+
+  --chart-1: #79b3fa;
+  --chart-2: #43b75d;
+  --chart-3: #ffaa00;
+  --chart-4: #0095ff;
+  --chart-5: #ee443f;
 }
 
 @theme inline {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Inter has no Thai glyphs — 'Noto Sans Thai' must follow it in the stack
+     so the `th` locale does not fall back to an arbitrary system font. */
+  --font-sans: 'Inter', 'Noto Sans Thai', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -123,7 +329,10 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
   --color-primary-foreground: var(--primary-foreground);
+  /* Accent-only blue for text/border/icon; `--primary` is the fill token. */
+  --color-primary-text: var(--primary-text);
   --color-primary-muted: var(--primary-muted);
   --color-primary-muted-foreground: var(--primary-muted-foreground);
   --color-primary-border: var(--primary-border);
@@ -136,10 +345,88 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
   --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  --color-bubble-sent: var(--bubble-sent);
+  --color-bubble-sent-foreground: var(--bubble-sent-foreground);
+  --color-bubble-received: var(--bubble-received);
+  --color-bubble-received-foreground: var(--bubble-received-foreground);
+  --color-bubble-system: var(--bubble-system);
+  --color-bubble-system-foreground: var(--bubble-system-foreground);
+
+  /* Figma ramps exposed to Tailwind (bg-brand-500, text-danger-700, …) */
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
+
+  --color-azure-50: var(--azure-50);
+  --color-azure-100: var(--azure-100);
+  --color-azure-200: var(--azure-200);
+  --color-azure-300: var(--azure-300);
+  --color-azure-400: var(--azure-400);
+  --color-azure-500: var(--azure-500);
+  --color-azure-600: var(--azure-600);
+  --color-azure-700: var(--azure-700);
+  --color-azure-800: var(--azure-800);
+  --color-azure-900: var(--azure-900);
+
+  --color-success-50: var(--success-50);
+  --color-success-100: var(--success-100);
+  --color-success-200: var(--success-200);
+  --color-success-300: var(--success-300);
+  --color-success-400: var(--success-400);
+  --color-success-500: var(--success-500);
+  --color-success-600: var(--success-600);
+  --color-success-700: var(--success-700);
+  --color-success-800: var(--success-800);
+  --color-success-900: var(--success-900);
+
+  --color-danger-50: var(--danger-50);
+  --color-danger-100: var(--danger-100);
+  --color-danger-200: var(--danger-200);
+  --color-danger-300: var(--danger-300);
+  --color-danger-400: var(--danger-400);
+  --color-danger-500: var(--danger-500);
+  --color-danger-600: var(--danger-600);
+  --color-danger-700: var(--danger-700);
+  --color-danger-800: var(--danger-800);
+  --color-danger-900: var(--danger-900);
+
+  --color-warning-50: var(--warning-50);
+  --color-warning-100: var(--warning-100);
+  --color-warning-200: var(--warning-200);
+  --color-warning-300: var(--warning-300);
+  --color-warning-400: var(--warning-400);
+  --color-warning-500: var(--warning-500);
+  --color-warning-600: var(--warning-600);
+  --color-warning-700: var(--warning-700);
+  --color-warning-800: var(--warning-800);
+  --color-warning-900: var(--warning-900);
+
+  --color-neutral-50: var(--neutral-50);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-400: var(--neutral-400);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-600: var(--neutral-600);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-800: var(--neutral-800);
+  --color-neutral-900: var(--neutral-900);
 
   --color-sidebar-bg: var(--sidebar-bg);
   --color-sidebar-bg-hover: var(--sidebar-bg-hover);
@@ -164,10 +451,16 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
+  --radius-control: var(--radius-control);
+  --radius-control-lg: var(--radius-control-lg);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+
+  /* Secondary/metadata copy sits at 13px in the design sheets */
+  --text-meta: 0.8125rem;
 }
 
 @layer base {
@@ -189,23 +482,34 @@
     background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
+    background: #d2d5db;
     border-radius: 9999px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
+    background: #9ea2ae;
   }
   .dark ::-webkit-scrollbar-thumb {
-    background: #475569;
+    background: #4d5461;
   }
   .dark ::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
+    background: #6d717f;
   }
   * {
     scrollbar-width: thin;
-    scrollbar-color: #cbd5e1 transparent;
+    scrollbar-color: #d2d5db transparent;
   }
   .dark * {
-    scrollbar-color: #475569 transparent;
+    scrollbar-color: #4d5461 transparent;
   }
+}
+
+/* Unlayered on purpose: Tailwind v4 puts utilities in a cascade layer, so a
+   rule inside @layer base would lose to `leading-none` / `tracking-tight`.
+   Thai stacks tall diacritics; the Latin line-heights we ship clip them. */
+:lang(th) {
+  line-height: 1.7;
+}
+
+:lang(th) :where(h1, h2, h3, h4, h5, h6) {
+  line-height: 1.5;
 }

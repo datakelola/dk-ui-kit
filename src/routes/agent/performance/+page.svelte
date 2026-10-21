@@ -152,7 +152,7 @@ import UserRound from '@lucide/svelte/icons/user-round';
 			</Field.FieldGroup>
 			<ToggleGroup.Root type="single" bind:value={view} aria-label={s.thStatus} class="max-w-full flex-wrap"><ToggleGroup.Item value="semua">{s.all}</ToggleGroup.Item><ToggleGroup.Item value="ready">{s.ready}</ToggleGroup.Item><ToggleGroup.Item value="offline">{s.offline}</ToggleGroup.Item></ToggleGroup.Root>
 		</Card.Content>
-		<Card.Footer class="text-muted-foreground text-xs">{s.updated}</Card.Footer>
+		<Card.Footer class="text-muted-foreground text-meta">{s.updated}</Card.Footer>
 	</Card.Root>
 
 	<Card.Root>
@@ -164,30 +164,30 @@ import UserRound from '@lucide/svelte/icons/user-round';
 			{:else if statusTab === 'history'}
 				<p class="text-sm text-muted-foreground">{s.histDesc}</p>
 				<div class="overflow-x-auto"><Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thAgent}</Table.Head><Table.Head>{s.thTotal}</Table.Head><Table.Head>{s.thAvg}</Table.Head><Table.Head>{s.thRate}</Table.Head><Table.Head>{s.thRating}</Table.Head></Table.Row></Table.Header>
-				<Table.Body>{#each filtered as a}<Table.Row><Table.Cell class="font-medium">{a.name}</Table.Cell><Table.Cell>{a.total}</Table.Cell><Table.Cell>{a.avg}</Table.Cell><Table.Cell><div class="flex items-center gap-2"><Progress value={a.rate} class="w-20" /><span class="text-xs">{a.rate}%</span></div></Table.Cell><Table.Cell><span class="flex items-center gap-1 font-medium"><Star data-icon="inline" />{a.rating}</span></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root></div>
+				<Table.Body>{#each filtered as a}<Table.Row><Table.Cell class="font-medium">{a.name}</Table.Cell><Table.Cell>{a.total}</Table.Cell><Table.Cell>{a.avg}</Table.Cell><Table.Cell><div class="flex items-center gap-2"><Progress value={a.rate} class="w-20" /><span class="text-meta">{a.rate}%</span></div></Table.Cell><Table.Cell><span class="flex items-center gap-1 font-medium"><Star data-icon="inline" />{a.rating}</span></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root></div>
 			{:else if filtered.length === 0}
 				<Empty.Root><Empty.Header><Empty.Media><UserRound data-icon="empty" /></Empty.Media><Empty.Title>{s.emptyTitle}</Empty.Title><Empty.Description>{s.emptyDesc}</Empty.Description></Empty.Header></Empty.Root>
 			{:else}
 				<div class="overflow-x-auto"><Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thAgent}</Table.Head><Table.Head>{s.thStatus}</Table.Head><Table.Head>{s.thHandle}</Table.Head><Table.Head>{s.thClosed}</Table.Head><Table.Head class="text-right">{s.thActions}</Table.Head></Table.Row></Table.Header>
 				<Table.Body>{#each filtered as a}<Table.Row>
-					<Table.Cell><div class="flex min-w-0 items-center gap-2"><Avatar.Root class="size-8 shrink-0"><Avatar.Fallback>{a.name.slice(0, 1)}</Avatar.Fallback></Avatar.Root><div class="min-w-0"><div class="truncate font-medium">{a.name}</div><div class="text-muted-foreground truncate text-xs">{a.user}</div></div></div></Table.Cell>
+					<Table.Cell><div class="flex min-w-0 items-center gap-2"><Avatar.Root class="size-8 shrink-0"><Avatar.Fallback>{a.name.slice(0, 1)}</Avatar.Fallback></Avatar.Root><div class="min-w-0"><div class="truncate font-medium">{a.name}</div><div class="text-muted-foreground truncate text-meta">{a.user}</div></div></div></Table.Cell>
 					<Table.Cell><Badge variant={a.status === 'Ready' ? 'success' : 'secondary'} class={cn(a.status === 'Ready' && 'border-green-500/30')}>{statusLabel(a.status)}</Badge></Table.Cell>
 					<Table.Cell>{a.handle}</Table.Cell><Table.Cell>{a.closed}</Table.Cell>
 					<Table.Cell class="text-right"><Tooltip.Root><Tooltip.Trigger><Button variant="ghost" size="sm" onclick={() => { detail = a; open = true; }}><Eye data-icon="inline-start" />{s.view}</Button></Tooltip.Trigger><Tooltip.Content>{s.viewTip} {a.name}</Tooltip.Content></Tooltip.Root></Table.Cell>
 				</Table.Row>{/each}</Table.Body></Table.Root></div>
 			{/if}
 		</Card.Content>
-		<Card.Footer><Separator class="my-1" /><p class="text-muted-foreground flex items-center gap-1 text-xs"><Info data-icon="inline" /> {s.cols}</p></Card.Footer>
+		<Card.Footer><Separator class="my-1" /><p class="text-muted-foreground flex items-center gap-1 text-meta"><Info data-icon="inline" /> {s.cols}</p></Card.Footer>
 	</Card.Root>
 
 	{#if statusTab === 'status'}
 	<Card.Root>
 		<Card.Header><Card.Title>{s.histTitle}</Card.Title><Card.Description>{s.histDesc}</Card.Description></Card.Header>
 		<Card.Content class="flex flex-col gap-4">
-			<div class="flex flex-col gap-2">{#each filtered as a}<div class="flex min-w-0 items-center gap-3"><Badge variant="outline" class="min-w-24 shrink-0 justify-center">{a.name.split(' ')[0]}</Badge><Progress value={Math.round((a.total / 128) * 100)} class="min-w-0 flex-1" /><span class="shrink-0 text-xs font-medium whitespace-nowrap">{a.total} {s.handled}</span></div>{/each}</div>
+			<div class="flex flex-col gap-2">{#each filtered as a}<div class="flex min-w-0 items-center gap-3"><Badge variant="outline" class="min-w-24 shrink-0 justify-center">{a.name.split(' ')[0]}</Badge><Progress value={Math.round((a.total / 128) * 100)} class="min-w-0 flex-1" /><span class="shrink-0 text-meta font-medium whitespace-nowrap">{a.total} {s.handled}</span></div>{/each}</div>
 
 			<div class="overflow-x-auto"><Table.Root class="min-w-[640px]"><Table.Header><Table.Row><Table.Head>{s.thAgent}</Table.Head><Table.Head>{s.thTotal}</Table.Head><Table.Head>{s.thAvg}</Table.Head><Table.Head>{s.thRate}</Table.Head><Table.Head>{s.thRating}</Table.Head></Table.Row></Table.Header>
-			<Table.Body>{#each filtered as a}<Table.Row><Table.Cell class="font-medium">{a.name}</Table.Cell><Table.Cell>{a.total}</Table.Cell><Table.Cell>{a.avg}</Table.Cell><Table.Cell><div class="flex items-center gap-2"><Progress value={a.rate} class="w-20" /><span class="text-xs">{a.rate}%</span></div></Table.Cell><Table.Cell><span class="flex items-center gap-1 font-medium"><Star data-icon="inline" />{a.rating}</span></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root></div>
+			<Table.Body>{#each filtered as a}<Table.Row><Table.Cell class="font-medium">{a.name}</Table.Cell><Table.Cell>{a.total}</Table.Cell><Table.Cell>{a.avg}</Table.Cell><Table.Cell><div class="flex items-center gap-2"><Progress value={a.rate} class="w-20" /><span class="text-meta">{a.rate}%</span></div></Table.Cell><Table.Cell><span class="flex items-center gap-1 font-medium"><Star data-icon="inline" />{a.rating}</span></Table.Cell></Table.Row>{/each}</Table.Body></Table.Root></div>
 		</Card.Content>
 		<Card.Footer><Alert.Root variant="success"><Info data-icon="alert" /><Alert.Description>{s.alert}</Alert.Description></Alert.Root></Card.Footer>
 	</Card.Root>

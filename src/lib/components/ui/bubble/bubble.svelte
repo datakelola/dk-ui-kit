@@ -5,7 +5,10 @@
 		base: "gap-1 data-[align=end]:self-end max-w-[80%] data-[variant=ghost]:max-w-full group-data-[align=end]/message:self-end group/bubble relative flex w-fit min-w-0 flex-col",
 		variants: {
 			variant: {
-				default: "*:data-[slot=bubble-content]:bg-primary *:data-[slot=bubble-content]:text-primary-foreground [&>[data-slot=bubble-content]:is(button,a):hover]:bg-primary/80",
+				default: "*:data-[slot=bubble-content]:bg-primary *:data-[slot=bubble-content]:text-primary-foreground [&>[data-slot=bubble-content]:is(button,a):hover]:bg-primary-hover",
+				sent: "*:data-[slot=bubble-content]:bg-bubble-sent *:data-[slot=bubble-content]:text-bubble-sent-foreground [&>[data-slot=bubble-content]:is(button,a):hover]:bg-primary-hover",
+				received: "*:data-[slot=bubble-content]:bg-bubble-received *:data-[slot=bubble-content]:text-bubble-received-foreground [&>[data-slot=bubble-content]:is(button,a):hover]:bg-neutral-200 dark:[&>[data-slot=bubble-content]:is(button,a):hover]:bg-neutral-700",
+				system: "*:data-[slot=bubble-content]:bg-bubble-system *:data-[slot=bubble-content]:text-bubble-system-foreground [&>[data-slot=bubble-content]:is(button,a):hover]:bg-success-100 dark:[&>[data-slot=bubble-content]:is(button,a):hover]:bg-success-800",
 				secondary: "*:data-[slot=bubble-content]:bg-secondary *:data-[slot=bubble-content]:text-secondary-foreground [&>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)]",
 				muted: "*:data-[slot=bubble-content]:bg-muted [&>[data-slot=bubble-content]:is(button,a):hover]:bg-[color-mix(in_oklch,var(--muted),var(--foreground)_5%)]",
 				tinted: "*:data-[slot=bubble-content]:bg-[oklch(from_var(--primary)_0.93_calc(c*0.4)_h)] dark:*:data-[slot=bubble-content]:bg-[oklch(from_var(--primary)_0.3_calc(c*0.4)_h)] *:data-[slot=bubble-content]:text-foreground [&>[data-slot=bubble-content]:is(button,a):hover]:bg-[oklch(from_var(--primary)_0.88_calc(c*0.5)_h)] dark:[&>[data-slot=bubble-content]:is(button,a):hover]:bg-[oklch(from_var(--primary)_0.35_calc(c*0.5)_h)]",

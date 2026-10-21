@@ -170,7 +170,7 @@ import SlidersHorizontal from '@lucide/svelte/icons/sliders-horizontal';
 
 <div class="flex flex-col gap-6">
 	<div class="flex flex-col justify-between gap-3 lg:flex-row lg:items-end">
-		<div><h1 class="flex items-center gap-2 text-xl font-bold"><MessagesSquare size={20} class="text-primary" />{s.heading}</h1><p class="mt-1 text-sm text-muted-foreground">{s.sub}</p></div>
+		<div><h1 class="flex items-center gap-2 text-xl font-bold"><MessagesSquare size={20} class="text-primary-text" />{s.heading}</h1><p class="mt-1 text-sm text-muted-foreground">{s.sub}</p></div>
 		<div class="flex flex-wrap gap-2"><Button size="sm" variant="outline" onclick={reset}><RotateCcw data-icon="inline-start" />{s.reset}</Button><Button size="sm"><Download data-icon="inline-start" />{s.export}</Button></div>
 	</div>
 

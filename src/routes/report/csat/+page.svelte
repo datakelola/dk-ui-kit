@@ -163,10 +163,10 @@ import CircleX from '@lucide/svelte/icons/circle-x';
 	const pageRows = $derived(filtered.slice((safePage - 1) * perPage, safePage * perPage));
 
 	let dist = $derived([
-		{ label: s.dist1, value: 3, color: 'var(--color-success, #16a34a)' },
-		{ label: s.dist2, value: 2, color: 'var(--color-warning, #d97706)' },
-		{ label: s.dist3, value: 1, color: 'var(--color-destructive, #dc2626)' },
-		{ label: s.distNone, value: 2, color: 'var(--color-muted-foreground, #9ca3af)' }
+		{ label: s.dist1, value: 3, color: 'var(--color-success)' },
+		{ label: s.dist2, value: 2, color: 'var(--color-warning)' },
+		{ label: s.dist3, value: 1, color: 'var(--color-destructive)' },
+		{ label: s.distNone, value: 2, color: 'var(--color-muted-foreground)' }
 	]);
 	const trend = [
 		{ day: '12 Sep', total: 2, filled: 2 }, { day: '13 Sep', total: 2, filled: 1 },
@@ -194,15 +194,15 @@ import CircleX from '@lucide/svelte/icons/circle-x';
 
 <div class="flex flex-col gap-6">
 	<div>
-		<h1 class="flex items-center gap-2 text-xl font-bold"><Smile size={20} class="text-primary" />{s.heading}</h1>
-		<p class="mt-1 flex items-center gap-1 text-xs text-muted-foreground"><ChartLine size={13} />{s.sub}</p>
+		<h1 class="flex items-center gap-2 text-xl font-bold"><Smile size={20} class="text-primary-text" />{s.heading}</h1>
+		<p class="mt-1 flex items-center gap-1 text-meta text-muted-foreground"><ChartLine size={13} />{s.sub}</p>
 	</div>
 
 	<Alert.Root variant="warning"><Info /><Alert.Title>{s.alertT}</Alert.Title><Alert.Description>{s.alertPre} {filtered.length} {s.alertMid} {total} {s.alertEnd}</Alert.Description></Alert.Root>
 
 	<div class="grid grid-cols-1 gap-4 md:grid-cols-4">
 		{#each statCards as sc}
-			<Card.Root><Card.Content class="flex items-center gap-3 p-4"><div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary"><sc.icon size={19} /></div><div class="min-w-0"><p class="text-xl font-bold">{sc.value}</p><p class="truncate text-xs text-muted-foreground">{sc.label}</p>{#if sc.id === 'rate'}<Progress value={rate} class="mt-2 w-full max-w-28" />{/if}</div></Card.Content></Card.Root>
+			<Card.Root><Card.Content class="flex items-center gap-3 p-4"><div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary-text"><sc.icon size={19} /></div><div class="min-w-0"><p class="text-xl font-bold">{sc.value}</p><p class="truncate text-meta text-muted-foreground">{sc.label}</p>{#if sc.id === 'rate'}<Progress value={rate} class="mt-2 w-full max-w-28" />{/if}</div></Card.Content></Card.Root>
 		{/each}
 	</div>
 
@@ -243,7 +243,7 @@ import CircleX from '@lucide/svelte/icons/circle-x';
 			<Card.Header><Card.Title>{s.distT}</Card.Title><p class="text-sm text-muted-foreground">{s.distD}</p></Card.Header>
 			<Card.Content>
 				{#if ChartDistribusi}<ChartDistribusi data={dist} config={chartConfig} />{:else}<Skeleton class="h-64 w-full" />{/if}
-				<div class="mt-3 flex flex-col gap-2">{#each dist as d}<div class="flex items-center justify-between text-xs"><span class="text-muted-foreground">{d.label}</span><span class="font-semibold">{d.value}</span></div><Progress value={(d.value / Math.max(1, total)) * 100} />{/each}</div>
+				<div class="mt-3 flex flex-col gap-2">{#each dist as d}<div class="flex items-center justify-between text-meta"><span class="text-muted-foreground">{d.label}</span><span class="font-semibold">{d.value}</span></div><Progress value={(d.value / Math.max(1, total)) * 100} />{/each}</div>
 			</Card.Content>
 		</Card.Root>
 		<Card.Root>
@@ -251,7 +251,7 @@ import CircleX from '@lucide/svelte/icons/circle-x';
 			<Card.Content>
 				{#if ChartTren}<ChartTren data={trend} config={chartConfig} />{:else}<Skeleton class="h-64 w-full" />{/if}
 				<Separator class="my-3" />
-				<div class="flex flex-wrap gap-2 text-xs"><Badge variant="secondary">{s.legTotal}</Badge><Badge variant="secondary">{s.legFilled}</Badge><Badge variant="outline"><Smile size={12} />{s.leg1}</Badge><Badge variant="outline"><Meh size={12} />{s.leg2}</Badge><Badge variant="outline"><Frown size={12} />{s.leg3}</Badge></div>
+				<div class="flex flex-wrap gap-2 text-meta"><Badge variant="secondary">{s.legTotal}</Badge><Badge variant="secondary">{s.legFilled}</Badge><Badge variant="outline"><Smile size={12} />{s.leg1}</Badge><Badge variant="outline"><Meh size={12} />{s.leg2}</Badge><Badge variant="outline"><Frown size={12} />{s.leg3}</Badge></div>
 			</Card.Content>
 		</Card.Root>
 	</div>
@@ -268,7 +268,7 @@ import CircleX from '@lucide/svelte/icons/circle-x';
 						<Table.Header><Table.Row><Table.Head>{s.hNo}</Table.Head><Table.Head>{s.hReporter}</Table.Head><Table.Head>{s.hChannel}</Table.Head><Table.Head>{s.hTicket}</Table.Head><Table.Head>{s.hDate}</Table.Head><Table.Head>{s.hTime}</Table.Head><Table.Head>{s.hScore}</Table.Head><Table.Head>{s.hDesc}</Table.Head><Table.Head>{s.hAgent}</Table.Head></Table.Row></Table.Header>
 						<Table.Body>
 							{#each pageRows as r, i}
-								<Table.Row><Table.Cell class="whitespace-nowrap">{(safePage - 1) * perPage + i + 1}</Table.Cell><Table.Cell class="max-w-[160px] truncate font-medium">{r.customer}</Table.Cell><Table.Cell class="whitespace-nowrap">{r.kanal}</Table.Cell><Table.Cell class="font-mono text-xs whitespace-nowrap">{r.ticket}</Table.Cell><Table.Cell class="whitespace-nowrap">{r.created}</Table.Cell><Table.Cell class="whitespace-nowrap">{r.time}</Table.Cell><Table.Cell><Badge variant={scoreVariant(r.score)}>{r.score ?? s.noScore}</Badge></Table.Cell><Table.Cell class="max-w-[160px] truncate">{r.score ? scoreLabel[r.score] : s.noScore}</Table.Cell><Table.Cell class="max-w-[140px] truncate">{r.agent}</Table.Cell></Table.Row>
+								<Table.Row><Table.Cell class="whitespace-nowrap">{(safePage - 1) * perPage + i + 1}</Table.Cell><Table.Cell class="max-w-[160px] truncate font-medium">{r.customer}</Table.Cell><Table.Cell class="whitespace-nowrap">{r.kanal}</Table.Cell><Table.Cell class="font-mono text-meta whitespace-nowrap">{r.ticket}</Table.Cell><Table.Cell class="whitespace-nowrap">{r.created}</Table.Cell><Table.Cell class="whitespace-nowrap">{r.time}</Table.Cell><Table.Cell><Badge variant={scoreVariant(r.score)}>{r.score ?? s.noScore}</Badge></Table.Cell><Table.Cell class="max-w-[160px] truncate">{r.score ? scoreLabel[r.score] : s.noScore}</Table.Cell><Table.Cell class="max-w-[140px] truncate">{r.agent}</Table.Cell></Table.Row>
 							{/each}
 						</Table.Body>
 					</Table.Root>

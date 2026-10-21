@@ -3,6 +3,7 @@
 	import { cn, type WithElementRef } from "$lib/utils.js";
 	import { SIDEBAR_WIDTH_MOBILE } from "./constants.js";
 	import { useSidebar } from "./context.svelte.js";
+	import { onMount } from "svelte";
 	import type { HTMLAttributes } from "svelte/elements";
 
 	let {
@@ -20,6 +21,22 @@
 	} = $props();
 
 	const sidebar = useSidebar();
+	let root = $state<HTMLDivElement>();
+	let container = $state<HTMLDivElement>();
+
+	onMount(() => {
+		const updateHover = (event: PointerEvent) => {
+			if (!sidebar.hover.enabled || !root || !container) return;
+			const rootRect = root.getBoundingClientRect();
+			const panelRect = container.getBoundingClientRect();
+			const insideRail = rootRect.left <= event.clientX && event.clientX <= rootRect.right;
+			const insidePanel = sidebar.peeking && panelRect.left <= event.clientX && event.clientX <= panelRect.right;
+			if (insideRail || insidePanel) sidebar.hover.enter();
+			else sidebar.hover.leave();
+		};
+		window.addEventListener("pointermove", updateHover);
+		return () => window.removeEventListener("pointermove", updateHover);
+	});
 </script>
 
 {#if collapsible === "none"}
@@ -58,21 +75,28 @@
 	</Sheet.Root>
 {:else}
 	<div
-		bind:this={ref}
+		bind:this={root}
 		class="group peer hidden text-sidebar-foreground md:block"
+		role="presentation"
 		data-state={sidebar.state}
 		data-collapsible={sidebar.state === "collapsed" ? collapsible : ""}
+		data-peek={sidebar.peeking}
 		data-variant={variant}
 		data-side={side}
 		data-slot="sidebar"
+		onmouseenter={() => sidebar.hover.enabled && sidebar.hover.enter()}
+		onmouseleave={() => sidebar.hover.enabled && sidebar.hover.leave()}
 	>
 		<!-- This is what handles the sidebar gap on desktop -->
 		<div
 			data-slot="sidebar-gap"
 			class={cn(
-				"transition-[width] duration-200 ease-linear relative w-(--sidebar-width) bg-transparent",
+				"relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-out motion-reduce:transition-none",
 				"group-data-[collapsible=offcanvas]:w-0",
 				"group-data-[side=right]:rotate-180",
+				// A hover peek is an overlay: the gap stays at icon width so the page
+				// content never reflows underneath the expanded sidebar.
+				"group-data-[peek=true]:w-(--sidebar-width-icon)",
 				variant === "floating" || variant === "inset"
 					? "group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_(--spacing(4)))]"
 					: "group-data-[collapsible=icon]:w-(--sidebar-width-icon)"
@@ -81,12 +105,15 @@
 		<div
 			data-slot="sidebar-container"
 			data-side={side}
+			bind:this={container}
 			class={cn(
-				"fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear data-[side=left]:start-0 data-[side=left]:group-data-[collapsible=offcanvas]:start-[calc(var(--sidebar-width)_*_-1)] data-[side=right]:end-0 data-[side=right]:group-data-[collapsible=offcanvas]:end-[calc(var(--sidebar-width)_*_-1)] md:flex",
+			"fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-out motion-reduce:transition-none data-[side=left]:start-0 data-[side=left]:group-data-[collapsible=offcanvas]:start-[calc(var(--sidebar-width)_*_-1)] data-[side=right]:end-0 data-[side=right]:group-data-[collapsible=offcanvas]:end-[calc(var(--sidebar-width)_*_-1)] md:flex",
 				// Adjust the padding for floating and inset variants.
 				variant === "floating" || variant === "inset"
 					? "p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_(--spacing(4))_+_2px)]"
 					: "group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-e group-data-[side=right]:border-s",
+				// The peek overlays the page; pointer tracking spans both the rail and panel.
+				"group-data-[peek=true]:z-30 group-data-[peek=true]:shadow-lg",
 				className
 			)}
 			{...restProps}

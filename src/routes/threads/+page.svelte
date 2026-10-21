@@ -177,7 +177,7 @@ import Filter from '@lucide/svelte/icons/filter';
 
 <svelte:head><title>{s.title}</title></svelte:head>
 
-<div class="flex flex-col gap-3">
+<div class="flex flex-col gap-4">
 	<Card.Root>
 		<Card.Header class="flex flex-row flex-wrap items-center gap-2">
 			<strong class="shrink-0 text-sm">{s.filters}</strong>
@@ -206,7 +206,7 @@ import Filter from '@lucide/svelte/icons/filter';
 							{#each filtered as r (r.id)}
 								<div class="flex min-w-0 flex-wrap items-center gap-3 rounded-lg border p-3">
 									<Avatar.Root class="shrink-0"><Avatar.Fallback>{initials(r.user)}</Avatar.Fallback></Avatar.Root>
-									<span class="min-w-0 flex-1 basis-40"><span class="flex flex-wrap items-center gap-2"><strong class="min-w-0 truncate text-sm">{r.user}</strong><Badge variant="outline" class="shrink-0 text-[10px]">{r.channel}</Badge><Badge variant="secondary" class="shrink-0">{r.count} {s.messages}</Badge></span>
+									<span class="min-w-0 flex-1 basis-40"><span class="flex flex-wrap items-center gap-2"><strong class="min-w-0 truncate text-sm">{r.user}</strong><Badge variant="outline" class="shrink-0">{r.channel}</Badge><Badge variant="secondary" class="shrink-0">{r.count} {s.messages}</Badge></span>
 									<span class="block truncate text-xs text-muted-foreground">{r.preview} • {r.agent} • {r.date}</span></span>
 									<Tooltip.Provider><Tooltip.Root><Tooltip.Trigger>{#snippet child({ props })}<Button size="sm" variant="outline" {...props} onclick={() => goto(`/chat/v3?thread=${r.id}`)}>{s.open}</Button>{/snippet}</Tooltip.Trigger><Tooltip.Content>{s.openTip}</Tooltip.Content></Tooltip.Root></Tooltip.Provider>
 									<Dialog.Root>
