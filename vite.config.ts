@@ -17,6 +17,12 @@ export default defineConfig({
 			'tailwind-variants'
 		]
 	},
+	server: {
+		watch: {
+			// Folder aset desain/referensi besar tidak perlu dipantau watcher.
+			ignored: ['**/design-systems/**', '**/pages-design/**', '**/reference/**']
+		}
+	},
 	plugins: [
 		tailwindcss(),
 		sveltekit({
