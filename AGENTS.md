@@ -49,5 +49,7 @@ bun run check:watch
 
 ## Reference material
 
+- `UI-RULES.md` is the binding rulebook for component choice, colour usage, layout, states, and accessibility. Read it before building or reviewing any UI; `DESIGN.md` explains the tokens it references.
+- `DESIGN.md` documents the design-system tokens (colour ramps, radii, typography, sizes, decision log) and maps `design-systems/*.png` to components.
 - `reference/crm-ahu/` holds copied Laravel Blade views from the original CRM, used as the visual source of truth. `reference/crm-ahu/README.md` has the route → blade-file mapping table. Read-only: never copy production data, credentials, or backend connections from it.
 - `tasks/plan.md` and `tasks/todo.md` hold the current phased UI-alignment plan (shell → tables → dashboards → polish) with per-phase checkpoints. Check them before starting layout work; the checkpoint list is the acceptance criteria.

@@ -4,6 +4,10 @@ Sumber kebenaran token adalah kode: `src/app.css` (variabel) dan
 `components.json` (alias registry). Referensi visual: 28 screenshot Figma
 di `design-systems/` (Button.png, Colors.png, Input.png, dst.).
 
+**Aturan pemakaian** (kapan memilih komponen/varian, layout, state, dan
+aksesibilitas) ada di `UI-RULES.md`. Dokumen ini hanya menjelaskan nilai token
+dan alasan di baliknya.
+
 Aturan terpenting:
 
 1. **Warna selalu lewat token Tailwind** (`bg-primary`, `text-muted-foreground`,
